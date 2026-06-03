@@ -164,6 +164,24 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 }
 
 /* ============================================
+   ✅ Animations (تم الإصلاح - كانت مفقودة!)
+   ============================================ */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes flt {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+@keyframes sp {
+    from { transform: rotate(0); }
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
    Pull-to-Refresh (سحب للتحديث)
    ============================================ */
 .pull-to-refresh {
@@ -353,7 +371,6 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     font-size: 0.8rem; font-weight: 600; background: rgba(231,76,60,0.06); margin-bottom: 1.5rem;
 }
 .landing-icon { font-size: 5rem; animation: flt 3s ease-in-out infinite; margin-bottom: 0.5rem; }
-@keyframes flt { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
 .landing-title {
     font-family: 'Cairo', sans-serif; font-size: 2.5rem; font-weight: 900;
     color: #fff; margin-bottom: 0.3rem; line-height: 1.3;
@@ -1372,17 +1389,17 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 }
 
 /* ============================================
-   باقي الأنماط الأصلية (مختصرة)
+   باقي الأنماط الأصلية
    ============================================ */
 
 /* Hero */
 .hero { text-align: center; padding: 4rem 1rem 3rem; position: relative; overflow: hidden; }
 .hero.hero-hidden { display: none; opacity: 0; max-height: 0; padding: 0; margin: 0; }
-.hero-badge { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem 1.2rem; border: 1px solid var(--accent); border-radius: 50px; color: var(--accent); font-size: .8rem; font-weight: 600; background: rgba(231,76,60,.06); margin-bottom: 1.5rem; }
-.hero h1 { font-size: clamp(2rem,5vw,3.5rem); font-weight: 900; color: #fff; line-height: 1.3; margin-bottom: .8rem; }
+.hero-badge { display: inline-flex; align-items: center; gap: .5rem; padding: .4rem 1.2rem; border: 1px solid var(--accent); border-radius: 50px; color: var(--accent); font-size: .8rem; font-weight: 600; background: rgba(231,76,60,.06); margin-bottom: 1.5rem; animation: fadeUp .7s ease; }
+.hero h1 { font-size: clamp(2rem,5vw,3.5rem); font-weight: 900; color: #fff; line-height: 1.3; margin-bottom: .8rem; animation: fadeUp .7s ease .15s both; }
 .hero h1 span { background: linear-gradient(135deg,var(--accent),var(--amber)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-.hero-subtitle { font-size: 1rem; color: var(--text2); max-width: 650px; margin: 0 auto 2rem; line-height: 1.9; }
-.hero-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; max-width: 600px; margin: 0 auto; }
+.hero-subtitle { font-size: 1rem; color: var(--text2); max-width: 650px; margin: 0 auto 2rem; line-height: 1.9; animation: fadeUp .7s ease .3s both; }
+.hero-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; max-width: 600px; margin: 0 auto; animation: fadeUp .7s ease .45s both; }
 .hero-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem 1.5rem; text-align: center; transition: all .3s; }
 .hero-stat:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow); }
 .hero-stat-num { font-family: 'Cairo'; font-size: 1.8rem; font-weight: 900; color: var(--accent); line-height: 1; }
@@ -1480,7 +1497,6 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .dvis { padding: 2.2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
 .dvico { width: 120px; height: 120px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; margin-bottom: .8rem; position: relative; animation: flt 4s ease-in-out infinite; }
 .dvr { position: absolute; width: 145px; height: 145px; border-radius: 50%; border: 2px dashed; opacity: .2; animation: sp 20s linear infinite; }
-@keyframes sp { from { transform: rotate(0) } to { transform: rotate(360deg) } }
 .dinf { padding: 2rem; }
 .dinf h3 { font-size: 1.4rem; font-weight: 900; margin-bottom: .3rem; }
 .dbdg { display: inline-flex; align-items: center; gap: 5px; padding: 3px 12px; border-radius: 50px; font-size: .72rem; font-weight: 600; margin-bottom: .8rem; }

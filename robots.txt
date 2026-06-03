@@ -1,19 +1,37 @@
-# https://yourdomain.com/robots.txt
+# ============================================
+# Robots.txt - Tuta Absoluta App
+# اكاديمية المهندس الزراعي
+# ============================================
 
+# السماح لجميع محركات البحث
 User-agent: *
 Allow: /
 
-# منع فهرسة صفحة الإدارة (اختياري)
-# Disallow: /admin.html
+# منع فهرسة ملفات البيانات (اختياري - لتحسين الأداء)
+# Disallow: /data/
 
-# Allow crawlers to access all content
-Allow: /index.html
-Allow: /data/
-Allow: /icons/
-Allow: /js/
+# منع فهرسة ملفات JavaScript الداخلية
+# Disallow: /js/
 
-# Sitemap location
-Sitemap: https://yourdomain.com/sitemap.xml
+# خريطة الموقع
+Sitemap: https://aburetage.github.io/Tuta-Absoluta-App/sitemap.xml
 
-# Crawl-delay (optional - for server load management)
-# Crawl-delay: 10
+# ============================================
+# محركات بحث محددة (اختياري)
+# ============================================
+
+# Google
+User-agent: Googlebot
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# Baidu
+User-agent: Baiduspider
+Allow: /
+
+# Yandex
+User-agent: YandexBot
+Allow: /

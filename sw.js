@@ -1,19 +1,19 @@
 // ============================================
 // Service Worker - Tuta Absoluta App v4
+// اكاديمية المهندس الزراعي
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v3';  // ← زود الرقم هنا كل ما تعدل
+const CACHE_NAME = 'tuta-app-v4';
 
-// الملفات الأساسية التي يجب تخزينها
+// ============================================
+// الملفات الأساسية
+// ============================================
 const PRECACHE_URLS = [
   './',
   './index.html',
   './style.css',
   './script.js',
-  './admin.html',
-  './manifest.json',
-  './robots.txt',
-  './sitemap.xml'
+  './manifest.json'
 ];
 
 // ملفات JavaScript
@@ -35,8 +35,15 @@ const DATA_FILES = [
   './data/resistance.json'
 ];
 
-// ملفات الأيقونات
+// ملفات الأيقونات (متطابقة مع manifest.json + index.html)
 const ICON_FILES = [
+  './icons/icon-72.png',
+  './icons/icon-96.png',
+  './icons/icon-128.png',
+  './icons/icon-192.png',
+  './icons/icon-256.png',
+  './icons/icon-384.png',
+  './icons/icon-512.png',
   './icons/icon.svg',
   './icons/favicon-32x32.png',
   './icons/favicon-16x16.png',
@@ -52,39 +59,42 @@ const ALL_CACHE_URLS = [
 ];
 
 // ============================================
-// Install Event - تثبيت Service Worker
+// Install Event
 // ============================================
-
 self.addEventListener('install', event => {
-  console.log('[SW] Installing new version:', CACHE_NAME);
+  console.log('[SW] Installing version:', CACHE_NAME);
   
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('[SW] Caching essential files...');
-        return cache.addAll(ALL_CACHE_URLS);
+        // استخدام Promise.allSettled عشان لو ملف ناقص، الباقي يتخزنوا
+        return Promise.allSettled(
+          ALL_CACHE_URLS.map(url => 
+            cache.add(url).catch(err => {
+              console.warn(`[SW] Could not cache: ${url}`);
+              return null;
+            })
+          )
+        );
       })
       .then(() => {
-        console.log('[SW] All files cached successfully');
-        // تفعيل النسخة الجديدة فوراً بدون انتظار إغلاق الصفحات القديمة
+        console.log('[SW] All cacheable files stored');
         return self.skipWaiting();
       })
       .catch(err => {
-        console.error('[SW] Failed to cache some files:', err);
-        // لا تمنع التثبيت حتى لو فشل بعض الملفات
+        console.error('[SW] Install error:', err);
       })
   );
 });
 
 // ============================================
-// Activate Event - تنشيط Service Worker
+// Activate Event
 // ============================================
-
 self.addEventListener('activate', event => {
-  console.log('[SW] Activating new version:', CACHE_NAME);
+  console.log('[SW] Activating version:', CACHE_NAME);
   
   event.waitUntil(
-    // حذف كل الكاش القديم
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
@@ -97,29 +107,23 @@ self.addEventListener('activate', event => {
     })
     .then(() => {
       console.log('[SW] Old caches deleted');
-      // السيطرة على جميع الصفحات المفتوحة فوراً
       return self.clients.claim();
     })
   );
 });
 
 // ============================================
-// Fetch Event - طلبات الشبكة
+// Fetch Event
 // ============================================
-
 self.addEventListener('fetch', event => {
   const { request } = event;
   
-  // تجاهل الطلبات غير GET
   if (request.method !== 'GET') return;
-  
-  // تجاهل طلبات Chrome DevTools
   if (request.url.includes('chrome-extension')) return;
   
-  // استراتيجية مختلفة حسب نوع الملف
   const url = new URL(request.url);
   
-  // 1. ملفات البيانات - Network First (الشبكة أولاً)
+  // 1. ملفات البيانات - Network First
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request)
@@ -134,9 +138,10 @@ self.addEventListener('fetch', event => {
         })
         .catch(() => {
           return caches.match(request).then(cached => {
-            return cached || new Response('Offline', {
+            return cached || new Response(JSON.stringify({ error: 'Offline' }), {
               status: 503,
-              statusText: 'Service Unavailable'
+              statusText: 'Service Unavailable',
+              headers: { 'Content-Type': 'application/json' }
             });
           });
         })
@@ -144,7 +149,7 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // 2. ملفات CSS و JS - Stale While Revalidate
+  // 2. CSS و JS - Stale While Revalidate
   if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(
       caches.match(request).then(cached => {
@@ -166,12 +171,10 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // 3. كل الملفات الأخرى - Cache First (الكاش أولاً)
+  // 3. باقي الملفات - Cache First
   event.respondWith(
     caches.match(request).then(cached => {
-      if (cached) {
-        return cached;
-      }
+      if (cached) return cached;
       return fetch(request).then(response => {
         if (response.ok) {
           const clone = response.clone();
@@ -182,7 +185,6 @@ self.addEventListener('fetch', event => {
         return response;
       });
     }).catch(() => {
-      // صفحة Offline مخصصة
       if (request.headers.get('accept').includes('text/html')) {
         return caches.match('./index.html');
       }
@@ -195,33 +197,17 @@ self.addEventListener('fetch', event => {
 });
 
 // ============================================
-// Message Event - استقبال رسائل من الصفحة
+// Message Event
 // ============================================
-
 self.addEventListener('message', event => {
   if (event.data === 'SKIP_WAITING') {
     self.skipWaiting();
   }
-  
   if (event.data === 'CLEAR_CACHE') {
     caches.keys().then(cacheNames => {
-      cacheNames.forEach(cacheName => {
-        caches.delete(cacheName);
-      });
+      cacheNames.forEach(cacheName => caches.delete(cacheName));
     });
   }
 });
 
-// ============================================
-// تحديث تلقائي كل ساعة
-// ============================================
-
-self.addEventListener('install', event => {
-  // افحص وجود تحديث كل ساعة
-  self.registration.addEventListener('updatefound', () => {
-    const newWorker = self.registration.installing;
-    console.log('[SW] Update found!');
-  });
-});
-
-console.log('[SW] Service Worker loaded successfully');
+console.log('[SW] Service Worker v4 loaded - Agricultural Engineer Academy');
