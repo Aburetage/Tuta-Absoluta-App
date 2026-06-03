@@ -74,13 +74,12 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// ✅ Translation Functions (تم الإصلاح)
+// Translation Functions
 // ============================================
 function t(key) {
     return translations[currentLang][key] || translations['ar'][key] || key;
 }
 
-// ✅ دالة toggleLanguage - كانت مفقودة!
 function toggleLanguage() {
     currentLang = currentLang === 'ar' ? 'en' : 'ar';
     localStorage.setItem('tuta-lang', currentLang);
@@ -93,28 +92,23 @@ function updateLanguage() {
     document.documentElement.lang = currentLang;
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
     
-    // Update Search Modal
     const searchHeader = document.querySelector('.search-header h3');
     if (searchHeader) searchHeader.innerHTML = `<i class="fas fa-search"></i> ${t('search')}`;
     
     const searchInput = document.getElementById('searchInput');
     if (searchInput) searchInput.placeholder = t('searchPlaceholder');
     
-    // Update Bottom Nav
     const bottomNavSpans = document.querySelectorAll('.bottom-nav-item span');
     const navTexts = [t('home'), t('biology'), t('control'), t('enemies'), t('contact')];
     bottomNavSpans.forEach((span, i) => { if (navTexts[i]) span.textContent = navTexts[i]; });
     
-    // Update FAB
     const fabSpans = document.querySelectorAll('.fab-menu-item span');
     const fabTexts = [t('whatsapp'), t('email'), t('twitter'), t('top')];
     fabSpans.forEach((span, i) => { if (fabTexts[i]) span.textContent = fabTexts[i]; });
     
-    // Update Pull to Refresh
     const ptr = document.querySelector('.pull-to-refresh span');
     if (ptr && !document.querySelector('.pull-to-refresh.refreshing')) ptr.textContent = t('pullToRefresh');
     
-    // Update Onboarding
     for (let i = 1; i <= 4; i++) {
         const slide = document.querySelector(`.onboarding-slide[data-slide="${i}"]`);
         if (slide) {
@@ -125,7 +119,6 @@ function updateLanguage() {
         }
     }
     
-    // Update onboarding buttons
     const skipBtn = document.querySelector('.onboarding-skip');
     if (skipBtn) skipBtn.textContent = t('skip');
     updateOnboardingSlide();
@@ -317,10 +310,10 @@ function populateTable() {
         { label: '💧 الرطوبة (%)', data: cData.humidities || [], type: 'hum' },
         { label: '🦋 نشاط الآفة', data: cData.activities || [], type: 'act' },
         { label: '🔄 الأجيال', data: cData.generations || [], type: 'gen' },
-        { label: '🪤 المصائد', data: cData.traps || [], type: 'trap' },
+        { label: ' المصائد', data: cData.traps || [], type: 'trap' },
         { label: '🦠 بيولوجية', data: cData.bioStatus || [], type: 'bio' },
         { label: '💊 كيميائية', data: cData.chemStatus || [], type: 'chem' },
-        { label: '🌞 تعقيم', data: cData.soilStatus || [], type: 'soil' }
+        { label: ' تعقيم', data: cData.soilStatus || [], type: 'soil' }
     ];
     const getTempColor = t => t < 20 ? '#3b82f6' : t <= 25 ? '#22c55e' : t <= 30 ? '#eab308' : t <= 34 ? '#f97316' : '#ef4444';
     const getGenColor = g => g <= .5 ? '#22c55e' : g <= 1 ? '#eab308' : g <= 1.5 ? '#f97316' : '#ef4444';
@@ -421,9 +414,9 @@ function buildIPMSection() {
     tabs.forEach((tab, i) => {
         const panel = panels[tab.id]; if (!panel) return;
         html += `<div class="ipm-panel ${i === 0 ? 'active' : ''}" id="panel-${tab.id}">`;
-        if (panel.warning) html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem"><p style="font-size:0.9rem;color:var(--text2)"><strong style="color:var(--accent)">⚠️ تحذير:</strong> ${panel.warning}</p></div>`;
+        if (panel.warning) html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem"><p style="font-size:0.9rem;color:var(--text2)"><strong style="color:var(--accent)">️ تحذير:</strong> ${panel.warning}</p></div>`;
         if (panel.cards) { html += '<div class="ipm-grid">'; panel.cards.forEach(card => { html += `<div class="ipm-card"><div class="ipm-card-icon">${card.icon}</div><h4>${card.title}</h4><p>${card.description}</p><span class="ipm-tag ${card.tagClass}">${card.tag}</span></div>`; }); html += '</div>'; }
-        if (panel.instructions) html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem"><h4 style="color:var(--amber);margin-bottom:0.5rem">⚠️ إرشادات</h4><ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2">${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}</ul></div>`;
+        if (panel.instructions) html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem"><h4 style="color:var(--amber);margin-bottom:0.5rem">️ إرشادات</h4><ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2">${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}</ul></div>`;
         if (panel.rotationSchedule) html += `<div style="margin-top:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)"><h4 style="color:var(--plan-accent);margin-bottom:0.8rem">🗓️ جدول التناوب</h4><p style="color:var(--text2);font-size:0.9rem;line-height:1.9">${panel.rotationSchedule}</p></div>`;
         html += '</div>';
     });
@@ -543,7 +536,12 @@ function closeLanding() {
     haptic(20);
     document.getElementById('landingOverlay').classList.add('hidden');
     showSingleSection('biology', document.querySelector('[data-group="biology"]'));
-    if (!localStorage.getItem('tuta-onboarding-shown')) setTimeout(showOnboarding, 800);
+    // ✅ إصلاح: تشغيل Onboarding
+    if (!localStorage.getItem('tuta-onboarding-shown')) {
+        setTimeout(() => {
+            showOnboarding();
+        }, 800);
+    }
 }
 
 // ============================================
@@ -552,12 +550,12 @@ function closeLanding() {
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: '🦋 الكاملة' };
 const targetStatusText = { effective: 'فعّال', partial: 'جزئي', none: 'لا يؤثر' };
 const targetClass = { effective: 'active-target', partial: 'partial-target', none: 'inactive-target' };
-const badgeMap = { 'preventive': { text: '🛡️ وقائي', class: 'badge-blue' }, 'curative': { text: '💊 علاجي', class: 'badge-amber' }, 'preventive-curative': { text: '🛡️💊 وقائي وعلاجي', class: 'badge-green' }, 'heat-tolerant': { text: '🌡️ متحمل', class: 'badge-green' }, 'egypt-native': { text: '🇪🇬 متوطن', class: 'badge-purple' }, 'pesticide-sensitive': { text: '⚠️ حساس', class: 'badge-red' }, 'bio-safe': { text: '✅ آمن', class: 'badge-green' }, 'needs-humidity': { text: '💧 رطوبة', class: 'badge-amber' }, 'needs-high-humidity': { text: '💧 رطوبة عالية', class: 'badge-red' }, 'good-heat': { text: '🌡️ تحمل جيد', class: 'badge-green' }, 'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' } };
+const badgeMap = { 'preventive': { text: '🛡️ وقائي', class: 'badge-blue' }, 'curative': { text: ' علاجي', class: 'badge-amber' }, 'preventive-curative': { text: '️💊 وقائي وعلاجي', class: 'badge-green' }, 'heat-tolerant': { text: '🌡️ متحمل', class: 'badge-green' }, 'egypt-native': { text: '🇪🇬 متوطن', class: 'badge-purple' }, 'pesticide-sensitive': { text: '⚠️ حساس', class: 'badge-red' }, 'bio-safe': { text: '✅ آمن', class: 'badge-green' }, 'needs-humidity': { text: '💧 رطوبة', class: 'badge-amber' }, 'needs-high-humidity': { text: '💧 رطوبة عالية', class: 'badge-red' }, 'good-heat': { text: '🌡️ تحمل جيد', class: 'badge-green' }, 'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' } };
 const importanceText = { high: 'عالي', medium: 'متوسط', low: 'منخفض', none: 'لا يؤثر' };
 const toleranceText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const toxicityText = { high: 'شديد', medium: 'متوسط', safe: 'آمن' };
-const categoryMap = { 'all': { name: '📋 الكل' }, 'egg-parasitoid': { name: ' طفيل بيض' }, 'larval-parasitoid': { name: '🐝 طفيل يرقات' }, 'predator': { name: '🪲 مفترس' }, 'fungi': { name: '🍄 فطريات' }, 'nematode': { name: '🪱 نيماتودا' } };
+const categoryMap = { 'all': { name: ' الكل' }, 'egg-parasitoid': { name: '🐝 طفيل بيض' }, 'larval-parasitoid': { name: '🐝 طفيل يرقات' }, 'predator': { name: '🪲 مفترس' }, 'fungi': { name: '🍄 فطريات' }, 'nematode': { name: '🪱 نيماتودا' } };
 
 function openModal(modalId) { const m = document.getElementById(modalId); if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; } }
 function openBioModal(id) { haptic(15); openModal(`modal-${id}`); }
@@ -609,7 +607,7 @@ function switchTab(agentId, tabName, event) {
 function filterBioByCategory(category, btn) { document.querySelectorAll('.bio-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); hapticButton(btn); renderBioCards(category); }
 
 // ============================================
-// ✅ Progress Bar (تم الإصلاح)
+// Progress Bar
 // ============================================
 function updateProgressBar() {
     const fill = document.getElementById('progressFill'); if (!fill) return;
@@ -621,7 +619,7 @@ function updateProgressBar() {
 }
 
 // ============================================
-// ✅ Pull-to-Refresh & Swipe (تم إصلاح التضارب)
+// Pull-to-Refresh & Swipe
 // ============================================
 let pullStartY = 0, pullStartX = 0, pullDistance = 0, isPulling = false;
 let touchStartX = 0, touchEndX = 0, touchStartY = 0;
@@ -642,7 +640,6 @@ function initGestures() {
         const deltaY = currentY - pullStartY;
         const deltaX = Math.abs(currentX - pullStartX);
         
-        // ✅ إصلاح: إذا كان السحب أفقي أكثر من عمودي، فهو Swipe
         if (deltaX > deltaY && deltaX > 30) { isPulling = false; return; }
         
         if (deltaY > 0 && window.scrollY === 0) {
@@ -660,15 +657,12 @@ function initGestures() {
         touchEndX = e.changedTouches[0].clientX;
         const ptr = document.getElementById('pullToRefresh');
         
-        // Pull-to-refresh
         if (pullDistance > 80) triggerRefresh();
         if (ptr) { ptr.classList.remove('visible'); ptr.style.transform = 'translateY(-100%)'; ptr.style.opacity = 0; }
         
-        // Swipe
         const swipeDiff = touchStartX - touchEndX;
         const swipeDiffY = Math.abs(touchStartY - e.changedTouches[0].clientY);
         if (Math.abs(swipeDiff) > 100 && swipeDiffY < 100) {
-            // تأكد إن المودالات مغلقة
             if (!document.querySelector('.bio-modal.active') && !document.querySelector('.search-modal.active') && !document.querySelector('.contact-modal.active')) {
                 haptic(10);
                 if (swipeDiff > 0) navigateGroup(1); else navigateGroup(-1);
@@ -686,7 +680,7 @@ function triggerRefresh() {
 }
 
 // ============================================
-// ✅ Sticky Headers (تم الإصلاح)
+// Sticky Headers
 // ============================================
 function initStickyHeaders() {
     const handleScroll = () => {
@@ -702,14 +696,17 @@ function initStickyHeaders() {
 }
 
 // ============================================
-// Onboarding
+// ✅ Onboarding (تم الإصلاح)
 // ============================================
 let currentOnboardingSlide = 1;
 const totalOnboardingSlides = 4;
 
 function showOnboarding() {
-    document.getElementById('onboardingOverlay').style.display = 'flex';
-    updateOnboardingSlide();
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        updateOnboardingSlide();
+    }
 }
 
 function updateOnboardingSlide() {
@@ -730,13 +727,16 @@ function nextOnboarding() {
 }
 
 function skipOnboarding() {
-    document.getElementById('onboardingOverlay').style.display = 'none';
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
     currentOnboardingSlide = 1;
     localStorage.setItem('tuta-onboarding-shown', 'true');
 }
 
 // ============================================
-// ✅ Smart Search (تم الإصلاح - Event Delegation)
+// Smart Search
 // ============================================
 let currentSearchFilter = 'all';
 let searchTimeout = null;
@@ -774,7 +774,7 @@ function performSearch(query) {
     if (currentSearchFilter === 'all' || currentSearchFilter === 'bio') {
         bioAgentsData.forEach(agent => {
             if (agent.scientificName.toLowerCase().includes(lowerQuery) || agent.arabicDesc.includes(query)) {
-                currentSearchResults.push({ type: 'bio', id: agent.id, category: '🦠 عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc });
+                currentSearchResults.push({ type: 'bio', id: agent.id, category: ' عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc });
             }
         });
     }
@@ -808,7 +808,6 @@ function performSearch(query) {
     });
     resultsContainer.innerHTML = html;
     
-    // ✅ Event Delegation - الإصلاح الأهم
     resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
         item.addEventListener('click', function() {
             const index = parseInt(this.dataset.index);
@@ -851,7 +850,7 @@ function openContact() { haptic(15); document.getElementById('contactModal').cla
 function closeContact() { document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = ''; }
 
 // ============================================
-// ✅ Bottom Navigation (تم الإصلاح)
+// Bottom Navigation
 // ============================================
 function bottomNavAction(section, element) {
     haptic(15);
@@ -892,6 +891,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         stagesData = getStages(); egyptMonthsData = getEgyptMonths(); calendarDataObj = getCalendarData();
         planCardsData = getPlanCards(); sourcesData = getSources(); bioAgentsData = getBioAgents();
         
+        console.log(`📊 Bio Agents: ${bioAgentsData.length}`);
+        console.log(`🔄 Stages: ${stagesData.length}`);
+        
         buildSpreadSection(); buildEconomicSection(); buildIPMSection(); buildFAQSection();
         buildResistanceSection(); buildSources();
         
@@ -902,7 +904,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
         
         buildStages(); populateTable(); buildPlanCards(); updAll();
-        renderBioCategoryFilter(); renderBioCards('all'); renderBioModals();
+        
+        // ✅ إصلاح: تشغيل مكتبة الأعداء الحيوية
+        renderBioCategoryFilter();
+        renderBioCards('all');
+        renderBioModals();
+        console.log(`✅ Bio Agents rendered: ${bioAgentsData.length} agents`);
         
         document.getElementById('prevS').addEventListener('click', () => { let n = curStage - 1; if (n < 0) n = stagesData.length - 1; selS(n); });
         document.getElementById('nextS').addEventListener('click', () => { let n = curStage + 1; if (n >= stagesData.length) n = 0; selS(n); });
@@ -911,16 +918,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.addEventListener('resize', debouncedDrawChart);
         createLandingParticles();
         
-        // ✅ تهيئة المميزات المصححة
         initGestures();
         initStickyHeaders();
         updateLanguage();
         
-        // Progress Bar
         window.addEventListener('scroll', throttle(updateProgressBar, 50), { passive: true });
         updateProgressBar();
         
-        // ✅ Search input
         const searchInput = document.getElementById('searchInput');
         if (searchInput) {
             searchInput.addEventListener('input', (e) => {
@@ -934,15 +938,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
         
-        // Close FAB on outside click
         document.addEventListener('click', (e) => { if (!e.target.closest('.fab-container')) closeFab(); });
         
-        // Close modals on outside click
         document.querySelectorAll('.contact-modal, .search-modal').forEach(modal => {
             modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } });
         });
         
-        // Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
@@ -955,7 +956,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         setTimeout(() => { if (loadingOverlay) { loadingOverlay.classList.add('hidden'); setTimeout(() => loadingOverlay.style.display = 'none', 500); } }, 800);
     } catch (error) {
-        console.error(error);
+        console.error('❌ Error:', error);
         if (loadingOverlay) loadingOverlay.classList.add('hidden');
     }
 });
