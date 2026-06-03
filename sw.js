@@ -1,135 +1,227 @@
 // ============================================
-// Service Worker - Tuta Absoluta PWA
+// Service Worker - Tuta Absoluta App v3
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v1';
-const OFFLINE_URL = './index.html';
+const CACHE_NAME = 'tuta-app-v3';  // ← زود الرقم هنا كل ما تعدل
 
-const STATIC_ASSETS = [
+// الملفات الأساسية التي يجب تخزينها
+const PRECACHE_URLS = [
   './',
   './index.html',
   './style.css',
-  './js/data-loader.js',
   './script.js',
+  './admin.html',
+  './manifest.json',
+  './robots.txt',
+  './sitemap.xml'
+];
+
+// ملفات JavaScript
+const JS_FILES = [
+  './js/data-loader.js'
+];
+
+// ملفات البيانات
+const DATA_FILES = [
+  './data/faq.json',
+  './data/sources.json',
+  './data/bio-agents.json',
+  './data/spread-reasons.json',
+  './data/economic-impact.json',
   './data/thermal-model.json',
   './data/seasonal-data.json',
   './data/plan-cards.json',
-  './data/sources.json',
-  './data/faq.json',
-  './data/spread-reasons.json',
-  './data/economic-impact.json',
   './data/ipm-program.json',
-  './data/resistance.json',
-  './data/bio-agents.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css',
-  'https://fonts.googleapis.com/css2?family=Cairo:wght@200;400;600;700;800;900&family=Tajawal:wght@300;400;500;700&display=swap'
+  './data/resistance.json'
 ];
 
-// ✅ Install - Cache Static Assets
-self.addEventListener('install', (event) => {
+// ملفات الأيقونات
+const ICON_FILES = [
+  './icons/icon.svg',
+  './icons/favicon-32x32.png',
+  './icons/favicon-16x16.png',
+  './icons/apple-touch-icon.png'
+];
+
+// كل الملفات مع بعض
+const ALL_CACHE_URLS = [
+  ...PRECACHE_URLS,
+  ...JS_FILES,
+  ...DATA_FILES,
+  ...ICON_FILES
+];
+
+// ============================================
+// Install Event - تثبيت Service Worker
+// ============================================
+
+self.addEventListener('install', event => {
+  console.log('[SW] Installing new version:', CACHE_NAME);
+  
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[SW] Caching static assets...');
-      return cache.addAll(STATIC_ASSETS);
-    }).catch((err) => {
-      console.warn('[SW] Failed to cache some assets:', err);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('[SW] Caching essential files...');
+        return cache.addAll(ALL_CACHE_URLS);
+      })
+      .then(() => {
+        console.log('[SW] All files cached successfully');
+        // تفعيل النسخة الجديدة فوراً بدون انتظار إغلاق الصفحات القديمة
+        return self.skipWaiting();
+      })
+      .catch(err => {
+        console.error('[SW] Failed to cache some files:', err);
+        // لا تمنع التثبيت حتى لو فشل بعض الملفات
+      })
   );
-  self.skipWaiting();
 });
 
-// ✅ Activate - Clean Old Caches
-self.addEventListener('activate', (event) => {
+// ============================================
+// Activate Event - تنشيط Service Worker
+// ============================================
+
+self.addEventListener('activate', event => {
+  console.log('[SW] Activating new version:', CACHE_NAME);
+  
   event.waitUntil(
-    caches.keys().then((keys) => {
+    // حذف كل الكاش القديم
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => {
-          console.log('[SW] Deleting old cache:', key);
-          return caches.delete(key);
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            console.log('[SW] Deleting old cache:', cacheName);
+            return caches.delete(cacheName);
+          }
         })
       );
     })
+    .then(() => {
+      console.log('[SW] Old caches deleted');
+      // السيطرة على جميع الصفحات المفتوحة فوراً
+      return self.clients.claim();
+    })
   );
-  self.clients.claim();
 });
 
-// ✅ Fetch - Network First with Cache Fallback
-self.addEventListener('fetch', (event) => {
+// ============================================
+// Fetch Event - طلبات الشبكة
+// ============================================
+
+self.addEventListener('fetch', event => {
   const { request } = event;
-  const url = new URL(request.url);
-
-  // Skip non-GET requests
+  
+  // تجاهل الطلبات غير GET
   if (request.method !== 'GET') return;
-
-  // Skip external fonts/CDN - cache only
-  if (url.origin !== location.origin) {
+  
+  // تجاهل طلبات Chrome DevTools
+  if (request.url.includes('chrome-extension')) return;
+  
+  // استراتيجية مختلفة حسب نوع الملف
+  const url = new URL(request.url);
+  
+  // 1. ملفات البيانات - Network First (الشبكة أولاً)
+  if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        return cached || fetch(request).then((response) => {
+      fetch(request)
+        .then(response => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(request, clone);
+            });
           }
           return response;
-        }).catch(() => {
-          return caches.match(request);
-        });
+        })
+        .catch(() => {
+          return caches.match(request).then(cached => {
+            return cached || new Response('Offline', {
+              status: 503,
+              statusText: 'Service Unavailable'
+            });
+          });
+        })
+    );
+    return;
+  }
+  
+  // 2. ملفات CSS و JS - Stale While Revalidate
+  if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
+    event.respondWith(
+      caches.match(request).then(cached => {
+        const fetchPromise = fetch(request)
+          .then(response => {
+            if (response.ok) {
+              const clone = response.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(request, clone);
+              });
+            }
+            return response;
+          })
+          .catch(() => cached);
+        
+        return cached || fetchPromise;
       })
     );
     return;
   }
-
-  // Data files - Network first, cache update
-  if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => caches.match(request))
-    );
-    return;
-  }
-
-  // Navigation requests (HTML pages)
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request)
-        .catch(() => caches.match(OFFLINE_URL))
-    );
-    return;
-  }
-
-  // Default: Cache First
+  
+  // 3. كل الملفات الأخرى - Cache First (الكاش أولاً)
   event.respondWith(
-    caches.match(request).then((cached) => {
-      return cached || fetch(request).then((response) => {
+    caches.match(request).then(cached => {
+      if (cached) {
+        return cached;
+      }
+      return fetch(request).then(response => {
         if (response.ok) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(request, clone);
+          });
         }
         return response;
       });
     }).catch(() => {
-      return new Response('Offline', { status: 503, statusText: 'Offline' });
+      // صفحة Offline مخصصة
+      if (request.headers.get('accept').includes('text/html')) {
+        return caches.match('./index.html');
+      }
+      return new Response('Offline', {
+        status: 503,
+        statusText: 'Service Unavailable'
+      });
     })
   );
 });
 
-// ✅ Push Notifications (Optional)
-self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : { title: 'توتا أبسولوتا', body: 'تحديث جديد متاح' };
-  event.waitUntil(
-    self.registration.showNotification(data.title, {
-      body: data.body,
-      icon: './icons/icon-192.png',
-      badge: './icons/icon-96.png',
-      lang: 'ar',
-      dir: 'rtl'
-    })
-  );
+// ============================================
+// Message Event - استقبال رسائل من الصفحة
+// ============================================
+
+self.addEventListener('message', event => {
+  if (event.data === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data === 'CLEAR_CACHE') {
+    caches.keys().then(cacheNames => {
+      cacheNames.forEach(cacheName => {
+        caches.delete(cacheName);
+      });
+    });
+  }
 });
+
+// ============================================
+// تحديث تلقائي كل ساعة
+// ============================================
+
+self.addEventListener('install', event => {
+  // افحص وجود تحديث كل ساعة
+  self.registration.addEventListener('updatefound', () => {
+    const newWorker = self.registration.installing;
+    console.log('[SW] Update found!');
+  });
+});
+
+console.log('[SW] Service Worker loaded successfully');

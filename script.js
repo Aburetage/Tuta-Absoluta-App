@@ -1,5 +1,10 @@
 // ============================================
-// Global Variables & Data
+// Tuta Absoluta App - Script.js
+// الإصدار المحسن مع تحديث تلقائي
+// ============================================
+
+// ============================================
+// Global Variables
 // ============================================
 
 let curTemp = 25, curStage = -1, autoInt = null, isAuto = false;
@@ -151,7 +156,7 @@ function updDaysBars(d) {
 }
 
 // ============================================
-// Chart Functions (Optimized with Debounce)
+// Chart Functions
 // ============================================
 
 function drawRoundedRect(ctx, x, y, w, h, r) {
@@ -409,9 +414,9 @@ function populateTable() {
     const cData = calendarDataObj;
     
     const rows = [
-        { label: ' متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
+        { label: '🌡️ متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
         { label: '💧 الرطوبة النسبية (%)', data: cData.humidities || [], type: 'hum' },
-        { label: '🦋 شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
+        { label: ' شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
         { label: '🔄 عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
         { label: '🪤 مصائد فرمونية (للمراقبة)', data: cData.traps || [], type: 'trap' },
         { label: '🦠 المكافحة البيولوجية', data: cData.bioStatus || [], type: 'bio' },
@@ -451,7 +456,7 @@ function populateTable() {
                 td.textContent = val;
             } else if (row.type === 'bio' || row.type === 'chem') {
                 let emoji = '🛑', bg = '#2d3748', color = '#a0aec0';
-                if (val.includes('مثالية') || val.includes('ضرورية')) { emoji = ''; bg = '#166534'; color = '#bbf7d0'; } 
+                if (val.includes('مثالية') || val.includes('ضرورية')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
                 else if (val.includes('نشطة')) { emoji = '✅'; bg = '#14532d'; color = '#86efac'; } 
                 else if (val.includes('موصى بها')) { emoji = '✅'; bg = '#064e3b'; color = '#6ee7b7'; } 
                 else if (val.includes('عند الدفء')) { emoji = '⚠️'; bg = '#78350f'; color = '#fcd34d'; }
@@ -459,7 +464,7 @@ function populateTable() {
             } else if (row.type === 'soil') {
                 let emoji = '⛔', bg = '#2d3748', color = '#a0aec0';
                 if (val.includes('تعقيم شمسي')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
-                else if (val.includes('حرث')) { emoji = '🌱'; bg = '#14532d'; color = '#86efac'; }
+                else if (val.includes('حرث')) { emoji = ''; bg = '#14532d'; color = '#86efac'; }
                 td.innerHTML = `<span class="control-badge" style="background:${bg};color:${color};">${emoji} ${val}</span>`;
             }
             tr.appendChild(td);
@@ -553,7 +558,7 @@ function filterSeason(season, btn) {
 }
 
 // ============================================
-// Sources Function
+// Build Sources
 // ============================================
 
 function buildSources() {
@@ -600,7 +605,7 @@ function buildSpreadSection() {
             </div>
             <div class="bio-body">
                 <p>${r.description}</p>
-                <h4>🔑 الأثر</h4>
+                <h4> الأثر</h4>
                 <p>${r.impact}</p>
             </div>
         `;
@@ -646,7 +651,7 @@ function buildEconomicSection() {
                 </div>
                 <div class="bio-body">
                     <p>${c.description}</p>
-                    <h4>💰 الأثر المالي</h4>
+                    <h4> الأثر المالي</h4>
                     <p>${c.financialImpact}</p>
                 </div>
             `;
@@ -810,20 +815,6 @@ function toggleFAQ(el) {
     if (!isOpen) {
         item.classList.add('open');
         el.setAttribute('aria-expanded', 'true');
-    }
-}
-
-function toggleBioCard(el) {
-    const o = el.classList.contains('open');
-    document.querySelectorAll('.bio-card').forEach(c => c.classList.remove('open'));
-    if (!o) {
-        el.classList.add('open');
-        setTimeout(() => { 
-            const r = el.getBoundingClientRect(); 
-            if (r.top < 0 || r.bottom > window.innerHeight) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
-            }
-        }, 300);
     }
 }
 
@@ -1051,11 +1042,11 @@ const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوس�
 const toxicityText = { high: 'شديد السمية', medium: 'متوسط', safe: 'آمن' };
 
 const categoryMap = {
-    'all': { name: ' جميع الأعداء الحيوية' },
-    'egg-parasitoid': { name: ' طفيلات البيض' },
+    'all': { name: '📋 جميع الأعداء الحيوية' },
+    'egg-parasitoid': { name: '🐝 طفيلات البيض' },
     'larval-parasitoid': { name: '🐝 طفيلات اليرقات' },
     'predator': { name: '🪲 المفترسات' },
-    'fungi': { name: ' الفطريات الممرضة' },
+    'fungi': { name: '🍄 الفطريات الممرضة' },
     'nematode': { name: '🪱 النيماتودا الممرضة' }
 };
 
@@ -1168,13 +1159,13 @@ function renderBioModals() {
                 <div class="modal-body-content">
                     <h4>🔬 التصنيف العلمي</h4>
                     <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
-                    <h4>🦠 النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
+                    <h4> النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
                     <h4>👁️ الوصف المورفولوجي</h4>
                     <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
                     <h4> الأهمية في المكافحة</h4>
                     <div class="importance-grid">
                         <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
-                        <div class="importance-item ${agent.importance.larvae}"><span> مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
+                        <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
                         <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
                         <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
                     </div>
@@ -1188,7 +1179,7 @@ function renderBioModals() {
                     <div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div>
                     <h4>🌡️ مدة الدورة حسب الحرارة</h4>
                     <table class="info-table"><tr><td>عند 20°م</td><td>${agent.cycleDuration.c20}</td></tr><tr><td>عند 25°م</td><td>${agent.cycleDuration.c25}</td></tr><tr><td>عند 30°م</td><td>${agent.cycleDuration.c30}</td></tr></table>
-                    <h4> السلوك الحيوي المميز</h4><p>${agent.behavior}</p>
+                    <h4>🧠 السلوك الحيوي المميز</h4><p>${agent.behavior}</p>
                 </div>
             </div>`;
             
@@ -1197,7 +1188,7 @@ function renderBioModals() {
                 <div class="modal-body-content">
                     <h4>🌡️ الظروف المثالية</h4>
                     <div class="conditions-grid">
-                        <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
+                        <div class="condition-item"><div class="cond-label">️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
                         <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
                         <div class="condition-item"><div class="cond-label">☀️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
                         <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
@@ -1210,9 +1201,9 @@ function renderBioModals() {
                         <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
                         <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
                     </div>
-                    <h4>🇪 التواجد الحالي في مصر</h4>
+                    <h4>🇪🇬 التواجد الحالي في مصر</h4>
                     <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
-                    ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
+                    ${agent.plants.length > 0 ? `<h4> النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
                 </div>
             </div>`;
             
@@ -1328,7 +1319,7 @@ document.addEventListener('mousedown', () => {
 });
 
 // ============================================
-// Main Initialization (Optimized)
+// Main Initialization
 // ============================================
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -1409,20 +1400,28 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         createLandingParticles();
 
+        // ============================================
         // Service Worker - تحديث تلقائي بدون رسالة مزعجة
+        // ============================================
+        
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
                         
-                        // ✅ التحقق من التحديثات وتحديث تلقائي بدون رسالة
+                        // التحقق من وجود تحديث كل 5 دقائق
+                        setInterval(() => {
+                            reg.update();
+                        }, 5 * 60 * 1000);
+                        
+                        // تحديث فوري عند اكتشاف نسخة جديدة
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 New version available, updating...');
                                     // تحديث تلقائي بدون رسالة
-                                    console.log('🔄 New version available, reloading...');
                                     window.location.reload();
                                 }
                             });
@@ -1431,7 +1430,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .catch(err => console.log('❌ SW failed:', err)); 
             }); 
             
-            // ✅ تحديث تلقائي عند وجود controller جديد (بدون رسالة)
+            // تحديث تلقائي عند تغيير الـ controller (بدون رسالة)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
