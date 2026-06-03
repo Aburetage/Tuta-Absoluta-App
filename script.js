@@ -1,6 +1,6 @@
 // ============================================
 // Tuta Absoluta App - Script.js
-// الإصدار المحسن مع تحديث تلقائي بدون رسالة
+// النسخة Pro الكاملة - اكاديمية المهندس الزراعي
 // ============================================
 
 // ============================================
@@ -17,6 +17,79 @@ let calendarDataObj = {};
 let planCardsData = [];
 let sourcesData = [];
 let bioAgentsData = [];
+
+// Multi-language support
+let currentLang = localStorage.getItem('tuta-lang') || 'ar';
+const translations = {
+    ar: {
+        search: 'البحث الذكي',
+        searchPlaceholder: 'ابحث عن كائن حيوي، مبيد، مرحلة...',
+        all: 'الكل',
+        bio: 'أعداء حيوية',
+        stages: 'مراحل الحياة',
+        ipm: 'مكافحة',
+        faq: 'أسئلة شائعة',
+        startTyping: 'ابدأ الكتابة للبحث...',
+        noResults: 'لا توجد نتائج',
+        resultsFound: 'نتائج',
+        home: 'الرئيسية',
+        biology: 'البيولوجيا',
+        control: 'المكافحة',
+        enemies: 'الأعداء',
+        contact: 'تواصل',
+        whatsapp: 'واتساب',
+        email: 'البريد الإلكتروني',
+        twitter: 'Twitter',
+        top: 'أعلى',
+        pullToRefresh: 'اسحب للتحديث',
+        refreshing: 'جاري التحديث...',
+        skip: 'تخطي',
+        next: 'التالي',
+        getStarted: 'ابدأ',
+        onboarding1Title: 'أهلاً بك في اكاديمية المهندس الزراعي',
+        onboarding1Desc: 'دليلك الشامل لمكافحة آفة توتا أبسولوتا في مصر',
+        onboarding2Title: 'تصفح سهل وسريع',
+        onboarding2Desc: 'استخدم الشريط السفلي للتنقل بين الأقسام أو اسحب يميناً ويساراً',
+        onboarding3Title: 'بحث ذكي',
+        onboarding3Desc: 'اضغط على أيقونة البحث للعثور على أي معلومة بسرعة',
+        onboarding4Title: 'جاهز للبدء!',
+        onboarding4Desc: 'استمتع بتجربة تفاعلية شاملة مع أحدث التقنيات الزراعية'
+    },
+    en: {
+        search: 'Smart Search',
+        searchPlaceholder: 'Search for bio-agent, pesticide, stage...',
+        all: 'All',
+        bio: 'Bio-agents',
+        stages: 'Stages',
+        ipm: 'IPM',
+        faq: 'FAQ',
+        startTyping: 'Start typing to search...',
+        noResults: 'No results found',
+        resultsFound: 'results found',
+        home: 'Home',
+        biology: 'Biology',
+        control: 'Control',
+        enemies: 'Enemies',
+        contact: 'Contact',
+        whatsapp: 'WhatsApp',
+        email: 'Email',
+        twitter: 'Twitter',
+        top: 'Top',
+        pullToRefresh: 'Pull to refresh',
+        refreshing: 'Refreshing...',
+        skip: 'Skip',
+        next: 'Next',
+        getStarted: 'Get Started',
+        onboarding1Title: 'Welcome to Agricultural Engineer Academy',
+        onboarding1Desc: 'Your comprehensive guide to combat Tuta Absoluta in Egypt',
+        onboarding2Title: 'Easy and Fast Navigation',
+        onboarding2Desc: 'Use bottom navigation or swipe left/right between sections',
+        onboarding3Title: 'Smart Search',
+        onboarding3Desc: 'Tap search icon to find any information quickly',
+        onboarding4Title: 'Ready to Start!',
+        onboarding4Desc: 'Enjoy an interactive experience with latest agricultural technologies'
+    }
+};
 
 // ============================================
 // Performance Utilities
@@ -45,6 +118,63 @@ function throttle(func, limit) {
             setTimeout(() => inThrottle = false, limit);
         }
     };
+}
+
+// ============================================
+// Translation Function
+// ============================================
+
+function t(key) {
+    return translations[currentLang][key] || translations['ar'][key] || key;
+}
+
+function updateLanguage() {
+    document.documentElement.lang = currentLang;
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+    
+    // Update search modal
+    const searchHeader = document.querySelector('.search-header h3');
+    if (searchHeader) searchHeader.innerHTML = `<i class="fas fa-search" aria-hidden="true"></i> ${t('search')}`;
+    
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.placeholder = t('searchPlaceholder');
+    
+    // Update bottom nav
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    const navTexts = [t('home'), t('biology'), t('control'), t('enemies'), t('contact')];
+    bottomNavItems.forEach((item, i) => {
+        const span = item.querySelector('span');
+        if (span && navTexts[i]) span.textContent = navTexts[i];
+    });
+    
+    // Update FAB menu
+    const fabItems = document.querySelectorAll('.fab-menu-item span');
+    const fabTexts = [t('whatsapp'), t('email'), t('twitter'), t('top')];
+    fabItems.forEach((item, i) => {
+        if (fabTexts[i]) item.textContent = fabTexts[i];
+    });
+    
+    // Update pull to refresh
+    const ptr = document.querySelector('.pull-to-refresh span');
+    if (ptr) ptr.textContent = t('pullToRefresh');
+    
+    localStorage.setItem('tuta-lang', currentLang);
+}
+
+// ============================================
+// Haptic Feedback
+// ============================================
+
+function haptic(pattern = 10) {
+    if (navigator.vibrate) {
+        navigator.vibrate(pattern);
+    }
+}
+
+function hapticButton(element) {
+    haptic(10);
+    element.classList.add('haptic');
+    setTimeout(() => element.classList.remove('haptic'), 150);
 }
 
 // ============================================
@@ -417,7 +547,7 @@ function populateTable() {
         { label: '🌡️ متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
         { label: '💧 الرطوبة النسبية (%)', data: cData.humidities || [], type: 'hum' },
         { label: '🦋 شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
-        { label: ' عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
+        { label: '🔄 عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
         { label: '🪤 مصائد فرمونية (للمراقبة)', data: cData.traps || [], type: 'trap' },
         { label: '🦠 المكافحة البيولوجية', data: cData.bioStatus || [], type: 'bio' },
         { label: '💊 المكافحة الكيميائية', data: cData.chemStatus || [], type: 'chem' },
@@ -464,7 +594,7 @@ function populateTable() {
             } else if (row.type === 'soil') {
                 let emoji = '⛔', bg = '#2d3748', color = '#a0aec0';
                 if (val.includes('تعقيم شمسي')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
-                else if (val.includes('حرث')) { emoji = ''; bg = '#14532d'; color = '#86efac'; }
+                else if (val.includes('حرث')) { emoji = '🌱'; bg = '#14532d'; color = '#86efac'; }
                 td.innerHTML = `<span class="control-badge" style="background:${bg};color:${color};">${emoji} ${val}</span>`;
             }
             tr.appendChild(td);
@@ -513,6 +643,7 @@ function showPlanCard(period, btn) {
     });
     btn.classList.add('active');
     btn.setAttribute('aria-pressed', 'true');
+    hapticButton(btn);
     
     const cards = document.querySelectorAll('.plan-card');
     cards.forEach(c => { 
@@ -538,6 +669,7 @@ function filterSeason(season, btn) {
     });
     btn.classList.add('active');
     btn.setAttribute('aria-pressed', 'true');
+    hapticButton(btn);
     
     const allMonths = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     let visible;
@@ -736,6 +868,7 @@ function buildIPMSection() {
             tabsContainer.addEventListener('click', function(e) {
                 const tab = e.target.closest('.ipm-tab');
                 if (!tab) return;
+                hapticButton(tab);
                 
                 const target = tab.dataset.tab;
                 document.querySelectorAll('.ipm-tab').forEach(t => { 
@@ -805,6 +938,7 @@ function buildResistanceSection() {
 function toggleFAQ(el) {
     const item = el.parentElement;
     const isOpen = item.classList.contains('open');
+    haptic(10);
     
     document.querySelectorAll('.faq-item').forEach(x => { 
         x.classList.remove('open'); 
@@ -822,6 +956,7 @@ function toggleAccordion(el, containerId) {
     const card = el.closest('.bio-card');
     const o = card.classList.contains('open');
     const c = document.getElementById(containerId);
+    haptic(10);
     c.querySelectorAll('.bio-card').forEach(x => x.classList.remove('open'));
     if (!o) {
         card.classList.add('open');
@@ -842,6 +977,7 @@ function filterBioCards(category, containerId, btn) {
     });
     btn.classList.add('active');
     btn.setAttribute('aria-pressed', 'true');
+    hapticButton(btn);
     
     const container = document.getElementById(containerId);
     const cards = container.querySelectorAll('.bio-card');
@@ -901,6 +1037,21 @@ function showSingleSection(groupId, clickedItem) {
     if (groupId === 'seasonal-heatmap') { 
         setTimeout(() => { drawChart(); }, 400); 
     }
+    
+    // Update bottom nav active state
+    updateBottomNavActive(groupId);
+}
+
+function updateBottomNavActive(groupId) {
+    const bottomNavItems = document.querySelectorAll('.bottom-nav-item');
+    bottomNavItems.forEach(item => item.classList.remove('active'));
+    
+    let activeItem = null;
+    if (groupId === 'biology') activeItem = document.querySelector('[data-section="biology"]');
+    else if (groupId === 'ipm') activeItem = document.querySelector('[data-section="ipm"]');
+    else if (groupId === 'bioagents') activeItem = document.querySelector('[data-section="bioagents"]');
+    
+    if (activeItem) activeItem.classList.add('active');
 }
 
 function goHome() {
@@ -917,6 +1068,10 @@ function goHome() {
     updateNavButtons();
     closeDropdown();
     document.getElementById('landingOverlay').classList.remove('hidden');
+    
+    // Reset bottom nav
+    document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
+    document.querySelector('[data-section="home"]').classList.add('active');
 }
 
 // ============================================
@@ -928,6 +1083,8 @@ function toggleDropdown() {
     const overlay = document.getElementById('menuOverlay');
     const btn = document.getElementById('navMenuBtn');
     const isOpen = panel.classList.contains('open');
+    
+    haptic(15);
     
     if (isOpen) { 
         closeDropdown(); 
@@ -954,6 +1111,7 @@ function closeDropdown() {
 // ============================================
 
 function navigateGroup(direction) {
+    haptic(10);
     if (!currentSingleGroup) {
         if (direction === 1) showSingleSection(groupOrder[0], document.querySelector(`.dropdown-item[data-group="${groupOrder[0]}"]`));
         else showSingleSection(groupOrder[groupOrder.length - 1], document.querySelector(`.dropdown-item[data-group="${groupOrder[groupOrder.length - 1]}"]`));
@@ -1007,16 +1165,30 @@ function createLandingParticles() {
 }
 
 function closeLanding() {
+    haptic(20);
     document.getElementById('landingOverlay').classList.add('hidden');
     const biologyItem = document.querySelector('.dropdown-item[data-group="biology"]');
     showSingleSection('biology', biologyItem);
+    
+    // Show onboarding if first time
+    if (!localStorage.getItem('tuta-onboarding-shown')) {
+        setTimeout(() => {
+            showOnboarding();
+            localStorage.setItem('tuta-onboarding-shown', 'true');
+        }, 800);
+    }
+    
+    // Show gesture hint
+    setTimeout(() => {
+        showGestureHint();
+    }, 2000);
 }
 
 // ============================================
 // Bio Agents Encyclopedia
 // ============================================
 
-const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
+const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: '🦋 الكاملة' };
 const targetStatusText = { effective: 'فعّال', partial: 'جزئي', none: 'لا يؤثر' };
 const targetClass = { effective: 'active-target', partial: 'partial-target', none: 'inactive-target' };
 
@@ -1026,7 +1198,7 @@ const badgeMap = {
     'preventive-curative': { text: '🛡️💊 وقائي وعلاجي', class: 'badge-green' },
     'heat-tolerant': { text: '🌡️ متحمل للحرارة', class: 'badge-green' },
     'egypt-native': { text: '🇪🇬 متوطن في مصر', class: 'badge-purple' },
-    'pesticide-sensitive': { text: '️ حساس للمبيدات', class: 'badge-red' },
+    'pesticide-sensitive': { text: '⚠️ حساس للمبيدات', class: 'badge-red' },
     'bio-safe': { text: '✅ آمن مع المبيدات الحيوية', class: 'badge-green' },
     'needs-humidity': { text: '💧 يحتاج رطوبة', class: 'badge-amber' },
     'needs-high-humidity': { text: '💧 يحتاج رطوبة عالية', class: 'badge-red' },
@@ -1059,6 +1231,7 @@ function openModal(modalId) {
 }
 
 function openBioModal(agentId) { 
+    haptic(15);
     openModal(`modal-${agentId}`); 
 }
 
@@ -1159,15 +1332,15 @@ function renderBioModals() {
                 <div class="modal-body-content">
                     <h4>🔬 التصنيف العلمي</h4>
                     <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
-                    <h4> النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
+                    <h4>🦠 النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
                     <h4>👁️ الوصف المورفولوجي</h4>
                     <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
                     <h4>📊 الأهمية في المكافحة</h4>
                     <div class="importance-grid">
-                        <div class="importance-item ${agent.importance.egg}"><span> مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
+                        <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
                         <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
                         <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
-                        <div class="importance-item ${agent.importance.adult}"><span> مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
+                        <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
                     </div>
                 </div>
             </div>`;
@@ -1186,11 +1359,11 @@ function renderBioModals() {
         const usage = `
             <div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel">
                 <div class="modal-body-content">
-                    <h4>️ الظروف المثالية</h4>
+                    <h4>🌡️ الظروف المثالية</h4>
                     <div class="conditions-grid">
                         <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
                         <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
-                        <div class="condition-item"><div class="cond-label">️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
+                        <div class="condition-item"><div class="cond-label">☀️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
                         <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
                     </div>
                     <h4>🗺️ التحمل في الظروف المصرية</h4>
@@ -1201,7 +1374,7 @@ function renderBioModals() {
                         <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
                         <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
                     </div>
-                    <h4>🇬 التواجد الحالي في مصر</h4>
+                    <h4>🇪🇬 التواجد الحالي في مصر</h4>
                     <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
                     ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
                 </div>
@@ -1255,6 +1428,8 @@ function switchTab(agentId, tabName, event) {
     const modal = document.getElementById(`modal-${agentId}`);
     if (!modal) return;
     
+    haptic(10);
+    
     modal.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
     modal.querySelectorAll('.tab-btn').forEach(tb => { 
         tb.classList.remove('active'); 
@@ -1280,7 +1455,455 @@ function filterBioByCategory(category, btn) {
     });
     btn.classList.add('active');
     btn.setAttribute('aria-pressed', 'true');
+    hapticButton(btn);
     renderBioCards(category);
+}
+
+// ============================================
+// Progress Bar
+// ============================================
+
+function updateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    if (!progressBar || !progressFill) return;
+    
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    
+    progressFill.style.width = `${progress}%`;
+}
+
+// ============================================
+// Pull-to-Refresh
+// ============================================
+
+let pullStartY = 0;
+let pullDistance = 0;
+let isPulling = false;
+
+function initPullToRefresh() {
+    const ptr = document.getElementById('pullToRefresh');
+    if (!ptr) return;
+    
+    document.addEventListener('touchstart', (e) => {
+        if (window.scrollY === 0) {
+            pullStartY = e.touches[0].clientY;
+            isPulling = true;
+        }
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (!isPulling) return;
+        
+        pullDistance = e.touches[0].clientY - pullStartY;
+        
+        if (pullDistance > 0 && window.scrollY === 0) {
+            const opacity = Math.min(pullDistance / 100, 1);
+            ptr.style.opacity = opacity;
+            ptr.style.transform = `translateY(${Math.min(pullDistance - 60, 0)}px)`;
+            
+            if (pullDistance > 80) {
+                ptr.classList.add('visible');
+            }
+        }
+    });
+    
+    document.addEventListener('touchend', () => {
+        if (pullDistance > 80) {
+            triggerRefresh();
+        }
+        
+        ptr.classList.remove('visible');
+        ptr.style.transform = 'translateY(-100%)';
+        ptr.style.opacity = 0;
+        isPulling = false;
+        pullDistance = 0;
+    });
+}
+
+function triggerRefresh() {
+    const ptr = document.getElementById('pullToRefresh');
+    haptic(30);
+    
+    ptr.classList.add('refreshing');
+    ptr.querySelector('span').textContent = t('refreshing');
+    
+    // Simulate refresh
+    setTimeout(() => {
+        // Reload data
+        location.reload();
+    }, 1000);
+}
+
+// ============================================
+// Onboarding Tour
+// ============================================
+
+let currentOnboardingSlide = 1;
+const totalOnboardingSlides = 4;
+
+function showOnboarding() {
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        updateOnboardingSlide();
+    }
+}
+
+function updateOnboardingSlide() {
+    document.querySelectorAll('.onboarding-slide').forEach(slide => {
+        slide.classList.remove('active');
+    });
+    document.querySelectorAll('.onboarding-dot').forEach(dot => {
+        dot.classList.remove('active');
+    });
+    
+    const currentSlide = document.querySelector(`.onboarding-slide[data-slide="${currentOnboardingSlide}"]`);
+    if (currentSlide) currentSlide.classList.add('active');
+    
+    const currentDot = document.querySelectorAll('.onboarding-dot')[currentOnboardingSlide - 1];
+    if (currentDot) currentDot.classList.add('active');
+    
+    // Update next button text
+    const nextBtn = document.querySelector('.onboarding-next');
+    if (nextBtn) {
+        if (currentOnboardingSlide === totalOnboardingSlides) {
+            nextBtn.innerHTML = `${t('getStarted')} <i class="fas fa-check"></i>`;
+        } else {
+            nextBtn.innerHTML = `${t('next')} <i class="fas fa-arrow-left"></i>`;
+        }
+    }
+}
+
+function nextOnboarding() {
+    haptic(15);
+    if (currentOnboardingSlide < totalOnboardingSlides) {
+        currentOnboardingSlide++;
+        updateOnboardingSlide();
+    } else {
+        skipOnboarding();
+    }
+}
+
+function skipOnboarding() {
+    const overlay = document.getElementById('onboardingOverlay');
+    if (overlay) {
+        overlay.style.display = 'none';
+    }
+    currentOnboardingSlide = 1;
+}
+
+// ============================================
+// Smart Search
+// ============================================
+
+let currentSearchFilter = 'all';
+let searchTimeout = null;
+
+function openSearch() {
+    haptic(15);
+    const modal = document.getElementById('searchModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('searchInput').focus(), 100);
+    }
+}
+
+function closeSearch() {
+    const modal = document.getElementById('searchModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchResults').innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('startTyping')}</p></div>`;
+    }
+}
+
+function setSearchFilter(filter, btn) {
+    currentSearchFilter = filter;
+    document.querySelectorAll('.search-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    hapticButton(btn);
+    const query = document.getElementById('searchInput').value.trim();
+    if (query) performSearch(query);
+}
+
+function performSearch(query) {
+    const resultsContainer = document.getElementById('searchResults');
+    const lowerQuery = query.toLowerCase();
+    let results = [];
+    
+    if (currentSearchFilter === 'all' || currentSearchFilter === 'bio') {
+        bioAgentsData.forEach(agent => {
+            if (agent.scientificName.toLowerCase().includes(lowerQuery) || agent.arabicDesc.includes(query) || agent.bioType.includes(query)) {
+                results.push({ category: '🦠 عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc, action: () => { closeSearch(); openBioModal(agent.id); } });
+            }
+        });
+    }
+    
+    if (currentSearchFilter === 'all' || currentSearchFilter === 'stages') {
+        stagesData.forEach(stage => {
+            if (stage.name.includes(query) || stage.brief.includes(query)) {
+                results.push({ category: '🔄 مرحلة حياة', title: stage.name, desc: stage.brief, action: () => { closeSearch(); showSingleSection('biology', document.querySelector('[data-group="biology"]')); selS(stagesData.indexOf(stage)); } });
+            }
+        });
+    }
+    
+    if (currentSearchFilter === 'all' || currentSearchFilter === 'faq') {
+        const faqs = getFAQ();
+        faqs.forEach(faq => {
+            if (faq.question.includes(query) || faq.answer.includes(query)) {
+                results.push({ category: '❓ سؤال شائع', title: faq.question, desc: faq.answer.substring(0, 100) + '...', action: () => { closeSearch(); showSingleSection('faq', document.querySelector('[data-group="faq"]')); } });
+            }
+        });
+    }
+    
+    if (results.length === 0) {
+        resultsContainer.innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('noResults')}</p></div>`;
+    } else {
+        let html = `<div class="search-stats">${results.length} ${t('resultsFound')}</div>`;
+        results.slice(0, 20).forEach((result, idx) => {
+            html += `<div class="search-result-item" onclick="window.searchResults[${idx}].action()" tabindex="0">
+                <div class="search-result-category">${result.category}</div>
+                <div class="search-result-title">${highlightText(result.title, query)}</div>
+                <div class="search-result-desc">${highlightText(result.desc, query)}</div>
+            </div>`;
+        });
+        resultsContainer.innerHTML = html;
+    }
+    window.searchResults = results;
+}
+
+function highlightText(text, query) {
+    if (!query) return text;
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<span class="search-result-highlight">$1</span>');
+}
+
+// ============================================
+// Floating Action Button (FAB)
+// ============================================
+
+function toggleFab() {
+    haptic(15);
+    const fabMain = document.getElementById('fabMain');
+    const fabMenu = document.getElementById('fabMenu');
+    
+    fabMain.classList.toggle('open');
+    fabMenu.classList.toggle('open');
+}
+
+function closeFab() {
+    const fabMain = document.getElementById('fabMain');
+    const fabMenu = document.getElementById('fabMenu');
+    
+    if (fabMain) fabMain.classList.remove('open');
+    if (fabMenu) fabMenu.classList.remove('open');
+}
+
+function fabAction(action) {
+    haptic(20);
+    closeFab();
+    
+    switch(action) {
+        case 'contact':
+            openContact();
+            break;
+        case 'email':
+            window.location.href = 'mailto:aliazmy30@gmail.com';
+            break;
+        case 'twitter':
+            window.open('https://x.com/abu_retage0', '_blank');
+            break;
+        case 'top':
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            break;
+    }
+}
+
+// ============================================
+// Contact Modal
+// ============================================
+
+function openContact() {
+    haptic(15);
+    const modal = document.getElementById('contactModal');
+    if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeContact() {
+    const modal = document.getElementById('contactModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+}
+
+// ============================================
+// Bottom Navigation
+// ============================================
+
+function bottomNavAction(section) {
+    haptic(15);
+    
+    document.querySelectorAll('.bottom-nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    event.currentTarget.classList.add('active');
+    
+    switch(section) {
+        case 'home':
+            goHome();
+            break;
+        case 'biology':
+            showSingleSection('biology', document.querySelector('[data-group="biology"]'));
+            break;
+        case 'ipm':
+            showSingleSection('ipm', document.querySelector('[data-group="ipm"]'));
+            break;
+        case 'bioagents':
+            showSingleSection('bioagents', document.querySelector('[data-group="bioagents"]'));
+            break;
+        case 'contact':
+            openContact();
+            break;
+    }
+}
+
+// ============================================
+// Gesture Hints
+// ============================================
+
+function showGestureHint() {
+    if (localStorage.getItem('tuta-gesture-shown')) return;
+    
+    const hint = document.getElementById('gestureHint');
+    if (hint) {
+        hint.style.display = 'flex';
+        setTimeout(() => {
+            hint.style.display = 'none';
+            localStorage.setItem('tuta-gesture-shown', 'true');
+        }, 5000);
+    }
+}
+
+// ============================================
+// Swipe Gestures
+// ============================================
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+function initSwipeGestures() {
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 100;
+    const diff = touchStartX - touchEndX;
+    
+    // Ignore if modal is open
+    if (document.querySelector('.bio-modal.active') || 
+        document.querySelector('.search-modal.active') ||
+        document.querySelector('.contact-modal.active') ||
+        document.querySelector('.onboarding-overlay[style*="flex"]')) {
+        return;
+    }
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        haptic(10);
+        if (diff > 0) {
+            // Swipe left (next)
+            navigateGroup(1);
+        } else {
+            // Swipe right (prev)
+            navigateGroup(-1);
+        }
+    }
+}
+
+// ============================================
+// Sticky Headers
+// ============================================
+
+function initStickyHeaders() {
+    const stickyHeaders = document.querySelectorAll('.sticky-header');
+    
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.remove('scrolled');
+                } else {
+                    entry.target.classList.add('scrolled');
+                }
+            });
+        },
+        { threshold: [1], rootMargin: '-60px 0px 0px 0px' }
+    );
+    
+    stickyHeaders.forEach(header => observer.observe(header));
+}
+
+// ============================================
+// Location-Based Content
+// ============================================
+
+function detectLocation() {
+    if ('geolocation' in navigator && !localStorage.getItem('tuta-location')) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                
+                // Check if in Egypt (rough bounds)
+                if (lat >= 22 && lat <= 32 && lon >= 24 && lon <= 37) {
+                    localStorage.setItem('tuta-location', 'egypt');
+                    showToast('📍 تم اكتشاف موقعك: مصر', 'success');
+                } else {
+                    localStorage.setItem('tuta-location', 'other');
+                }
+            },
+            (error) => {
+                console.log('Location error:', error);
+            },
+            { timeout: 5000 }
+        );
+    }
+}
+
+// ============================================
+// Toast Notifications
+// ============================================
+
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icons = { success: 'check-circle', error: 'times-circle', warning: 'exclamation-circle', info: 'info-circle' };
+    toast.innerHTML = `<i class="fas fa-${icons[type]}"></i><span>${message}</span>`;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-100%)';
+        setTimeout(() => toast.remove(), 300);
+    }, 3500);
 }
 
 // ============================================
@@ -1290,6 +1913,8 @@ function filterBioByCategory(category, btn) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeDropdown();
+        closeSearch();
+        closeContact();
         document.querySelectorAll('.bio-modal.active').forEach(m => { 
             m.classList.remove('active'); 
             document.body.style.overflow = ''; 
@@ -1303,6 +1928,11 @@ document.addEventListener('keydown', function(e) {
     
     if (e.key === 'Tab') {
         document.body.classList.add('keyboard-user');
+    }
+    
+    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
     }
     
     if (e.key === 'Enter' || e.key === ' ') {
@@ -1399,29 +2029,69 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.addEventListener('resize', debouncedDrawChart);
 
         createLandingParticles();
-
-        // ============================================
-        // Service Worker - تحديث تلقائي بدون أي رسالة
-        // ============================================
         
+        // Initialize new features
+        initPullToRefresh();
+        initSwipeGestures();
+        initStickyHeaders();
+        
+        // Progress bar
+        window.addEventListener('scroll', throttle(updateProgressBar, 100));
+        updateProgressBar();
+        
+        // Search input
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const query = e.target.value.trim();
+                if (query.length < 2) {
+                    document.getElementById('searchResults').innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('startTyping')}</p></div>`;
+                    return;
+                }
+                searchTimeout = setTimeout(() => performSearch(query), 300);
+            });
+        }
+        
+        // Language
+        updateLanguage();
+        
+        // Location detection
+        setTimeout(detectLocation, 3000);
+        
+        // Close FAB on outside click
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.fab-container')) {
+                closeFab();
+            }
+        });
+        
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay, .contact-modal, .search-modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Service Worker - تحديث تلقائي بدون أي رسالة
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
                         
-                        // فحص التحديثات كل دقيقتين
                         setInterval(() => {
                             reg.update();
                         }, 2 * 60 * 1000);
                         
-                        // تحديث تلقائي عند اكتشاف نسخة جديدة
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     console.log('🔄 New version ready - auto updating...');
-                                    // إعادة تحميل تلقائية بدون أي رسالة
                                     window.location.reload();
                                 }
                             });
@@ -1430,7 +2100,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .catch(err => console.log('❌ SW failed:', err)); 
             }); 
             
-            // تحديث تلقائي عند تغيير الـ controller (بدون رسالة)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
@@ -1450,7 +2119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 800);
         
     } catch (error) {
-        console.error(' Error initializing application:', error);
+        console.error('❌ Error initializing application:', error);
         if (loadingOverlay) { 
             loadingOverlay.classList.add('hidden'); 
             setTimeout(() => loadingOverlay.style.display = 'none', 500); 
