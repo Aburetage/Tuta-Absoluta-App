@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f12">
+    <title>لوحة إدارة توتا أبسولوتا - Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0b0f12;
+            --surface: #151a20;
+            --surface2: #1c2128;
+            --surface3: #252b33;
+            --border: #2a3038;
+            --text: #e6edf3;
+            --text2: #9ba9b6;
+            --accent: #e74c3c;
+            --plan-accent: #27ae60;
+            --plan-accent2: #2ecc71;
+            --amber: #f39c12;
+            --blue: #3498db;
+            --purple: #9b59b6;
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+        [data-theme="light"] {
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --surface2: #f8f9fa;
+            --surface3: #e9ecef;
+            --border: #dee2e6;
+            --text: #212529;
+            --text2: #6c757d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+        h1, h2, h3, h4 { font-family: 'Cairo', sans-serif; font-weight: 700; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        .header-right, .header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.2rem;
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+        }
+        [data-theme="light"] .logo { color: var(--text); }
+        .logo i { color: var(--plan-accent); font-size: 1.5rem; }
+        .version-badge {
+            background: linear-gradient(135deg, var(--plan-accent), var(--blue));
+            color: #fff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        .file-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+        .file-selector select {
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+        }
+        .file-selector select option { background: var(--surface); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .btn-primary { background: var(--plan-accent); color: #000; border-color: var(--plan-accent); }
+        .btn-primary:hover { background: var(--plan-accent2); }
+        .btn-danger { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .btn-amber { background: var(--amber); color: #000; border-color: var(--amber); }
+        .btn-blue { background: var(--blue); color: #fff; border-color: var(--blue); }
+        .btn-ghost { background: transparent; }
+        .btn-icon { width: 40px; height: 40px; padding: 0; justify-content: center; }
+        .btn-sm { padding: 0.4rem 0.8rem; font-size: 0.78rem; }
+        .toolbar {
+            background: var(--surface2);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .toolbar-right, .toolbar-left {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-wrapper { position: relative; }
+        .search-input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.9rem;
+            width: 250px;
+            transition: all 0.3s;
+        }
+        .search-input:focus { outline: none; border-color: var(--plan-accent); width: 300px; }
+        .search-wrapper i {
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text2);
+        }
+        .stats-bar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text2);
+        }
+        .stat-item strong { color: #fff; font-family: 'Cairo', sans-serif; }
+        [data-theme="light"] .stat-item strong { color: var(--text); }
+        .stat-item i { color: var(--plan-accent); }
+        .autosave-indicator {
+            margin-right: auto;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--plan-accent2);
+        }
+        .autosave-indicator .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--plan-accent2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .main { padding: 1.5rem; max-width: 1600px; margin: 0 auto; }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1rem;
+        }
+        @media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } }
+        .visual-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .visual-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--plan-accent);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        .card-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface2);
+        }
+        .card-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: rgba(39,174,96,0.15);
+            color: var(--plan-accent2);
+            flex-shrink: 0;
+        }
+        .card-title-area { flex: 1; min-width: 0; }
+        .card-title {
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        [data-theme="light"] .card-title { color: var(--text); }
+        .card-subtitle { font-size: 0.75rem; color: var(--text2); }
+        .card-badge {
+            background: var(--surface3);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: var(--plan-accent2);
+            white-space: nowrap;
+        }
+        .card-body {
+            padding: 1rem;
+            color: var(--text2);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            max-height: 80px;
+            overflow: hidden;
+            position: relative;
+        }
+        .card-body::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 30px;
+            background: linear-gradient(transparent, var(--surface));
+        }
+        .card-footer {
+            padding: 0.8rem 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface2);
+        }
+        .card-actions { display: flex; gap: 0.4rem; }
+        .card-action {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .card-action:hover { background: var(--surface3); color: var(--text); }
+        .card-action.edit:hover { color: var(--blue); border-color: var(--blue); }
+        .card-action.copy:hover { color: var(--purple); border-color: var(--purple); }
+        .card-action.delete:hover { color: var(--accent); border-color: var(--accent); }
+        .add-card {
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+        .add-card:hover {
+            border-color: var(--plan-accent);
+            background: rgba(39,174,96,0.05);
+        }
+        .add-card i { font-size: 2.5rem; color: var(--plan-accent); margin-bottom: 1rem; }
+        .add-card span { color: var(--text2); font-weight: 600; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface2);
+        }
+        .modal-title {
+            font-size: 1.2rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        [data-theme="light"] .modal-title { color: var(--text); }
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .modal-close:hover { background: var(--accent); color: #fff; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; }
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            background: var(--surface2);
+        }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+        .form-field { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+        .form-field.full { grid-column: 1 / -1; }
+        .form-field label {
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+        }
+        .form-field label .required { color: var(--accent); }
+        .form-field input, .form-field textarea, .form-field select {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            color: var(--text);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+        }
+        .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+            outline: none; border-color: var(--plan-accent);
+        }
+        .form-field textarea { min-height: 100px; resize: vertical; font-family: inherit; line-height: 1.6; }
+        .form-field .hint { font-size: 0.75rem; color: var(--text2); }
+        .form-section {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+        }
+        .form-section-title {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        [data-theme="light"] .form-section-title { color: var(--text); }
+        .toast-container { position: fixed; top: 80px; left: 1.5rem; z-index: 2000; display: flex; flex-direction: column; gap: 0.5rem; }
+        .toast {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            animation: slideIn 0.3s ease;
+            min-width: 280px;
+        }
+        @keyframes slideIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast.success { border-right: 4px solid var(--plan-accent2); }
+        .toast.error { border-right: 4px solid var(--accent); }
+        .toast.warning { border-right: 4px solid var(--amber); }
+        .toast.info { border-right: 4px solid var(--blue); }
+        .toast i { font-size: 1.2rem; }
+        .toast.success i { color: var(--plan-accent2); }
+        .toast.error i { color: var(--accent); }
+        .toast.warning i { color: var(--amber); }
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .confirm-overlay.active { display: flex; }
+        .confirm-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        .confirm-box i { font-size: 3rem; color: var(--amber); margin-bottom: 1rem; }
+        .confirm-box h3 { color: #fff; margin-bottom: 0.5rem; }
+        [data-theme="light"] .confirm-box h3 { color: var(--text); }
+        .confirm-box p { color: var(--text2); margin-bottom: 1.5rem; }
+        .confirm-actions { display: flex; gap: 0.5rem; justify-content: center; }
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text2); }
+        .empty-state i { font-size: 4rem; color: var(--border); margin-bottom: 1rem; }
+        .empty-state h3 { color: #fff; margin-bottom: 0.5rem; }
+        [data-theme="light"] .empty-state h3 { color: var(--text); }
+        .error-state {
+            background: rgba(231,76,60,0.1);
+            border: 2px solid var(--accent);
+            border-radius: var(--radius);
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        .error-state i { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; }
+        .error-state h3 { color: var(--accent); margin-bottom: 0.5rem; }
+        .error-state p { color: var(--text2); margin-bottom: 1rem; }
+        .error-details {
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: var(--text);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        @media (max-width: 768px) {
+            .header { padding: 0.8rem 1rem; }
+            .toolbar { padding: 0.8rem 1rem; }
+            .main { padding: 1rem; }
+            .search-input { width: 150px; }
+            .search-input:focus { width: 180px; }
+            .stats-bar { padding: 0.6rem 1rem; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-right">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>لوحة إدارة توتا أبسولوتا</span>
+                <span class="version-badge">PRO</span>
+            </div>
+            <div class="file-selector">
+                <i class="fas fa-folder-open" style="color: var(--plan-accent);"></i>
+                <select id="fileSelect" onchange="switchFile(this.value)">
+                    <option value="">اختر ملفاً للتعديل...</option>
+                </select>
+            </div>
+        </div>
+        <div class="header-left">
+            <button class="btn btn-ghost btn-icon" onclick="toggleTheme()" title="تبديل الوضع">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <a href="index.html" class="btn btn-blue"><i class="fas fa-globe"></i> الموقع</a>
+            <button class="btn btn-amber" onclick="exportCurrentFile()"><i class="fas fa-download"></i> تحميل</button>
+        </div>
+    </header>
+
+    <div class="stats-bar" id="statsBar" style="display:none;">
+        <div class="stat-item"><i class="fas fa-list"></i><span>العناصر:</span><strong id="statCount">0</strong></div>
+        <div class="stat-item"><i class="fas fa-database"></i><span>الحجم:</span><strong id="statSize">0 KB</strong></div>
+        <div class="stat-item"><i class="fas fa-key"></i><span>المفاتيح:</span><strong id="statKeys">0</strong></div>
+        <div class="autosave-indicator">
+            <span class="dot"></span>
+            <span id="autosaveText">الحفظ التلقائي مفعل</span>
+        </div>
+    </div>
+
+    <div class="toolbar" id="toolbar" style="display:none;">
+        <div class="toolbar-right">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="ابحث في العناصر..." oninput="filterCards(this.value)">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="toolbar-left">
+            <button class="btn btn-primary" onclick="openAddModal()"><i class="fas fa-plus"></i> إضافة عنصر جديد</button>
+        </div>
+    </div>
+
+    <main class="main" id="mainContent">
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-folder-open"></i>
+            <h3>اختر ملفاً للبدء</h3>
+            <p>استخدم القائمة في الأعلى لاختيار ملف البيانات الذي تريد تعديله</p>
+        </div>
+        <div id="errorContainer"></div>
+        <div class="cards-grid" id="cardsGrid" style="display:none;"></div>
+    </main>
+
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle"><i class="fas fa-edit"></i> تعديل عنصر</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeModal()">إلغاء</button>
+                <button class="btn btn-primary" onclick="saveItem()"><i class="fas fa-save"></i> حفظ</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-box">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>تأكيد الحذف</h3>
+            <p id="confirmText">هل أنت متأكد؟</p>
+            <div class="confirm-actions">
+                <button class="btn" onclick="closeConfirm()">إلغاء</button>
+                <button class="btn btn-danger" id="confirmBtn">حذف</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const FILE_DEFS = {
+            'faq': {
+                name: 'الأسئلة الشائعة',
+                icon: 'fa-question-circle',
+                color: '#9b59b6',
+                isArray: true,
+                fields: [
+                    { key: 'question', label: 'السؤال', type: 'text', required: true, placeholder: 'اكتب السؤال هنا...' },
+                    { key: 'answer', label: 'الإجابة', type: 'textarea', required: true, placeholder: 'اكتب الإجابة التفصيلية...', rows: 4 }
+                ],
+                titleField: 'question',
+                descField: 'answer'
+            },
+            'sources': {
+                name: 'المصادر والمراجع',
+                icon: 'fa-book-open',
+                color: '#f39c12',
+                isArray: true,
+                fields: [
+                    { key: 'tag', label: 'التصنيف', type: 'text', required: true, placeholder: 'مثال: دراسة علمية' },
+                    { key: 'title', label: 'العنوان', type: 'text', required: true },
+                    { key: 'description', label: 'الوصف', type: 'textarea', required: true, rows: 3 }
+                ],
+                titleField: 'title',
+                descField: 'description'
+            },
+            'spread-reasons': {
+                name: 'أسباب الانتشار',
+                icon: 'fa-chart-pie',
+                color: '#e67e22',
+                isArray: true,
+                fields: [
+                    { key: 'icon', label: 'الأيقونة', type: 'text', required: false, placeholder: '' },
+                    { key: 'title', label: 'العنوان', type: 'text', required: true },
+                    { key: 'type', label: 'النوع', type: 'text', required: false },
+                    { key: 'category', label: 'التصنيف', type: 'text', required: false },
+                    { key: 'description', label: 'الوصف', type: 'textarea', required: true, rows: 3 },
+                    { key: 'impact', label: 'الأثر', type: 'textarea', required: true, rows: 2 }
+                ],
+                titleField: 'title',
+                descField: 'description',
+                iconField: 'icon'
+            },
+            'economic-impact': {
+                name: 'التأثير الاقتصادي',
+                icon: 'fa-coins',
+                color: '#f1c40f',
+                isArray: true,
+                fields: [
+                    { key: 'icon', label: 'الأيقونة', type: 'text', required: false },
+                    { key: 'title', label: 'العنوان', type: 'text', required: true },
+                    { key: 'type', label: 'النوع', type: 'text', required: false },
+                    { key: 'category', label: 'التصنيف', type: 'text', required: false },
+                    { key: 'description', label: 'الوصف', type: 'textarea', required: true, rows: 3 },
+                    { key: 'financialImpact', label: 'الأثر المالي', type: 'textarea', required: true, rows: 2 }
+                ],
+                titleField: 'title',
+                descField: 'description',
+                iconField: 'icon'
+            },
+            'resistance': {
+                name: 'مقاومة المبيدات',
+                icon: 'fa-chart-line',
+                color: '#e74c3c',
+                isArray: true,
+                fields: [
+                    { key: 'pesticide', label: 'اسم المبيد', type: 'text', required: true },
+                    { key: 'example', label: 'مثال', type: 'text', required: false },
+                    { key: 'level', label: 'المستوى', type: 'text', required: false },
+                    { key: 'levelText', label: 'نص المستوى', type: 'text', required: true }
+                ],
+                titleField: 'pesticide',
+                descField: 'example'
+            },
+            'plan-cards': {
+                name: 'خطط العمل الشهرية',
+                icon: 'fa-clipboard-list',
+                color: '#27ae60',
+                isArray: true,
+                fields: [
+                    { key: 'id', label: 'المعرف', type: 'text', required: true },
+                    { key: 'months', label: 'الأشهر', type: 'text', required: true },
+                    { key: 'title', label: 'العنوان', type: 'text', required: true },
+                    { key: 'level', label: 'المستوى', type: 'text', required: false },
+                    { key: 'color', label: 'اللون', type: 'text', required: false },
+                    { key: 'context', label: 'السياق (JSON)', type: 'textarea', required: false, rows: 3 },
+                    { key: 'items', label: 'العناصر (JSON)', type: 'textarea', required: false, rows: 3 }
+                ],
+                titleField: 'title',
+                descField: 'months'
+            },
+            'bio-agents': {
+                name: 'الأعداء الحيوية',
+                icon: 'fa-bug',
+                color: '#1abc9c',
+                isArray: true,
+                fields: [
+                    { key: 'id', label: 'المعرف', type: 'text', required: true },
+                    { key: 'icon', label: 'الأيقونة', type: 'text', required: false },
+                    { key: 'scientificName', label: 'الاسم العلمي', type: 'text', required: true },
+                    { key: 'arabicDesc', label: 'الوصف العربي', type: 'text', required: true },
+                    { key: 'category', label: 'التصنيف', type: 'text', required: false },
+                    { key: 'bioType', label: 'النوع الحيوي', type: 'textarea', required: false, rows: 3 },
+                    { key: 'behavior', label: 'السلوك', type: 'textarea', required: false, rows: 3 }
+                ],
+                titleField: 'scientificName',
+                descField: 'arabicDesc',
+                iconField: 'icon'
+            },
+            'thermal-model': {
+                name: 'النموذج الحراري',
+                icon: 'fa-thermometer-half',
+                color: '#e74c3c',
+                isArray: false,
+                fields: [
+                    { key: 'T0', label: 'العتبة الدنيا', type: 'number', required: true },
+                    { key: 'TH', label: 'العتبة العليا', type: 'number', required: true }
+                ],
+                titleField: null,
+                descField: null
+            },
+            'seasonal-data': {
+                name: 'البيانات الموسمية',
+                icon: 'fa-calendar-alt',
+                color: '#3498db',
+                isArray: true,
+                fields: [
+                    { key: 'month', label: 'الشهر', type: 'text', required: true },
+                    { key: 'temp', label: 'متوسط الحرارة', type: 'number', required: true }
+                ],
+                titleField: 'month',
+                descField: 'temp'
+            },
+            'ipm-program': {
+                name: 'برنامج المكافحة',
+                icon: 'fa-shield-alt',
+                color: '#2ecc71',
+                isArray: false,
+                fields: [
+                    { key: 'title', label: 'العنوان', type: 'text', required: true },
+                    { key: 'description', label: 'الوصف', type: 'textarea', required: false, rows: 4 }
+                ],
+                titleField: 'title',
+                descField: 'description'
+            }
+        };
+
+        let currentFile = null;
+        let currentData = null;
+        let editingIndex = -1;
+        let deleteIndex = -1;
+        let isFormDirty = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const select = document.getElementById('fileSelect');
+            Object.keys(FILE_DEFS).forEach(key => {
+                const def = FILE_DEFS[key];
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = def.name;
+                select.appendChild(option);
+            });
+
+            const savedTheme = localStorage.getItem('tuta_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') { closeModal(); closeConfirm(); }
+                if (e.ctrlKey && e.key === 's') { e.preventDefault(); if (currentFile) exportCurrentFile(); }
+            });
+        });
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('tuta_theme', next);
+            document.getElementById('themeIcon').className = next === 'light' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        async function switchFile(fileId) {
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('cardsGrid').style.display = 'none';
+            document.getElementById('statsBar').style.display = 'none';
+            document.getElementById('toolbar').style.display = 'none';
+            document.getElementById('errorContainer').innerHTML = '';
+
+            if (!fileId) {
+                document.getElementById('emptyState').style.display = 'block';
+                currentFile = null;
+                currentData = null;
+                return;
+            }
+
+            currentFile = fileId;
+            const def = FILE_DEFS[fileId];
+
+            document.getElementById('errorContainer').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <h3>جاري تحميل ${def.name}...</h3>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`data/${fileId}.json`);
+                if (!response.ok) throw new Error(`الملف غير موجود (HTTP ${response.status})`);
+
+                const text = await response.text();
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch (e) {
+                    throw new Error(`خطأ في صيغة JSON`);
+                }
+
+                currentData = data;
+                document.getElementById('errorContainer').innerHTML = '';
+                renderCards();
+                updateStats();
+
+                document.getElementById('cardsGrid').style.display = 'grid';
+                document.getElementById('statsBar').style.display = 'flex';
+                document.getElementById('toolbar').style.display = 'flex';
+
+                showToast(`تم تحميل ${def.name} بنجاح ✅`, 'success');
+            } catch (error) {
+                document.getElementById('errorContainer').innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>خطأ في تحميل الملف</h3>
+                        <p>تعذر تحميل: <strong>data/${fileId}.json</strong></p>
+                        <div class="error-details">${error.message}</div>
+                        <br>
+                        <button class="btn btn-primary" onclick="switchFile('${fileId}')">
+                            <i class="fas fa-redo"></i> إعادة المحاولة
+                        </button>
+                    </div>
+                `;
+                showToast(`خطأ: ${error.message}`, 'error');
+            }
+        }
+
+        function getCurrentItems() {
+            if (Array.isArray(currentData)) return currentData;
+            if (typeof currentData === 'object' && currentData !== null) {
+                const values = Object.values(currentData);
+                const arr = values.find(v => Array.isArray(v));
+                if (arr) return arr;
+            }
+            return [currentData];
+        }
+
+        function renderCards(filter = '') {
+            const grid = document.getElementById('cardsGrid');
+            const def = FILE_DEFS[currentFile];
+            const lowerFilter = filter.toLowerCase();
+
+            if (currentFile === 'ipm-program' && currentData.panels) {
+                renderIPMView(grid, filter);
+                return;
+            }
+
+            const items = getCurrentItems();
+            let displayItems = items.map((item, idx) => ({ item, idx }));
+            
+            if (filter) {
+                displayItems = displayItems.filter(({ item }) =>
+                    JSON.stringify(item).toLowerCase().includes(lowerFilter)
+                );
+            }
+
+            grid.innerHTML = '';
+            displayItems.forEach(({ item, idx }) => {
+                const card = createVisualCard(item, idx, def);
+                grid.appendChild(card);
+            });
+
+            const addCard = document.createElement('div');
+            addCard.className = 'add-card';
+            addCard.onclick = () => openAddModal();
+            addCard.innerHTML = '<i class="fas fa-plus"></i><span>إضافة عنصر جديد</span>';
+            grid.appendChild(addCard);
+        }
+
+        function createVisualCard(item, idx, def) {
+            const card = document.createElement('div');
+            card.className = 'visual-card';
+
+            const title = def.titleField ? (item[def.titleField] || 'بدون عنوان') : 'بيانات';
+            const desc = def.descField ? String(item[def.descField] || '').substring(0, 120) : '';
+            const icon = def.iconField && item[def.iconField] ? item[def.iconField] : (def.icon || 'fa-file');
+            const subtitle = item.type || item.category || item.tag || '';
+
+            const isIconEmoji = String(icon).length <= 3 || /[\u{1F300}-\u{1F9FF}]/u.test(icon);
+            const iconContent = isIconEmoji ? icon : `<i class="fas ${icon}"></i>`;
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div class="card-icon">${iconContent}</div>
+                    <div class="card-title-area">
+                        <div class="card-title">${escapeHtml(String(title))}</div>
+                        ${subtitle ? `<div class="card-subtitle">${escapeHtml(String(subtitle))}</div>` : ''}
+                    </div>
+                    <div class="card-badge">#${idx + 1}</div>
+                </div>
+                ${desc ? `<div class="card-body">${escapeHtml(String(desc))}${String(desc).length >= 120 ? '...' : ''}</div>` : ''}
+                <div class="card-footer">
+                    <div class="card-actions">
+                        <button class="card-action edit" onclick="openEditModal(${idx})" title="تعديل"><i class="fas fa-pen"></i></button>
+                        <button class="card-action copy" onclick="duplicateItem(${idx})" title="نسخ"><i class="fas fa-copy"></i></button>
+                        <button class="card-action delete" onclick="confirmDelete(${idx})" title="حذف"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function renderIPMView(grid, filter) {
+            grid.innerHTML = '';
+            const panels = currentData.panels;
+            const tabs = currentData.ipmTabs || [];
+
+            const tabsContainer = document.createElement('div');
+            tabsContainer.style.cssText = 'grid-column: 1 / -1; display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);';
+            tabsContainer.innerHTML = '<div style="color: var(--text2); font-size: 0.9rem; width: 100%; margin-bottom: 0.5rem;"><i class="fas fa-layer-group"></i> تبويبات البرنامج:</div>';
+            
+            tabs.forEach((tab, i) => {
+                const panel = panels[tab.id];
+                const cardCount = panel && panel.cards ? panel.cards.length : 0;
+                tabsContainer.innerHTML += `
+                    <div style="background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 1.2rem; cursor: pointer; transition: all 0.3s;" 
+                         onmouseover="this.style.borderColor='var(--plan-accent)'" 
+                         onmouseout="this.style.borderColor='var(--border)'"
+                         onclick="document.getElementById('panel-${tab.id}').scrollIntoView({behavior:'smooth'})">
+                        <div style="font-weight: 700; color: #fff; font-family: Cairo;">${tab.title}</div>
+                        <div style="font-size: 0.75rem; color: var(--text2);">${cardCount} عنصر</div>
+                    </div>
+                `;
+            });
+            grid.appendChild(tabsContainer);
+
+            Object.keys(panels).forEach(panelKey => {
+                const panel = panels[panelKey];
+                const tab = tabs.find(t => t.id === panelKey);
+                const tabTitle = tab ? tab.title : panelKey;
+
+                const panelHeader = document.createElement('div');
+                panelHeader.id = `panel-${panelKey}`;
+                panelHeader.style.cssText = 'grid-column: 1 / -1; padding: 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.5rem;';
+                panelHeader.innerHTML = `<h3 style="color: var(--plan-accent2); font-family: Cairo;">${tabTitle}</h3>`;
+                grid.appendChild(panelHeader);
+
+                if (panel.warning) {
+                    const warningCard = document.createElement('div');
+                    warningCard.style.cssText = 'grid-column: 1 / -1; background: rgba(231,76,60,0.1); border: 1px solid var(--accent); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 0.5rem; display: flex; gap: 1rem; align-items: flex-start;';
+                    warningCard.innerHTML = `<span style="font-size: 1.5rem;">⚠️</span><p style="color: var(--text); font-size: 0.9rem; line-height: 1.7; flex: 1;"><strong style="color: var(--accent);">تحذير:</strong> ${panel.warning}</p>`;
+                    grid.appendChild(warningCard);
+                }
+
+                if (panel.intro) {
+                    const introCard = document.createElement('div');
+                    introCard.style.cssText = 'grid-column: 1 / -1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 0.5rem;';
+                    introCard.innerHTML = `<p style="color: var(--text2); font-size: 0.9rem; line-height: 1.8;">${panel.intro}</p>`;
+                    grid.appendChild(introCard);
+                }
+
+                if (panel.cards && Array.isArray(panel.cards)) {
+                    panel.cards.forEach((card, idx) => {
+                        const cardEl = document.createElement('div');
+                        cardEl.className = 'visual-card';
+                        
+                        const iconContent = (card.icon && card.icon.length <= 3) ? card.icon : 
+                                           (card.icon ? `<i class="fas ${card.icon}"></i>` : '📄');
+                        
+                        cardEl.innerHTML = `
+                            <div class="card-header">
+                                <div class="card-icon">${iconContent}</div>
+                                <div class="card-title-area">
+                                    <div class="card-title">${escapeHtml(card.title || 'بدون عنوان')}</div>
+                                    ${card.tag ? `<div class="card-subtitle">${escapeHtml(card.tag)}</div>` : ''}
+                                </div>
+                                <div class="card-badge">#${idx + 1}</div>
+                            </div>
+                            <div class="card-body">${escapeHtml(card.description || '')}</div>
+                            <div class="card-footer">
+                                <div class="card-actions">
+                                    <button class="card-action edit" onclick="editIPMCard('${panelKey}', ${idx})" title="تعديل"><i class="fas fa-pen"></i></button>
+                                    <button class="card-action copy" onclick="duplicateIPMCard('${panelKey}', ${idx})" title="نسخ"><i class="fas fa-copy"></i></button>
+                                    <button class="card-action delete" onclick="deleteIPMCard('${panelKey}', ${idx})" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(cardEl);
+                    });
+                }
+
+                if (panel.instructions && Array.isArray(panel.instructions)) {
+                    const instHeader = document.createElement('div');
+                    instHeader.style.cssText = 'grid-column: 1 / -1; padding: 0.8rem; color: var(--amber); font-weight: 700;';
+                    instHeader.innerHTML = '<i class="fas fa-list-check"></i> إرشادات:';
+                    grid.appendChild(instHeader);
+
+                    panel.instructions.forEach(inst => {
+                        const instCard = document.createElement('div');
+                        instCard.style.cssText = 'grid-column: 1 / -1; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.8rem; display: flex; gap: 0.8rem; align-items: flex-start;';
+                        instCard.innerHTML = `<span style="color: var(--plan-accent2);">✓</span><span style="color: var(--text2); font-size: 0.9rem;">${escapeHtml(inst)}</span>`;
+                        grid.appendChild(instCard);
+                    });
+                }
+
+                if (panel.rotationSchedule) {
+                    const rotCard = document.createElement('div');
+                    rotCard.style.cssText = 'grid-column: 1 / -1; background: rgba(39,174,96,0.1); border: 1px solid var(--plan-accent); border-radius: var(--radius-sm); padding: 1rem;';
+                    rotCard.innerHTML = `<div style="color: var(--plan-accent2); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-calendar-alt"></i> جدول التناوب:</div><p style="color: var(--text); font-size: 0.9rem; line-height: 1.8;">${panel.rotationSchedule}</p>`;
+                    grid.appendChild(rotCard);
+                }
+            });
+
+            const addSection = document.createElement('div');
+            addSection.style.cssText = 'grid-column: 1 / -1; display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1rem;';
+            tabs.forEach(tab => {
+                addSection.innerHTML += `
+                    <button class="btn btn-primary" onclick="addIPMCardToPanel('${tab.id}')">
+                        <i class="fas fa-plus"></i> إضافة إلى "${tab.title}"
+                    </button>
+                `;
+            });
+            grid.appendChild(addSection);
+        }
+
+        function openEditModal(idx) {
+            editingIndex = idx;
+            const def = FILE_DEFS[currentFile];
+            const items = getCurrentItems();
+            const item = items[idx] || {};
+
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-pen"></i> تعديل عنصر #${idx + 1}`;
+            renderForm(item, def);
+            document.getElementById('editModal').classList.add('active');
+            isFormDirty = false;
+        }
+
+        function openAddModal() {
+            editingIndex = -1;
+            const def = FILE_DEFS[currentFile];
+
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-plus"></i> إضافة عنصر جديد`;
+            renderForm({}, def);
+            document.getElementById('editModal').classList.add('active');
+            isFormDirty = false;
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('active');
+            editingIndex = -1;
+            isFormDirty = false;
+        }
+
+        function renderForm(item, def) {
+            const body = document.getElementById('modalBody');
+            let html = '<div class="form-section">';
+            html += `<div class="form-section-title"><i class="fas fa-edit"></i> تعديل البيانات</div>`;
+            html += '<div class="form-grid">';
+
+            def.fields.forEach(field => {
+                const value = item[field.key] !== undefined ? item[field.key] : '';
+                html += renderFormField(field, value);
+            });
+
+            html += '</div></div>';
+            body.innerHTML = html;
+        }
+
+        function renderFormField(field, value) {
+            const isFull = field.type === 'textarea';
+            const required = field.required ? '<span class="required">*</span>' : '';
+            const hint = field.hint ? `<span class="hint">${field.hint}</span>` : '';
+            const placeholder = field.placeholder ? `placeholder="${escapeHtml(field.placeholder)}"` : '';
+
+            let inputHtml = '';
+
+            if (field.type === 'textarea') {
+                const rows = field.rows || 3;
+                const displayValue = typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value || '');
+                inputHtml = `<textarea name="${field.key}" rows="${rows}" ${placeholder} oninput="isFormDirty=true">${escapeHtml(displayValue)}</textarea>`;
+            } else if (field.type === 'number') {
+                inputHtml = `<input type="number" name="${field.key}" value="${value || 0}" ${placeholder} oninput="isFormDirty=true">`;
+            } else {
+                inputHtml = `<input type="text" name="${field.key}" value="${escapeHtml(String(value || ''))}" ${placeholder} oninput="isFormDirty=true">`;
+            }
+
+            return `
+                <div class="form-field ${isFull ? 'full' : ''}">
+                    <label>${field.label} ${required}</label>
+                    ${inputHtml}
+                    ${hint}
+                </div>
+            `;
+        }
+
+        function saveItem() {
+            const modalBody = document.getElementById('modalBody');
+            if (modalBody.dataset.panelKey && currentFile === 'ipm-program') {
+                return saveIPMCard(modalBody.dataset.panelKey);
+            }
+
+            const def = FILE_DEFS[currentFile];
+            const newItem = {};
+            let hasError = false;
+
+            def.fields.forEach(field => {
+                const el = document.querySelector(`[name="${field.key}"]`);
+                if (el) {
+                    let value = el.value;
+                    if (field.type === 'number') value = parseFloat(value) || 0;
+
+                    if (field.required && (!value || value.toString().trim() === '')) {
+                        hasError = true;
+                        el.style.borderColor = 'var(--accent)';
+                    } else {
+                        el.style.borderColor = '';
+                    }
+                    newItem[field.key] = value;
+                }
+            });
+
+            if (hasError) {
+                showToast('يرجى ملء جميع الحقول المطلوبة', 'warning');
+                return;
+            }
+
+            const items = getCurrentItems();
+            if (editingIndex === -1) {
+                items.push(newItem);
+            } else {
+                items[editingIndex] = newItem;
+            }
+
+            closeModal();
+            renderCards();
+            updateStats();
+            isFormDirty = false;
+            showToast(editingIndex === -1 ? 'تمت الإضافة بنجاح ✨' : 'تم الحفظ بنجاح ✅', 'success');
+        }
+
+        function editIPMCard(panelKey, idx) {
+            const panel = currentData.panels[panelKey];
+            if (!panel || !panel.cards[idx]) return;
+            
+            const item = panel.cards[idx];
+            editingIndex = idx;
+            
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-pen"></i> تعديل عنصر في "${panelKey}"`;
+            
+            const body = document.getElementById('modalBody');
+            body.dataset.panelKey = panelKey;
+            body.innerHTML = `
+                <div class="form-section">
+                    <div class="form-section-title"><i class="fas fa-edit"></i> تعديل بيانات البطاقة</div>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>الأيقونة (Emoji)</label>
+                            <input type="text" id="edit-icon" value="${escapeHtml(item.icon || '')}" placeholder="🌱">
+                        </div>
+                        <div class="form-field">
+                            <label>العنوان</label>
+                            <input type="text" id="edit-title" value="${escapeHtml(item.title || '')}" required>
+                        </div>
+                        <div class="form-field full">
+                            <label>الوصف</label>
+                            <textarea id="edit-description" rows="4">${escapeHtml(item.description || '')}</textarea>
+                        </div>
+                        <div class="form-field">
+                            <label>التصنيف (Tag)</label>
+                            <input type="text" id="edit-tag" value="${escapeHtml(item.tag || '')}">
+                        </div>
+                        <div class="form-field">
+                            <label>لون التصنيف</label>
+                            <select id="edit-tagClass">
+                                <option value="tag-green" ${item.tagClass === 'tag-green' ? 'selected' : ''}>أخضر (tag-green)</option>
+                                <option value="tag-blue" ${item.tagClass === 'tag-blue' ? 'selected' : ''}>أزرق (tag-blue)</option>
+                                <option value="tag-amber" ${item.tagClass === 'tag-amber' ? 'selected' : ''}>برتقالي (tag-amber)</option>
+                                <option value="tag-red" ${item.tagClass === 'tag-red' ? 'selected' : ''}>أحمر (tag-red)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function addIPMCardToPanel(panelKey) {
+            editingIndex = -1;
+            
+            document.getElementById('modalTitle').innerHTML = `<i class="fas fa-plus"></i> إضافة عنصر إلى "${panelKey}"`;
+            
+            const body = document.getElementById('modalBody');
+            body.dataset.panelKey = panelKey;
+            body.innerHTML = `
+                <div class="form-section">
+                    <div class="form-section-title"><i class="fas fa-plus"></i> إضافة بطاقة جديدة</div>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label>الأيقونة (Emoji)</label>
+                            <input type="text" id="edit-icon" placeholder="🌱">
+                        </div>
+                        <div class="form-field">
+                            <label>العنوان *</label>
+                            <input type="text" id="edit-title" required>
+                        </div>
+                        <div class="form-field full">
+                            <label>الوصف *</label>
+                            <textarea id="edit-description" rows="4"></textarea>
+                        </div>
+                        <div class="form-field">
+                            <label>التصنيف (Tag)</label>
+                            <input type="text" id="edit-tag">
+                        </div>
+                        <div class="form-field">
+                            <label>لون التصنيف</label>
+                            <select id="edit-tagClass">
+                                <option value="tag-green">أخضر (tag-green)</option>
+                                <option value="tag-blue">أزرق (tag-blue)</option>
+                                <option value="tag-amber">برتقالي (tag-amber)</option>
+                                <option value="tag-red">أحمر (tag-red)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function saveIPMCard(panelKey) {
+            const panel = currentData.panels[panelKey];
+            if (!panel) return;
+
+            const title = document.getElementById('edit-title').value;
+            if (!title.trim()) {
+                showToast('العنوان مطلوب', 'warning');
+                return;
+            }
+
+            const newCard = {
+                icon: document.getElementById('edit-icon').value || '',
+                title: title,
+                description: document.getElementById('edit-description').value || '',
+                tag: document.getElementById('edit-tag').value || '',
+                tagClass: document.getElementById('edit-tagClass').value || 'tag-green'
+            };
+
+            if (editingIndex === -1) {
+                panel.cards.push(newCard);
+                showToast('تمت إضافة البطاقة بنجاح ✨', 'success');
+            } else {
+                panel.cards[editingIndex] = newCard;
+                showToast('تم حفظ التعديلات ✅', 'success');
+            }
+
+            closeModal();
+            renderCards();
+            updateStats();
+        }
+
+        function duplicateIPMCard(panelKey, idx) {
+            if (!confirm('هل تريد نسخ هذه البطاقة؟')) return;
+            const panel = currentData.panels[panelKey];
+            const copy = JSON.parse(JSON.stringify(panel.cards[idx]));
+            copy.title = copy.title + ' (نسخة)';
+            panel.cards.splice(idx + 1, 0, copy);
+            renderCards();
+            showToast('تم نسخ البطاقة بنجاح', 'success');
+        }
+
+        function deleteIPMCard(panelKey, idx) {
+            const panel = currentData.panels[panelKey];
+            const title = panel.cards[idx].title;
+            if (!confirm(`هل تريد حذف "${title}"؟`)) return;
+            panel.cards.splice(idx, 1);
+            renderCards();
+            showToast('تم الحذف بنجاح', 'success');
+        }
+
+        function duplicateItem(idx) {
+            if (!confirm('هل تريد نسخ هذا العنصر؟')) return;
+            const items = getCurrentItems();
+            const copy = JSON.parse(JSON.stringify(items[idx]));
+            if (copy.id) copy.id = copy.id + '_copy';
+            if (copy.title) copy.title = copy.title + ' (نسخة)';
+            if (copy.scientificName) copy.scientificName = copy.scientificName + ' (نسخة)';
+            items.splice(idx + 1, 0, copy);
+            renderCards();
+            showToast('تم نسخ العنصر بنجاح', 'success');
+        }
+
+        function confirmDelete(idx) {
+            deleteIndex = idx;
+            const items = getCurrentItems();
+            const item = items[idx];
+            const def = FILE_DEFS[currentFile];
+            const title = def.titleField ? item[def.titleField] : `عنصر #${idx + 1}`;
+            document.getElementById('confirmText').textContent = `هل تريد حذف "${title}"؟`;
+            document.getElementById('confirmOverlay').classList.add('active');
+        }
+
+        function closeConfirm() {
+            document.getElementById('confirmOverlay').classList.remove('active');
+            deleteIndex = -1;
+        }
+
+        document.getElementById('confirmBtn').addEventListener('click', () => {
+            if (deleteIndex >= 0 && currentFile) {
+                const items = getCurrentItems();
+                items.splice(deleteIndex, 1);
+                renderCards();
+                updateStats();
+                closeConfirm();
+                showToast('تم الحذف بنجاح', 'success');
+            }
+        });
+
+        function filterCards(query) { renderCards(query); }
+
+        function updateStats() {
+            if (!currentData) return;
+            const jsonStr = JSON.stringify(currentData);
+            const items = getCurrentItems();
+            const count = items.length;
+            const keys = typeof currentData === 'object' ? Object.keys(currentData).length : 0;
+            document.getElementById('statCount').textContent = count;
+            document.getElementById('statSize').textContent = formatBytes(jsonStr.length);
+            document.getElementById('statKeys').textContent = keys;
+        }
+
+        function exportCurrentFile() {
+            if (!currentData || !currentFile) {
+                showToast('اختر ملفاً أولاً', 'warning');
+                return;
+            }
+            const jsonStr = JSON.stringify(currentData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentFile}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast(`تم تحميل ${currentFile}.json ✅`, 'success');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { success: 'check-circle', error: 'times-circle', warning: 'exclamation-circle', info: 'info-circle' };
+            toast.innerHTML = `<i class="fas fa-${icons[type]}"></i><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target.id === 'editModal') closeModal();
+        });
+        document.getElementById('confirmOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmOverlay') closeConfirm();
+        });
+    </script>
+</body>
+</html>

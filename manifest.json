@@ -1,0 +1,96 @@
+{
+  "name": "توتا أبسولوتا - دليل المكافحة المتكاملة",
+  "short_name": "توتا أبسولوتا",
+  "description": "دليل تفاعلي شامل حول آفة توتا أبسولوتا في مصر: محاكاة النموذج الحراري وخطة مكافحة متكاملة",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0b0f12",
+  "background_color": "#0b0f12",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["education", "reference", "productivity"],
+  "icons": [
+    {
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-256.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "icons/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "الصفحة الرئيسية"
+    },
+    {
+      "src": "icons/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "النموذج الحراري"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "النموذج الحراري",
+      "short_name": "الحرارة",
+      "description": "محاكاة تطور الحشرة",
+      "url": "./index.html?section=thermal",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "تقويم المكافحة",
+      "short_name": "التقويم",
+      "description": "خطة العمل الشهرية",
+      "url": "./index.html?section=calendar",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "الأعداء الحيوية",
+      "short_name": "الأعداء",
+      "description": "موسوعة الأعداء الحيوية",
+      "url": "./index.html?section=bioagents",
+      "icons": [{ "src": "icons/icon-96.png", "sizes": "96x96" }]
+    }
+  ]
+}

@@ -1,0 +1,1277 @@
+{
+  "bioAgents": [
+    {
+      "id": "trichogramma-achaeae",
+      "category": "egg-parasitoid",
+      "icon": "🐝",
+      "scientificName": "Trichogramma achaeae",
+      "arabicDesc": "طفيل بيض متخصص لمكافحة توتا أبسلوتا",
+      "targets": { "egg": "effective", "larvae": "none", "pupae": "none", "adult": "none" },
+      "badges": ["preventive", "heat-tolerant", "pesticide-sensitive", "bio-safe"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Trichogrammatidae",
+        "genus": "Trichogramma",
+        "species": "Trichogramma achaeae"
+      },
+      "bioType": "طفيل بيض مجهري الحجم يهاجم بيض توتا أبسلوتا قبل الفقس. تضع الأنثى بيضها داخل بيضة التوتا، فتتغذى اليرقة على محتويات البيضة بالكامل وتمنع خروج اليرقة الضارة. يعد من أكثر أنواع الترايكوجراما تخصصًا وفعالية ضد التوتا.",
+      "morphology": {
+        "adult": "طول 0.3–0.8 مم، لون أصفر إلى بني فاتح، أجنحة شفافة ذات أهداب طويلة.",
+        "egg": "بيضاء شفافة، توضع داخل بيضة العائل.",
+        "larva": "عديمة الأرجل وتتطور بالكامل داخل بيضة التوتا.",
+        "pupa": "تتكون داخل البيضة المتطفل عليها."
+      },
+      "importance": { "egg": "high", "larvae": "none", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن بيض التوتا باستخدام الإشارات الكيميائية المنبعثة من نباتات الطماطم المصابة.",
+        "فحص البيضة والتعرف عليها بواسطة المستقبلات الحسية.",
+        "وضع البيض داخل بيضة التوتا بواسطة آلة وضع البيض.",
+        "تطور اليرقة داخل البيضة والتغذي على محتوياتها بالكامل.",
+        "تكوين العذراء داخل البيضة.",
+        "خروج الحشرة الكاملة من البيضة المظلمة."
+      ],
+      "cycleDuration": { "c20": "13–15 يومًا", "c25": "8–12 يومًا", "c30": "7–9 أيام" },
+      "behavior": "يستطيع التعرف على بيض التوتا باستخدام الإشارات الكيميائية المنبعثة من نباتات الطماطم المصابة (Kairomones). يفضل البيض الحديث العمر ويحقق أعلى نسب تطفل عند الإطلاق المبكر. يتميز بحساسية عالية تجاه الفيرومونات النباتية.",
+      "conditions": { "temp": "20–30°م", "humidity": "60–80%", "light": "معتدلة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "لا", "commercial": "محدود", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "الجزر المزهر"],
+      "compatibility": [
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Chrysoperla carnea", "good"],
+        ["Orius laevigatus", "good"],
+        ["Beauveria bassiana", "excellent"],
+        ["Bacillus thuringiensis", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Emamectin benzoate", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"],
+        ["Metarhizium anisopliae", "safe"],
+        ["زيوت نباتية", "safe"]
+      ],
+      "pros": [
+        "متخصص جدًا على بيض التوتا مما يرفع كفاءته مقارنة بـ T. evanescens.",
+        "يمنع الضرر قبل خروج اليرقات وبالتالي قبل تكوين الأنفاق.",
+        "مناسب للزراعات التصديرية لأنه لا يترك متبقيات.",
+        "لا يترك متبقيات على الثمار أو النبات.",
+        "يتوافق مع معظم برامج المكافحة الحيوية والمبيدات الحيوية.",
+        "فعال جدًا عند الاستخدام الوقائي منذ بداية رصد الفراشات."
+      ],
+      "cons": [
+        "لا يؤثر على اليرقات أو العذارى أو الحشرة الكاملة.",
+        "يحتاج إطلاقات متكررة خلال الموسم (كل 7 أيام).",
+        "حساس للمبيدات واسعة التأثير خاصة البيريثرويدات.",
+        "تقل كفاءته عند التأخر في الإطلاق بعد وضع البيض."
+      ],
+      "finalRating": "يعتبر Trichogramma achaeae من أقوى طفيلات البيض المستخدمة ضد توتا أبسلوتا عالميًا، خاصة في منطقة البحر المتوسط. يوصى باستخدامه وقائيًا منذ بداية رصد الفراشات بالمصائد الفرمونية، ويعطي أفضل النتائج عند دمجه مع مفترسات اليرقات مثل Nesidiocoris tenuis ضمن برامج المكافحة الحيوية للطماطم المكشوفة وطماطم التصنيع.",
+      "ratingStars": 5
+    },
+    {
+      "id": "trichogramma-evanescens",
+      "category": "egg-parasitoid",
+      "icon": "🐝",
+      "scientificName": "Trichogramma evanescens",
+      "arabicDesc": "طفيل بيض عام لحرشفيات الأجنحة ويستخدم في مكافحة العديد من الآفات",
+      "targets": { "egg": "effective", "larvae": "none", "pupae": "none", "adult": "none" },
+      "badges": ["preventive", "egypt-native", "pesticide-sensitive", "bio-safe"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Trichogrammatidae",
+        "genus": "Trichogramma",
+        "species": "Trichogramma evanescens"
+      },
+      "bioType": "طفيل بيض مجهري الحجم يهاجم بيض العديد من حشرات حرشفيات الأجنحة. تقوم الأنثى بوضع بيضة أو أكثر داخل بيضة التوتا، فتتغذى يرقات الطفيل على محتوياتها بالكامل وتمنع فقس اليرقة الضارة. يعتبر أقل تخصصًا من T. achaeae لكنه أكثر انتشارًا وتوفرًا في برامج المكافحة الحيوية.",
+      "morphology": {
+        "adult": "طول 0.3–0.7 مم، لون أصفر فاتح إلى بني مصفر، أجنحة شفافة مهدبة.",
+        "egg": "بيضاء شفافة وتوضع داخل بيضة العائل.",
+        "larva": "عديمة الأرجل وتتطور بالكامل داخل البيضة المتطفل عليها.",
+        "pupa": "تتكون داخل بيضة العائل."
+      },
+      "importance": { "egg": "high", "larvae": "none", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن بيض العائل باستخدام الإشارات الكيميائية.",
+        "فحص البيضة والتعرف عليها وملاءمتها.",
+        "وضع البيض داخل بيضة التوتا.",
+        "نمو اليرقة داخل البيضة والتغذي على المحتويات.",
+        "تكوين العذراء داخل البيضة.",
+        "خروج الحشرة الكاملة من البيضة المظلمة."
+      ],
+      "cycleDuration": { "c20": "12–15 يومًا", "c25": "8–10 أيام", "c30": "6–8 أيام" },
+      "behavior": "يمتلك قدرة جيدة على الانتشار والبحث عن البيض داخل الحقول المفتوحة. يمكنه استغلال عدد كبير من العوائل البديلة (مثل ديدان اللوز والثمار)، مما يساعد على استمراره طبيعيًا في البيئة الزراعية حتى عند انخفاض أعداد التوتا.",
+      "conditions": { "temp": "20–30°م", "humidity": "60–80%", "light": "معتدلة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "نعم", "commercial": "محدود", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "الجزر المزهر"],
+      "compatibility": [
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Dolichogenidea gelechiidivoris", "excellent"],
+        ["Chrysoperla carnea", "good"],
+        ["Orius laevigatus", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "موجود طبيعيًا في معظم مناطق زراعة الطماطم بمصر.",
+        "سهل التربية والإكثار الجماعي تجاريًا.",
+        "فعال في خفض نسبة فقس البيض.",
+        "لا يترك متبقيات على الثمار.",
+        "متوافق مع برامج المكافحة الحيوية.",
+        "يمكنه البقاء على عوائل بديلة عند انخفاض التوتا."
+      ],
+      "cons": [
+        "أقل تخصصًا على التوتا من Trichogramma achaeae.",
+        "لا يؤثر على اليرقات أو العذارى.",
+        "حساس للمبيدات واسعة التأثير.",
+        "يحتاج إطلاقات متكررة خلال الموسم."
+      ],
+      "finalRating": "يعتبر Trichogramma evanescens من أهم طفيلات البيض الموجودة طبيعيًا في مصر، ويُعد خيارًا عمليًا واقتصاديًا في برامج المكافحة الحيوية بسبب سهولة إنتاجه وتكيفه مع الظروف المحلية. ورغم أن كفاءته ضد توتا أبسلوتا غالبًا أقل من T. achaeae، فإنه يظل من أفضل الخيارات الوقائية لمهاجمة البيض في الطماطم المكشوفة وطماطم التصنيع، خاصة عند دمجه مع مفترسات اليرقات.",
+      "ratingStars": 4
+    },
+    {
+      "id": "trichogramma-pretiosum",
+      "category": "egg-parasitoid",
+      "icon": "",
+      "scientificName": "Trichogramma pretiosum",
+      "arabicDesc": "طفيل بيض متخصص نسبيًا في حرشفيات الأجنحة ويُستخدم عالميًا في مكافحة توتا أبسلوتا",
+      "targets": { "egg": "effective", "larvae": "none", "pupae": "none", "adult": "none" },
+      "badges": ["preventive", "heat-tolerant", "pesticide-sensitive", "bio-safe"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Trichogrammatidae",
+        "genus": "Trichogramma",
+        "species": "Trichogramma pretiosum"
+      },
+      "bioType": "طفيل بيض مجهري يهاجم بيض العديد من حرشفيات الأجنحة، ويُعتبر من أكثر أنواع الترايكوجراما استخدامًا في أمريكا الجنوبية (خاصة البرازيل) لمكافحة توتا أبسلوتا. تضع الأنثى بيضها داخل بيضة التوتا، فتتطور اليرقة داخلها وتمنع خروج اليرقة الضارة.",
+      "morphology": {
+        "adult": "طول 0.3–0.8 مم، لون أصفر إلى بني فاتح، أجنحة شفافة ذات أهداب دقيقة.",
+        "egg": "بيضاء شفافة وتوضع داخل بيضة العائل.",
+        "larva": "صغيرة عديمة الأرجل وتتطور داخل البيضة المتطفل عليها.",
+        "pupa": "تتكون بالكامل داخل بيضة العائل."
+      },
+      "importance": { "egg": "high", "larvae": "none", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن بيض العائل باستخدام kairomones.",
+        "التعرف على البيضة المناسبة ووضع البيض.",
+        "وضع البيض داخل بيضة التوتا.",
+        "نمو اليرقة داخل البيضة والتغذي على المحتويات.",
+        "تكوين العذراء.",
+        "خروج الحشرة الكاملة."
+      ],
+      "cycleDuration": { "c20": "11–14 يومًا", "c25": "7–10 أيام", "c30": "6–8 أيام" },
+      "behavior": "يتميز بسرعة التكاثر وقدرته العالية على البحث عن البيض حتى عند الكثافات المنخفضة للآفة. كما يتحمل درجات الحرارة المرتفعة نسبيًا مقارنة ببعض أنواع الترايكوجراما الأخرى، وهو ما ساهم في نجاحه الكبير في مناطق زراعة الطماطم الحارة في أمريكا الجنوبية.",
+      "conditions": { "temp": "22–32°م", "humidity": "60–80%", "light": "معتدلة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "good", "summer": "excellent", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "لا", "commercial": "غير متاح", "research": "محدود" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الآليسوم", "الريحان", "الجزر المزهر"],
+      "compatibility": [
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Dolichogenidea gelechiidivoris", "excellent"],
+        ["Chrysoperla carnea", "good"],
+        ["Beauveria bassiana", "excellent"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "من أنجح طفيلات البيض المستخدمة ضد التوتا عالميًا (خاصة في البرازيل).",
+        "كفاءة مرتفعة جدًا في خفض نسبة فقس البيض.",
+        "يتحمل درجات الحرارة المرتفعة نسبيًا (مناسب لمصر).",
+        "سريع التكاثر والإكثار التجاري.",
+        "متوافق مع برامج المكافحة الحيوية المتكاملة.",
+        "لا يترك أي متبقيات على المحصول."
+      ],
+      "cons": [
+        "غير متوفر تجاريًا في مصر حاليًا.",
+        "لا يؤثر على اليرقات أو العذارى.",
+        "يحتاج إطلاقات متكررة طوال الموسم.",
+        "حساس للمبيدات واسعة الطيف."
+      ],
+      "finalRating": "يُعتبر Trichogramma pretiosum أحد أقوى طفيلات البيض المستخدمة ضد توتا أبسلوتا على مستوى العالم، خاصة في البرازيل ودول أمريكا الجنوبية. وفي حالة إدخاله مستقبلاً إلى برامج المكافحة الحيوية في مصر، فقد يكون منافسًا قويًا لـ Trichogramma achaeae بفضل تحمله الجيد للحرارة وسرعة تكاثره. يناسب بشكل خاص برامج المكافحة الوقائية في طماطم التصنيع والطماطم المكشوفة عند دمجه مع مفترسات اليرقات.",
+      "ratingStars": 5
+    },
+    {
+      "id": "bracon-nigricans",
+      "category": "larval-parasitoid",
+      "icon": "",
+      "scientificName": "Bracon nigricans",
+      "arabicDesc": "طفيل يرقات متخصص على توتا أبسلوتا",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "none", "adult": "none" },
+      "badges": ["curative", "heat-tolerant", "pesticide-sensitive"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Braconidae",
+        "genus": "Bracon",
+        "species": "Bracon nigricans"
+      },
+      "bioType": "طفيل يهاجم يرقات توتا أبسلوتا داخل الأنفاق الموجودة بالأوراق والسيقان وأحيانًا الثمار. تقوم الأنثى بلسع اليرقة وشل حركتها مؤقتًا ثم تضع البيض عليها أو بداخلها، وبعد الفقس تتغذى يرقات الطفيل على العائل حتى تموت اليرقة. يتميز بقدرته على الوصول لليرقات المختبئة داخل الأنفاق.",
+      "morphology": {
+        "adult": "طول 3–5 مم، لون بني داكن إلى أسود، جسم نحيف، أجنحة شفافة، وآلة وضع بيض طويلة نسبيًا.",
+        "egg": "صغيرة جدًا، بيضاء اللون، توضع على أو داخل اليرقة.",
+        "larva": "عديمة الأرجل، كريمية اللون، تتغذى على العائل.",
+        "pupa": "تتكون داخل شرنقة حريرية صغيرة بالقرب من اليرقة المصابة."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن يرقة التوتا داخل الأنفاق باستخدام kairomones.",
+        "لسع اليرقة وشل حركتها مؤقتًا.",
+        "وضع البيض على أو داخل اليرقة المشلولة.",
+        "نمو يرقات الطفيل على العائل والتغذي عليه.",
+        "تكوين الشرنقة الحريرية الصغيرة.",
+        "خروج الحشرة الكاملة للبحث عن عوائل جديدة."
+      ],
+      "cycleDuration": { "c20": "18–24 يومًا", "c25": "12–18 يومًا", "c30": "10–14 يومًا" },
+      "behavior": "يستطيع تحديد موقع اليرقات المختبئة داخل الأنفاق من خلال الإشارات الكيميائية الصادرة عن النباتات المصابة (Herbivore-Induced Plant Volatiles - HIPVs). يتميز بقدرته على الوصول إلى يرقات التوتا التي يصعب على المبيدات الوصول إليها.",
+      "conditions": { "temp": "20–32°م", "humidity": "50–80%", "light": "طبيعية", "wind": "منخفضة إلى متوسطة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "good", "summer": "excellent", "nile": "excellent", "greenhouse": "good" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "غير متاح", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "الجزر المزهر"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Trichogramma evanescens", "excellent"],
+        ["Necremnus tutae", "excellent"],
+        ["Dolichogenidea gelechiidivoris", "good"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Orius laevigatus", "good"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Emamectin benzoate", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "متخصص على يرقات التوتا مما يرفع كفاءته.",
+        "قادر على الوصول لليرقات داخل الأنفاق حيث تعجز المبيدات.",
+        "متحمل نسبيًا لدرجات الحرارة المرتفعة.",
+        "يقلل إصابات الثمار بشكل مباشر.",
+        "مكمل ممتاز لطفيلات البيض في البرامج المتكاملة.",
+        "مناسب للمكافحة الحيوية المتكاملة في الحقول المكشوفة."
+      ],
+      "cons": [
+        "لا يؤثر على البيض.",
+        "حساس للمبيدات واسعة التأثير.",
+        "غير متوفر تجاريًا على نطاق واسع.",
+        "يحتاج وجود يرقات نشطة حتى يبدأ تأثيره."
+      ],
+      "finalRating": "يعد Bracon nigricans من أهم طفيلات اليرقات الواعدة في مكافحة توتا أبسلوتا. تكمن أهميته في مهاجمة اليرقات التي نجت من طفيلات البيض، مما يجعله عنصرًا مكملًا مهمًا داخل برامج المكافحة الحيوية للطماطم المكشوفة وطماطم التصنيع، خاصة عند تقليل استخدام المبيدات غير الانتقائية والحفاظ على النباتات الداعمة مثل الكزبرة والشبت.",
+      "ratingStars": 4
+    },
+    {
+      "id": "necremnus-tutae",
+      "category": "larval-parasitoid",
+      "icon": "",
+      "scientificName": "Necremnus tutae",
+      "arabicDesc": "طفيل خارجي متخصص على يرقات توتا أبسلوتا",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "none", "adult": "none" },
+      "badges": ["curative", "heat-tolerant", "pesticide-sensitive"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Eulophidae",
+        "genus": "Necremnus",
+        "species": "Necremnus tutae"
+      },
+      "bioType": "طفيل خارجي يهاجم يرقات توتا أبسلوتا داخل الأنفاق الموجودة بأوراق الطماطم. تقوم الأنثى بشل حركة اليرقة ثم تضع البيض على سطح جسمها، وبعد الفقس تتغذى يرقات الطفيل خارجيًا على اليرقة حتى تموت. كما تقتل بعض اليرقات مباشرة أثناء التغذية (Host Feeding) دون وضع بيض.",
+      "morphology": {
+        "adult": "طول 2–3 مم، لون أخضر معدني أو أسود مخضر لامع، أجنحة شفافة، عيون حمراء واضحة.",
+        "egg": "صغيرة جدًا، بيضاء اللون، توضع على جسم اليرقة.",
+        "larva": "عديمة الأرجل، كريمية اللون، تتغذى خارجيًا على العائل.",
+        "pupa": "تتكون داخل شرنقة صغيرة داخل النفق أو بالقرب من اليرقة المصابة."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن يرقة التوتا داخل النفق باستخدام kairomones.",
+        "لدغ اليرقة وشل حركتها بواسطة اللسع.",
+        "وضع البيض على سطح جسم اليرقة المشلولة.",
+        "تغذية يرقات الطفيل على العائل من الخارج حتى الموت.",
+        "تكوين العذراء داخل شرنقة صغيرة.",
+        "خروج الحشرة الكاملة للبحث عن عوائل جديدة."
+      ],
+      "cycleDuration": { "c20": "18–22 يومًا", "c25": "12–16 يومًا", "c30": "10–13 يومًا" },
+      "behavior": "يمتلك سلوك Host Feeding المميز حيث تتغذى الأنثى على سوائل بعض اليرقات مباشرة دون وضع بيض، مما يؤدي إلى قتل عدد إضافي من اليرقات بجانب التطفل الطبيعي. كما يتميز بقدرته على اكتشاف اليرقات المختبئة داخل الأنفاق باستخدام الإشارات الكيميائية.",
+      "conditions": { "temp": "20–32°م", "humidity": "50–80%", "light": "طبيعية", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "good", "summer": "excellent", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "غير متاح", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "الجزر المزهر"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Trichogramma evanescens", "excellent"],
+        ["Trichogramma pretiosum", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Dolichogenidea gelechiidivoris", "good"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Orius laevigatus", "good"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Emamectin benzoate", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "متخصص جدًا على يرقات التوتا.",
+        "يهاجم اليرقات داخل الأنفاق حيث تعجز المبيدات.",
+        "يمتلك خاصية Host Feeding الفريدة (قتل مباشر إضافي).",
+        "متحمل نسبيًا للحرارة المرتفعة.",
+        "يكمل دور طفيلات البيض بكفاءة عالية.",
+        "يقلل أعداد اليرقات بسرعة في بؤر الإصابة."
+      ],
+      "cons": [
+        "لا يؤثر على البيض.",
+        "حساس للمبيدات واسعة التأثير.",
+        "غير متوفر تجاريًا في مصر حاليًا.",
+        "يحتاج وجود يرقات نشطة حتى يبدأ تأثيره."
+      ],
+      "finalRating": "يعتبر Necremnus tutae من أهم الطفيليات الطبيعية ليرقات توتا أبسلوتا في منطقة البحر المتوسط. يتميز بقدرته على الجمع بين التطفل والقتل المباشر لليرقات (Host Feeding)، مما يجعله من أكثر الأعداء الحيوية كفاءة في خفض تعداد التوتا. يناسب برامج المكافحة الحيوية في الطماطم المكشوفة وطماطم التصنيع عند الحفاظ على الأعداء الحيوية وتقليل استخدام المبيدات غير الانتقائية.",
+      "ratingStars": 4
+    },
+    {
+      "id": "dolichogenidea-gelechiidivoris",
+      "category": "larval-parasitoid",
+      "icon": "🐝",
+      "scientificName": "Dolichogenidea gelechiidivoris",
+      "arabicDesc": "طفيل داخلي متخصص على يرقات توتا أبسلوتا",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "none", "adult": "none" },
+      "badges": ["curative", "heat-tolerant", "pesticide-sensitive"],
+      "classification": {
+        "order": "Hymenoptera",
+        "family": "Braconidae",
+        "genus": "Dolichogenidea",
+        "species": "Dolichogenidea gelechiidivoris"
+      },
+      "bioType": "طفيل داخلي متخصص يهاجم يرقات توتا أبسلوتا في الأعمار المبكرة. تضع الأنثى بيضة واحدة داخل جسم اليرقة، ثم ينمو الطفيل داخلها متغذيًا على أنسجتها الداخلية دون قتلها مباشرة. عند اكتمال نموه يخرج من اليرقة ويكوّن شرنقة خارجية، ثم تموت اليرقة المصابة.",
+      "morphology": {
+        "adult": "طول 2–4 مم، لون بني داكن إلى أسود، جسم نحيف، أجنحة شفافة.",
+        "egg": "دقيقة جدًا وتوضع داخل جسم اليرقة.",
+        "larva": "تعيش داخل جسم العائل وتتغذى على أنسجته الداخلية.",
+        "pupa": "تتكون داخل شرنقة حريرية بيضاء أو صفراء فاتحة خارج جسم اليرقة المصابة."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "none", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن يرقات التوتا الصغيرة (الأعمار الأولى والثانية).",
+        "وضع البيضة داخل جسم اليرقة بواسطة آلة وضع البيض.",
+        "نمو الطفيل داخل جسم العائل والتغذي على أنسجته.",
+        "خروج يرقة الطفيل من اليرقة المصابة (تظهر ثقوب خروج مميزة).",
+        "تكوين الشرنقة الحريرية البيضاء أو الصفراء.",
+        "خروج الحشرة الكاملة للبحث عن عوائل جديدة."
+      ],
+      "cycleDuration": { "c20": "20–24 يومًا", "c25": "14–18 يومًا", "c30": "10–14 يومًا" },
+      "behavior": "طفيل داخلي (Endoparasitoid) متخصص في يرقات حرشفية الأجنحة. يفضل الأعمار اليرقية الأولى والثانية من التوتا، ويستطيع تحديد مواقع العائل باستخدام المركبات المتطايرة الصادرة من نباتات الطماطم المصابة (HIPVs).",
+      "conditions": { "temp": "20–30°م", "humidity": "60–80%", "light": "طبيعية", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "لا", "commercial": "غير متاح", "research": "محدود" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الآليسوم", "الريحان", "الجزر المزهر"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Trichogramma evanescens", "excellent"],
+        ["Necremnus tutae", "good"],
+        ["Bracon nigricans", "good"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"]
+      ],
+      "pros": [
+        "متخصص على يرقات التوتا.",
+        "فعال ضد الأعمار اليرقية المبكرة قبل حدوث الضرر الكبير.",
+        "قادر على الوصول إلى اليرقات داخل الأنفاق.",
+        "متوافق مع طفيلات البيض في برامج المكافحة المتكاملة.",
+        "لا يترك متبقيات على الثمار.",
+        "يساهم في خفض تعداد الآفة على المدى الطويل."
+      ],
+      "cons": [
+        "غير متوفر تجاريًا في مصر.",
+        "حساس للمبيدات واسعة التأثير.",
+        "لا يؤثر على البيض أو العذارى.",
+        "تقل كفاءته عند ارتفاع درجات الحرارة الشديدة."
+      ],
+      "finalRating": "يعد Dolichogenidea gelechiidivoris من أكثر طفيلات اليرقات المتخصصة التي أظهرت نتائج قوية ضد توتا أبسلوتا في أمريكا اللاتينية (خاصة كولومبيا والبرازيل). ورغم عدم وجود استخدام تجاري له في مصر حاليًا، فإنه يُعتبر من الأعداء الحيوية الواعدة التي يمكن أن تكمل دور طفيلات البيض والمفترسات الطبيعية داخل برامج المكافحة الحيوية المتكاملة للطماطم المكشوفة وطماطم التصنيع.",
+      "ratingStars": 4
+    },
+    {
+      "id": "nesidiocoris-tenuis",
+      "category": "predator",
+      "icon": "🪲",
+      "scientificName": "Nesidiocoris tenuis",
+      "arabicDesc": "بق مفترس يتغذى على بيض ويرقات توتا أبسلوتا",
+      "targets": { "egg": "effective", "larvae": "effective", "pupae": "partial", "adult": "partial" },
+      "badges": ["preventive-curative", "heat-tolerant", "egypt-native", "pesticide-sensitive"],
+      "classification": {
+        "order": "Hemiptera",
+        "family": "Miridae",
+        "genus": "Nesidiocoris",
+        "species": "Nesidiocoris tenuis"
+      },
+      "bioType": "مفترس عام يعتبر من أهم الأعداء الحيوية الطبيعية لتوتا أبسلوتا في مصر ودول حوض البحر المتوسط. يتغذى على بيض التوتا واليرقات الصغيرة عن طريق ثقبها وامتصاص محتوياتها، كما يهاجم العديد من الآفات الأخرى مثل الذبابة البيضاء والمن والتربس، مما يجعله عنصرًا أساسيًا في برامج المكافحة الحيوية المتكاملة.",
+      "morphology": {
+        "adult": "طول 3–4 مم، لون أخضر فاتح إلى أخضر مصفر، جسم نحيف وأرجل طويلة وقرون استشعار واضحة.",
+        "egg": "بيضاء ممدودة وتوضع داخل أنسجة النبات، ولا يظهر منها سوى جزء صغير.",
+        "larva": "حورية خضراء فاتحة سريعة الحركة تشبه الحشرة الكاملة ولكن بدون أجنحة مكتملة.",
+        "pupa": "لا يوجد طور عذراء، حيث يتبع التحول الناقص (Hemimetabolous)."
+      },
+      "importance": { "egg": "high", "larvae": "high", "pupae": "low", "adult": "low" },
+      "lifecycleSteps": [
+        "وضع البيض داخل أنسجة النبات (الأوراق والسوق).",
+        "فقس البيض بعد 4-7 أيام حسب الحرارة.",
+        "الحورية العمر الأول والثاني (صغيرة جدًا).",
+        "الحورية العمر الثالث والرابع (أكبر حجمًا).",
+        "الحورية العمر الخامس (قريبة من البالغة).",
+        "خروج الحشرة الكاملة بعد اكتمال التحول."
+      ],
+      "cycleDuration": { "c20": "30–35 يومًا", "c25": "20–25 يومًا", "c30": "14–18 يومًا" },
+      "behavior": "يتميز بأنه مفترس ومتغذٍ نباتيًا (Zoophytophagous)، أي يمكنه البقاء والتكاثر على نبات الطماطم حتى عند انخفاض أعداد الآفة من خلال التغذية على العصارة النباتية وحبوب اللقاح. كما يمتلك قدرة عالية على الانتشار الذاتي داخل الحقل ومهاجمة أكثر من آفة في نفس الوقت.",
+      "conditions": { "temp": "20–35°م", "humidity": "50–80%", "light": "طبيعية", "wind": "منخفضة إلى متوسطة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "excellent", "summer": "excellent", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "نعم", "commercial": "محدود", "research": "نعم" },
+      "plants": ["الريحان", "الكزبرة", "الشبت", "الشمار", "السمسم", "الآليسوم"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Trichogramma evanescens", "excellent"],
+        ["Necremnus tutae", "good"],
+        ["Bracon nigricans", "good"],
+        ["Dolichogenidea gelechiidivoris", "good"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Orius laevigatus", "excellent"],
+        ["Beauveria bassiana", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Emamectin benzoate", "medium"],
+        ["Chlorantraniliprole", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"],
+        ["Metarhizium anisopliae", "safe"]
+      ],
+      "pros": [
+        "موجود طبيعيًا في معظم مناطق زراعة الطماطم بمصر.",
+        "يهاجم البيض واليرقات الصغيرة للتوتا بكفاءة عالية.",
+        "يتحمل درجات الحرارة المرتفعة جدًا (حتى 35°م).",
+        "يتكاثر طبيعيًا داخل الحقول والصوب.",
+        "يساهم في مكافحة الذبابة البيضاء والمن والتربس.",
+        "من أهم الأعداء الحيوية للطماطم المكشوفة وطماطم التصنيع.",
+        "Zoophytophagous: يستطيع البقاء عند انخفاض أعداد الآفة."
+      ],
+      "cons": [
+        "حساس للمبيدات واسعة التأثير (خاصة البيريثرويدات).",
+        "قد يسبب وخزًا محدودًا للنبات عند ارتفاع كثافته بشدة.",
+        "يحتاج إلى غطاء نباتي وتنوع حيوي للحفاظ على أعداده.",
+        "تقل أعداده بسرعة عند الاستخدام المكثف للمبيدات."
+      ],
+      "finalRating": "يُعد Nesidiocoris tenuis أحد أهم وأقوى الأعداء الحيوية الطبيعية لتوتا أبسلوتا في مصر، خاصة في الطماطم المكشوفة وطماطم التصنيع. يتميز بقدرته على البقاء والتكاثر داخل الحقول ومهاجمة أكثر من طور للآفة، لذلك يعتبر حجر الأساس في أي برنامج مكافحة حيوية مستدام، خصوصًا عند دعمه بزراعة نباتات جاذبة مثل الريحان والكزبرة وتقليل استخدام المبيدات غير الانتقائية.",
+      "ratingStars": 5
+    },
+    {
+      "id": "macrolophus-pygmaeus",
+      "category": "predator",
+      "icon": "",
+      "scientificName": "Macrolophus pygmaeus",
+      "arabicDesc": "بق مفترس عام يتغذى على بيض ويرقات توتا أبسلوتا",
+      "targets": { "egg": "effective", "larvae": "effective", "pupae": "partial", "adult": "partial" },
+      "badges": ["preventive-curative", "heat-tolerant", "pesticide-sensitive", "bio-safe"],
+      "classification": {
+        "order": "Hemiptera",
+        "family": "Miridae",
+        "genus": "Macrolophus",
+        "species": "Macrolophus pygmaeus"
+      },
+      "bioType": "مفترس عام واسع الاستخدام في برامج المكافحة الحيوية للطماطم (خاصة في أوروبا)، يتغذى على بيض توتا أبسلوتا واليرقات الصغيرة من خلال ثقبها وامتصاص محتوياتها. كما يهاجم الذبابة البيضاء والمن والعناكب الحمراء وبعض الحشرات الصغيرة الأخرى.",
+      "morphology": {
+        "adult": "طول 4–6 مم، لون أخضر فاتح، جسم نحيف وأرجل طويلة وقرون استشعار طويلة.",
+        "egg": "بيضاء ممدودة توضع داخل أنسجة النبات.",
+        "larva": "حورية خضراء فاتحة تشبه الحشرة الكاملة ولكن بدون أجنحة مكتملة.",
+        "pupa": "لا يوجد طور عذراء، حيث يتبع التحول الناقص."
+      },
+      "importance": { "egg": "high", "larvae": "high", "pupae": "low", "adult": "low" },
+      "lifecycleSteps": [
+        "وضع البيض داخل أنسجة النبات.",
+        "فقس البيض بعد 7-10 أيام.",
+        "الحورية العمر الأول والثاني.",
+        "الحورية العمر الثالث والرابع.",
+        "الحورية العمر الخامس.",
+        "خروج الحشرة الكاملة."
+      ],
+      "cycleDuration": { "c20": "35–40 يومًا", "c25": "25–30 يومًا", "c30": "18–22 يومًا" },
+      "behavior": "مفترس ومتغذٍ نباتيًا (Zoophytophagous)، يستطيع البقاء لفترات طويلة على نبات الطماطم حتى عند انخفاض أعداد الآفة. يتميز بمعدل افتراس مرتفع للبيض مقارنة بالعديد من المفترسات الأخرى، ويُعرف بقدرته على تكوين تجمعات مستقرة داخل المحاصيل المحمية.",
+      "conditions": { "temp": "20–30°م", "humidity": "60–80%", "light": "طبيعية", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "لا", "commercial": "غير متاح", "research": "محدود" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "القطيفة"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Necremnus tutae", "good"],
+        ["Bracon nigricans", "good"],
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Orius laevigatus", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "فعال جدًا ضد بيض التوتا واليرقات الصغيرة.",
+        "يساعد في مكافحة عدة آفات أخرى (ذبابة بيضاء، من، تربس).",
+        "يمكنه الاستقرار والتكاثر داخل المحصول لفترات طويلة.",
+        "يتوافق مع برامج المكافحة الحيوية المتكاملة.",
+        "من أنجح المفترسات المستخدمة عالميًا ضد التوتا.",
+        "معدل افتراس مرتفع للبيض."
+      ],
+      "cons": [
+        "غير متوفر تجاريًا في مصر حاليًا.",
+        "حساس للمبيدات واسعة التأثير.",
+        "يتأثر بارتفاع درجات الحرارة الشديدة (أقل من N. tenuis).",
+        "يحتاج وقتًا لبناء تعداد فعال داخل الحقل."
+      ],
+      "finalRating": "يُعد Macrolophus pygmaeus من أهم مفترسات توتا أبسلوتا المستخدمة تجاريًا في أوروبا، خاصة داخل الصوب الزراعية. يتميز بفعالية عالية ضد البيض واليرقات الصغيرة، لكنه أقل ملاءمة للظروف الحارة جدًا مقارنة بـ Nesidiocoris tenuis. لذلك، في ظروف مصر وخاصة طماطم التصنيع المكشوفة، يُعتبر N. tenuis غالبًا الخيار الأفضل، بينما يظل M. pygmaeus مفترسًا ممتازًا للبيئات المعتدلة والبيوت المحمية.",
+      "ratingStars": 4
+    },
+    {
+      "id": "orius-laevigatus",
+      "category": "predator",
+      "icon": "🪲",
+      "scientificName": "Orius laevigatus",
+      "arabicDesc": "بق مفترس عام يتغذى على بيض ويرقات توتا أبسلوتا والعديد من الآفات الأخرى",
+      "targets": { "egg": "effective", "larvae": "partial", "pupae": "none", "adult": "partial" },
+      "badges": ["preventive-curative", "heat-tolerant", "pesticide-sensitive", "bio-safe"],
+      "classification": {
+        "order": "Hemiptera",
+        "family": "Anthocoridae",
+        "genus": "Orius",
+        "species": "Orius laevigatus"
+      },
+      "bioType": "مفترس عام معروف باسم \"بق القراصنة الدقيق\" (Minute Pirate Bug). يتغذى على بيض توتا أبسلوتا واليرقات حديثة الفقس، كما يعتبر من أهم مفترسات التربس عالميًا. يثقب الفريسة ويمتص محتوياتها مما يؤدي إلى موتها سريعًا.",
+      "morphology": {
+        "adult": "طول 2–3 مم، لون بني داكن إلى أسود مع بقع فاتحة على الأجنحة، جسم بيضاوي مفلطح نسبيًا.",
+        "egg": "بيضاء ممدودة وتوضع داخل أنسجة النبات.",
+        "larva": "حورية صفراء إلى برتقالية اللون، سريعة الحركة.",
+        "pupa": "لا يوجد طور عذراء، حيث يتبع التحول الناقص."
+      },
+      "importance": { "egg": "high", "larvae": "medium", "pupae": "none", "adult": "low" },
+      "lifecycleSteps": [
+        "وضع البيض داخل أنسجة النبات.",
+        "فقس البيض بعد 4-6 أيام.",
+        "الحورية العمر الأول والثاني (صغيرة جدًا).",
+        "الحورية العمر الثالث والرابع.",
+        "الحورية العمر الخامس.",
+        "خروج الحشرة الكاملة."
+      ],
+      "cycleDuration": { "c20": "22–28 يومًا", "c25": "14–18 يومًا", "c30": "10–14 يومًا" },
+      "behavior": "يتميز بسرعة الحركة والبحث عن الفرائس، ويمكنه البقاء على حبوب اللقاح والرحيق عند انخفاض أعداد الآفات. يمتلك قدرة عالية على الانتشار داخل الحقل ويُعد من أكثر المفترسات كفاءة ضد التربس.",
+      "conditions": { "temp": "20–32°م", "humidity": "50–80%", "light": "طبيعية", "wind": "منخفضة إلى متوسطة" },
+      "egyptTolerance": { "delta": "good", "saeed": "good", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "محدود", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "عباد الشمس"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Macrolophus pygmaeus", "excellent"],
+        ["Chrysoperla carnea", "good"],
+        ["Necremnus tutae", "good"],
+        ["Bracon nigricans", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "فعال ضد بيض التوتا واليرقات صغيرة الحجم.",
+        "من أفضل المفترسات لمكافحة التربس عالميًا.",
+        "سريع التكاثر والانتشار داخل الحقل.",
+        "يستطيع البقاء على حبوب اللقاح والرحيق.",
+        "متوافق مع معظم برامج المكافحة الحيوية.",
+        "مناسب للصوب الزراعية والمحاصيل متعددة الآفات."
+      ],
+      "cons": [
+        "أقل كفاءة على التوتا من Nesidiocoris tenuis.",
+        "لا يهاجم اليرقات الكبيرة.",
+        "حساس للمبيدات واسعة التأثير.",
+        "يحتاج مصادر غذاء بديلة للحفاظ على أعداده."
+      ],
+      "finalRating": "يعتبر Orius laevigatus مفترسًا ممتازًا ضمن برامج المكافحة الحيوية المتكاملة، لكنه ليس العدو الحيوي الرئيسي لتوتا أبسلوتا. تكمن أهميته في الحقول التي تعاني من التربس إلى جانب التوتا، حيث يوفر مكافحة مزدوجة للآفتين. في طماطم التصنيع المكشوفة بمصر يُعد Nesidiocoris tenuis أكثر أهمية، بينما يكون Orius laevigatus عنصرًا داعمًا قويًا خاصة في البيوت المحمية والبرامج الحيوية المتكاملة.",
+      "ratingStars": 4
+    },
+    {
+      "id": "chrysoperla-carnea",
+      "category": "predator",
+      "icon": "",
+      "scientificName": "Chrysoperla carnea",
+      "arabicDesc": "أسد المن الأخضر (شبكية الأجنحة الخضراء) – مفترس عام لبيض ويرقات العديد من الآفات",
+      "targets": { "egg": "effective", "larvae": "effective", "pupae": "none", "adult": "partial" },
+      "badges": ["preventive-curative", "egypt-native", "heat-tolerant", "pesticide-sensitive"],
+      "classification": {
+        "order": "Neuroptera",
+        "family": "Chrysopidae",
+        "genus": "Chrysoperla",
+        "species": "Chrysoperla carnea"
+      },
+      "bioType": "يُعد من أشهر المفترسات الحيوية في العالم. الطور المفترس الحقيقي هو اليرقة، حيث تهاجم بيض توتا أبسلوتا واليرقات الصغيرة والعديد من الآفات الأخرى مثل المن والذبابة البيضاء والتربس. تستخدم فكوكها المنجلية للإمساك بالفريسة وامتصاص محتوياتها.",
+      "morphology": {
+        "adult": "طول 10–15 مم، لون أخضر فاتح، أجنحة شفافة شبكية كبيرة، عيون ذهبية لامعة.",
+        "egg": "بيضاء أو خضراء فاتحة، توضع منفردة على حامل خيطي طويل.",
+        "larva": "بنية أو رمادية اللون، جسم ممدود مزود بفكين قويين، وتعرف باسم \"أسد المن\".",
+        "pupa": "داخل شرنقة حريرية بيضاء كروية الشكل."
+      },
+      "importance": { "egg": "high", "larvae": "high", "pupae": "none", "adult": "low" },
+      "lifecycleSteps": [
+        "وضع البيض على حوامل خيطية طويلة.",
+        "فقس البيض بعد 3-5 أيام.",
+        "اليرقة العمر الأول (أصغر حجمًا).",
+        "اليرقة العمر الثاني والثالث (أكبر حجمًا وشرهة).",
+        "تكوين الشرنقة الحريرية.",
+        "خروج الحشرة الكاملة."
+      ],
+      "cycleDuration": { "c20": "30–40 يومًا", "c25": "20–30 يومًا", "c30": "15–20 يومًا" },
+      "behavior": "اليرقات شرهة جدًا للافتراس ويمكن أن تستهلك عشرات البيضات أو اليرقات يوميًا. كما أنها تفترس مجموعة واسعة من الآفات، مما يجعلها أداة فعالة في برامج المكافحة الحيوية المتكاملة. الحشرة الكاملة تتغذى أساسًا على الرحيق وحبوب اللقاح والندوة العسلية.",
+      "conditions": { "temp": "20–32°م", "humidity": "50–80%", "light": "طبيعية", "wind": "منخفضة إلى متوسطة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "good", "summer": "excellent", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "نعم", "commercial": "متاح واسع", "research": "نعم" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "عباد الشمس"],
+      "compatibility": [
+        ["Trichogramma achaeae", "good"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Orius laevigatus", "good"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Beauveria bassiana", "good"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["Beauveria bassiana", "safe"]
+      ],
+      "pros": [
+        "متوفر تجاريًا في مصر بأسعار معقولة.",
+        "موجود طبيعيًا في الحقول المصرية.",
+        "يهاجم بيض ويرقات التوتا بفعالية.",
+        "يساعد في مكافحة العديد من الآفات الأخرى.",
+        "سهل الإطلاق والتربية الجماعية.",
+        "مناسب للمكافحة الحيوية والمكافحة المتكاملة."
+      ],
+      "cons": [
+        "غير متخصص على التوتا فقط.",
+        "قد يتغذى على بعض الأعداء الحيوية الصغيرة عند نقص الغذاء.",
+        "حساس للمبيدات واسعة التأثير.",
+        "كفاءته على التوتا أقل من بعض المفترسات المتخصصة."
+      ],
+      "finalRating": "يعتبر Chrysoperla carnea من أهم الأعداء الحيوية المتاحة تجاريًا في مصر، ويتميز بسهولة الاستخدام وتعدد الفرائس. ورغم أنه ليس متخصصًا على توتا أبسلوتا، فإنه يساهم بفاعلية في خفض أعداد البيض واليرقات الصغيرة، خاصة عند دمجه مع مفترسات متخصصة مثل Nesidiocoris tenuis أو طفيلات البيض Trichogramma. يُنصح به كجزء من برنامج متكامل لمكافحة التوتا في الطماطم المكشوفة وطماطم التصنيع.",
+      "ratingStars": 4
+    },
+    {
+      "id": "dicyphus-errans",
+      "category": "predator",
+      "icon": "🪲",
+      "scientificName": "Dicyphus errans",
+      "arabicDesc": "بق مفترس من فصيلة Miridae يتغذى على بيض ويرقات توتا أبسلوتا والعديد من الآفات الأخرى",
+      "targets": { "egg": "effective", "larvae": "effective", "pupae": "none", "adult": "partial" },
+      "badges": ["preventive-curative", "heat-tolerant", "bio-safe", "pesticide-sensitive"],
+      "classification": {
+        "order": "Hemiptera",
+        "family": "Miridae",
+        "genus": "Dicyphus",
+        "species": "Dicyphus errans"
+      },
+      "bioType": "مفترس عام ينتمي إلى مجموعة بق الميريد المفترس. يهاجم بيض توتا أبسلوتا واليرقات الصغيرة عن طريق ثقب الفريسة وامتصاص محتوياتها. كما يتغذى على الذبابة البيضاء والمن والتربس وبعض الآفات الأخرى، مما يجعله عنصرًا مهمًا في برامج المكافحة المتكاملة.",
+      "morphology": {
+        "adult": "طول 4–5 مم، لون أخضر فاتح إلى أخضر مصفر، جسم نحيف وأرجل طويلة.",
+        "egg": "ممدودة وتوضع داخل أنسجة النبات.",
+        "larva": "حورية خضراء فاتحة عديمة الأجنحة.",
+        "pupa": "لا يوجد طور عذراء (تحول ناقص)."
+      },
+      "importance": { "egg": "high", "larvae": "high", "pupae": "none", "adult": "low" },
+      "lifecycleSteps": [
+        "وضع البيض داخل أنسجة النبات.",
+        "فقس البيض.",
+        "الحورية العمر الأول والثاني.",
+        "الحورية العمر الثالث والرابع.",
+        "الحورية العمر الخامس.",
+        "خروج الحشرة الكاملة."
+      ],
+      "cycleDuration": { "c20": "30–35 يومًا", "c25": "20–25 يومًا", "c30": "15–20 يومًا" },
+      "behavior": "مفترس ومتغذٍ نباتيًا جزئيًا (Zoophytophagous)، يستطيع البقاء على النبات حتى عند انخفاض أعداد الفرائس من خلال التغذي المحدود على العصارة النباتية وحبوب اللقاح. يتميز بقدرته على الانتشار داخل نباتات الطماطم والوصول إلى البيض الموجود على الأوراق والقمم النامية.",
+      "conditions": { "temp": "20–30°م", "humidity": "60–80%", "light": "طبيعية", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "لا توجد سجلات مؤكدة", "commercial": "غير متاح", "research": "محدود" },
+      "plants": ["الكزبرة", "الشبت", "الشمار", "الريحان", "الآليسوم", "القطيفة"],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Necremnus tutae", "good"],
+        ["Bracon nigricans", "good"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Beauveria bassiana", "good"]
+      ],
+      "pesticides": [
+        ["البيرثرويدات", "high"],
+        ["الفوسفات العضوية", "high"],
+        ["الكاربامات", "high"],
+        ["السبينوسينات", "medium"],
+        ["الأفرمكتينات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"]
+      ],
+      "pros": [
+        "فعال ضد بيض التوتا واليرقات الصغيرة.",
+        "يساعد في مكافحة عدة آفات زراعية أخرى.",
+        "يستطيع الاستقرار على النبات لفترات طويلة.",
+        "متوافق مع معظم الأعداء الحيوية.",
+        "مناسب للصوب الزراعية وبرامج المكافحة المتكاملة.",
+        "يساهم في تقليل الحاجة للمبيدات الكيميائية."
+      ],
+      "cons": [
+        "غير متوفر تجاريًا في مصر.",
+        "أقل دراسة من Nesidiocoris tenuis وMacrolophus pygmaeus.",
+        "حساس للمبيدات واسعة الطيف.",
+        "قد يسبب تغذية نباتية محدودة عند نقص الفرائس."
+      ],
+      "finalRating": "يُعد Dicyphus errans من المفترسات الواعدة ضد توتا أبسلوتا، لكنه أقل انتشارًا واستخدامًا من Nesidiocoris tenuis وMacrolophus pygmaeus. يمتلك قدرة جيدة على افتراس البيض واليرقات الصغيرة، ويُستخدم بشكل رئيسي في بعض برامج المكافحة الحيوية الأوروبية. بالنسبة للطماطم المكشوفة وطماطم التصنيع في مصر، يبقى دوره حاليًا بحثيًا أكثر من كونه خيارًا عمليًا متاحًا، لكنه يستحق الإدراج ضمن موسوعة الأعداء الحيوية المتخصصة في التوتا.",
+      "ratingStars": 3
+    },
+    {
+      "id": "beauveria-bassiana",
+      "category": "fungi",
+      "icon": "",
+      "scientificName": "Beauveria bassiana",
+      "arabicDesc": "فطر ممرض للحشرات يستخدم في المكافحة الحيوية لتوتا أبسلوتا والعديد من الآفات",
+      "targets": { "egg": "partial", "larvae": "effective", "pupae": "effective", "adult": "effective" },
+      "badges": ["preventive-curative", "bio-safe", "needs-humidity", "medium-heat"],
+      "classification": {
+        "order": "Hypocreales",
+        "family": "Cordycipitaceae",
+        "genus": "Beauveria",
+        "species": "Beauveria bassiana"
+      },
+      "bioType": "فطر ممرض للحشرات (Entomopathogenic Fungus). تلتصق الجراثيم بسطح جسم الحشرة أو اليرقة ثم تنبت وتخترق الجلد الخارجي، وبعد ذلك تنتشر داخل الجسم وتفرز سمومًا (Beauvericin) تؤدي إلى موت الحشرة. بعد الوفاة يغطي الفطر الجسم بطبقة بيضاء من النموات الفطرية وينتج جراثيم جديدة.",
+      "morphology": {
+        "adult": "جراثيم كونيدية بيضاء دقيقة جدًا.",
+        "egg": "—",
+        "larva": "ميسيليوم أبيض قطني.",
+        "pupa": "يظهر غطاء أبيض مسحوقي بعد الموت على الحشرة المصابة."
+      },
+      "importance": { "egg": "low", "larvae": "high", "pupae": "medium", "adult": "high" },
+      "lifecycleSteps": [
+        "وصول الجراثيم إلى جسم الحشرة عن طريق الهواء أو الرذاذ.",
+        "التصاق الجراثيم بالسطح الخارجي (Cuticle).",
+        "إنبات الجرثومة واختراق الجلد باستخدام إنزيمات.",
+        "انتشار الفطر داخل الجسم وإفراز السموم.",
+        "موت الحشرة خلال 3-7 أيام.",
+        "خروج النمو الفطري الأبيض وإنتاج جراثيم جديدة."
+      ],
+      "cycleDuration": { "c20": "7–12 يومًا حتى ظهور الأعراض", "c25": "4–8 أيام", "c30": "3–6 أيام (إذا توفرت الرطوبة المناسبة)" },
+      "behavior": "لا يحتاج إلى أن تأكل الحشرة المادة الفعالة، بل يكفي ملامسة الجراثيم للجسم. كما يمكن أن تنتقل العدوى بين بعض الحشرات المصابة والسليمة (Secondary Infection)، مما يساهم في انتشار التأثير داخل بؤر الإصابة.",
+      "conditions": { "temp": "20–30°م", "humidity": "70–95%", "light": "منخفضة إلى متوسطة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "medium", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "نعم", "commercial": "متاح واسع", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Bacillus thuringiensis (Bt)", "excellent"],
+        ["Metarhizium anisopliae", "good"]
+      ],
+      "pesticides": [
+        ["المبيدات الفطرية النحاسية", "high"],
+        ["مركبات الكبريت", "medium"],
+        ["المبيدات الفطرية الجهازية واسعة الطيف", "high"],
+        ["البيرثرويدات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["الفيروسات الحيوية", "safe"],
+        ["Metarhizium anisopliae", "good"]
+      ],
+      "pros": [
+        "متوفر تجاريًا في مصر بعدة أسماء تجارية.",
+        "يصيب عدة أطوار من التوتا (يرقات، عذارى، بالغات).",
+        "لا يترك متبقيات ضارة على الثمار.",
+        "مناسب للزراعة التصديرية والعضوية.",
+        "يمكن دمجه مع معظم برامج المكافحة الحيوية.",
+        "يساعد في مكافحة آفات أخرى بجانب التوتا."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة نسبيًا (70-95%) لتحقيق أفضل النتائج.",
+        "يتأثر بأشعة الشمس القوية والأشعة فوق البنفسجية.",
+        "تأثيره أبطأ من المبيدات الكيميائية.",
+        "يتأثر ببعض المبيدات الفطرية المستخدمة في الحقل."
+      ],
+      "finalRating": "يُعد Beauveria bassiana من أهم الفطريات الحيوية المستخدمة ضد توتا أبسلوتا في مصر. لا يُعتمد عليه وحده عند الإصابة الشديدة، لكنه عنصر ممتاز داخل برامج المكافحة المتكاملة، خاصة عند دمجه مع Bt والمفترسات الطبيعية مثل Nesidiocoris tenuis وChrysoperla carnea. يحقق أفضل النتائج في العروة النيلية والصوب الزراعية أو عند الرش مساءً مع توفر رطوبة مناسبة.",
+      "ratingStars": 4
+    },
+    {
+      "id": "metarhizium-anisopliae",
+      "category": "fungi",
+      "icon": "🍄",
+      "scientificName": "Metarhizium anisopliae",
+      "arabicDesc": "فطر أخضر ممرض للحشرات يستخدم في المكافحة الحيوية لتوتا أبسلوتا والعديد من الآفات الزراعية",
+      "targets": { "egg": "partial", "larvae": "effective", "pupae": "effective", "adult": "effective" },
+      "badges": ["preventive-curative", "bio-safe", "heat-tolerant", "needs-humidity"],
+      "classification": {
+        "order": "Hypocreales",
+        "family": "Clavicipitaceae",
+        "genus": "Metarhizium",
+        "species": "Metarhizium anisopliae"
+      },
+      "bioType": "فطر ممرض للحشرات يعمل عن طريق التصاق الجراثيم بسطح جسم الحشرة أو اليرقة، ثم اختراق الطبقة الخارجية للجسم باستخدام إنزيمات متخصصة (بروتياز، كيتيناز، ليباز). بعد الاختراق ينتشر الفطر داخل جسم العائل ويؤدي إلى موته، ثم يغطي الجثة بنمو فطري أخضر اللون وينتج جراثيم جديدة.",
+      "morphology": {
+        "adult": "جراثيم كونيدية خضراء دقيقة.",
+        "egg": "—",
+        "larva": "ميسيليوم أبيض يتحول تدريجيًا إلى اللون الأخضر الزيتوني.",
+        "pupa": "غطاء أخضر مخضر مميز على الحشرة المصابة بعد الموت."
+      },
+      "importance": { "egg": "low", "larvae": "high", "pupae": "high", "adult": "medium" },
+      "lifecycleSteps": [
+        "وصول الجراثيم إلى جسم الحشرة.",
+        "التصاق الجراثيم بالسطح الخارجي.",
+        "إنبات الجرثومة واختراق الجلد بالإنزيمات.",
+        "انتشار الفطر داخل الجسم.",
+        "موت الحشرة.",
+        "تكوين النمو الفطري الأخضر وإنتاج جراثيم جديدة."
+      ],
+      "cycleDuration": { "c20": "8–14 يومًا حتى ظهور الأعراض", "c25": "5–9 أيام", "c30": "4–7 أيام" },
+      "behavior": "يمتاز بقدرته على البقاء لفترات طويلة نسبيًا في التربة مقارنة بالعديد من الفطريات الحيوية الأخرى. كما أن بعض السلالات قادرة على استعمار منطقة الجذور (Rhizosphere) مما يساعد على استمرار وجودها في البيئة الزراعية.",
+      "conditions": { "temp": "25–32°م", "humidity": "70–95%", "light": "منخفضة إلى متوسطة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "excellent", "saeed": "good", "summer": "excellent", "nile": "good", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "نعم", "commercial": "متاح محدود", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Necremnus tutae", "excellent"],
+        ["Bracon nigricans", "excellent"],
+        ["Beauveria bassiana", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["المبيدات الفطرية النحاسية", "high"],
+        ["مركبات الكبريت", "medium"],
+        ["المبيدات الفطرية الجهازية واسعة الطيف", "high"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["الفيروسات الحيوية", "safe"],
+        ["Beauveria bassiana", "good"]
+      ],
+      "pros": [
+        "فعال ضد اليرقات والعذارى والحشرات الكاملة.",
+        "أكثر تحملاً للحرارة من Beauveria bassiana.",
+        "يمكن أن يستمر لفترة أطول في البيئة الزراعية.",
+        "مناسب للزراعة العضوية والتصديرية.",
+        "لا يترك متبقيات ضارة على الثمار.",
+        "يمكن دمجه مع العديد من الأعداء الحيوية الأخرى."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة نسبيًا لتحقيق أفضل كفاءة.",
+        "يتأثر بأشعة الشمس القوية والأشعة فوق البنفسجية.",
+        "تأثيره أبطأ من المبيدات الكيميائية التقليدية.",
+        "يتأثر ببعض المبيدات الفطرية المستخدمة في برامج المكافحة المرضية."
+      ],
+      "finalRating": "يُعد Metarhizium anisopliae من الفطريات الحيوية الواعدة في مكافحة توتا أبسلوتا، خاصة في البيئات الحارة نسبيًا حيث يتحمل الحرارة بشكل أفضل من Beauveria bassiana. يناسب برامج المكافحة المتكاملة في الطماطم المكشوفة وطماطم التصنيع، خصوصًا عند استخدامه مع Bt والمفترسات الطبيعية. يحقق أفضل النتائج عند الرش مساءً أو في الصباح الباكر مع توفر رطوبة مناسبة تساعد على إنبات الجراثيم واختراق الآفة.",
+      "ratingStars": 4
+    },
+    {
+      "id": "lecanicillium-muscarium",
+      "category": "fungi",
+      "icon": "🍄",
+      "scientificName": "Lecanicillium muscarium",
+      "arabicDesc": "فطر ممرض للحشرات يستخدم في المكافحة الحيوية للآفات الثاقبة الماصة وبعض يرقات الحشرات",
+      "targets": { "egg": "partial", "larvae": "effective", "pupae": "partial", "adult": "effective" },
+      "badges": ["preventive-curative", "bio-safe", "needs-high-humidity", "sun-sensitive"],
+      "classification": {
+        "order": "Hypocreales",
+        "family": "Cordycipitaceae",
+        "genus": "Lecanicillium",
+        "species": "Lecanicillium muscarium"
+      },
+      "bioType": "فطر ممرض للحشرات يلتصق بسطح جسم الحشرة أو اليرقة، ثم ينبت ويخترق الطبقة الخارجية للجسم بواسطة إنزيمات متخصصة. بعد الاختراق ينتشر داخل الجسم ويستهلك محتوياته حتى تموت الحشرة، ثم ينتج نموًا فطريًا أبيض يغطي الجثة ويطلق جراثيم جديدة. رغم شهرته في مكافحة الذبابة البيضاء والمن والتربس، فقد أظهرت بعض الدراسات تأثيرًا على يرقات توتا أبسلوتا خاصة في البيئات المحمية.",
+      "morphology": {
+        "adult": "جراثيم كونيدية بيضاء دقيقة.",
+        "egg": "—",
+        "larva": "ميسيليوم أبيض قطني.",
+        "pupa": "غطاء أبيض كثيف على الحشرة المصابة بعد الوفاة."
+      },
+      "importance": { "egg": "low", "larvae": "medium", "pupae": "low", "adult": "medium" },
+      "lifecycleSteps": [
+        "وصول الجراثيم إلى جسم الحشرة.",
+        "التصاق الجراثيم بالسطح الخارجي.",
+        "إنبات الجرثومة.",
+        "اختراق جسم الحشرة بالإنزيمات.",
+        "موت العائل.",
+        "إنتاج جراثيم جديدة على الجثة."
+      ],
+      "cycleDuration": { "c20": "7–12 يومًا", "c25": "5–8 أيام", "c30": "4–7 أيام (مع توفر رطوبة مرتفعة)" },
+      "behavior": "يمتاز بقدرته على الانتشار فوق الأسطح النباتية الرطبة، كما يمكن أن يسبب عدوى ثانوية بين الحشرات المتلامسة. يحتاج إلى رطوبة مرتفعة أكثر من Beauveria bassiana وMetarhizium anisopliae لتحقيق أفضل كفاءة.",
+      "conditions": { "temp": "18–28°م", "humidity": "80–100%", "light": "منخفضة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "medium", "saeed": "poor", "summer": "poor", "nile": "good", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "غير معروف", "commercial": "غير متاح", "research": "محدود" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Beauveria bassiana", "good"],
+        ["Metarhizium anisopliae", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"],
+        ["النيماتودا الممرضة", "safe"]
+      ],
+      "pesticides": [
+        ["المبيدات الفطرية النحاسية", "high"],
+        ["مركبات الكبريت", "high"],
+        ["المبيدات الفطرية الجهازية واسعة الطيف", "high"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["النيماتودا الممرضة للحشرات", "safe"],
+        ["الفيروسات الحيوية", "safe"]
+      ],
+      "pros": [
+        "آمن للإنسان والبيئة.",
+        "لا يترك متبقيات على المحصول.",
+        "متوافق مع معظم الأعداء الحيوية.",
+        "فعال ضد مجموعة واسعة من الآفات.",
+        "مناسب للزراعة العضوية.",
+        "يعطي نتائج جيدة في الصوب الزراعية."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة جدًا (80-100%).",
+        "يتأثر بشدة بأشعة الشمس.",
+        "أقل فعالية ضد التوتا من Beauveria وMetarhizium.",
+        "محدود التوفر التجاري والدراسات على التوتا."
+      ],
+      "finalRating": "يُعتبر Lecanicillium muscarium فطرًا حيويًا مهمًا في مكافحة الذبابة البيضاء والمن والتربس، أما بالنسبة لتوتا أبسلوتا فيُصنف كعامل مساعد أكثر منه عاملًا رئيسيًا. يمكن أن يساهم في خفض أعداد اليرقات في البيئات الرطبة والصوب الزراعية، لكنه أقل أهمية من Beauveria bassiana وMetarhizium anisopliae في برامج مكافحة التوتا. لذلك يُنصح بإدراجه ضمن الموسوعة كعامل حيوي ثانوي أو مكمل وليس كأحد الأعداء الحيوية الأساسية.",
+      "ratingStars": 3
+    },
+    {
+      "id": "cordyceps-fumosorosea",
+      "category": "fungi",
+      "icon": "🍄",
+      "scientificName": "Cordyceps fumosorosea",
+      "arabicDesc": "فطر ممرض للحشرات واسع المدى يصيب يرقات وحشرات توتا أبسلوتا والعديد من الآفات الزراعية (Isaria fumosorosea سابقًا)",
+      "targets": { "egg": "partial", "larvae": "effective", "pupae": "effective", "adult": "effective" },
+      "badges": ["preventive-curative", "bio-safe", "needs-humidity", "good-heat"],
+      "classification": {
+        "order": "Hypocreales",
+        "family": "Cordycipitaceae",
+        "genus": "Cordyceps",
+        "species": "Cordyceps fumosorosea"
+      },
+      "bioType": "فطر ممرض للحشرات يعمل بطريقة مشابهة لـ Beauveria bassiana، حيث تلتصق الجراثيم بسطح الحشرة أو اليرقة ثم تنبت وتخترق الهيكل الخارجي باستخدام إنزيمات متخصصة. بعد دخول الجسم ينتشر الفطر داخليًا ويؤدي إلى موت العائل ثم يغطيه بنمو فطري أبيض مائل للوردي وينتج جراثيم جديدة.",
+      "morphology": {
+        "adult": "جراثيم كونيدية دقيقة بيضاء إلى وردية اللون.",
+        "egg": "—",
+        "larva": "ميسيليوم أبيض قطني.",
+        "pupa": "نمو فطري أبيض مائل للوردي أو الدخاني على الحشرة المصابة."
+      },
+      "importance": { "egg": "low", "larvae": "high", "pupae": "medium", "adult": "medium" },
+      "lifecycleSteps": [
+        "وصول الجراثيم إلى جسم الحشرة.",
+        "الالتصاق بالسطح الخارجي.",
+        "الإنبات واختراق الجلد.",
+        "الانتشار داخل الجسم.",
+        "موت الحشرة.",
+        "إنتاج نمو فطري وجراثيم جديدة."
+      ],
+      "cycleDuration": { "c20": "7–12 يومًا", "c25": "5–8 أيام", "c30": "4–7 أيام" },
+      "behavior": "يمتلك قدرة جيدة على إصابة الحشرات المختبئة نسبيًا، كما أن بعض الدراسات تشير إلى إمكانية بقائه لفترة أطول على الأسطح النباتية مقارنة ببعض الفطريات الحيوية الأخرى. يتميز بإنتاج كثيف للجراثيم عند توفر الرطوبة المناسبة.",
+      "conditions": { "temp": "22–30°م", "humidity": "70–95%", "light": "منخفضة إلى متوسطة", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "غير معروف", "commercial": "محدود جدًا", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "good"],
+        ["Chrysoperla carnea", "good"],
+        ["Beauveria bassiana", "good"],
+        ["Metarhizium anisopliae", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["المبيدات الفطرية النحاسية", "high"],
+        ["مركبات الكبريت", "high"],
+        ["المبيدات الفطرية الجهازية واسعة الطيف", "high"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["النيماتودا الممرضة للحشرات", "safe"],
+        ["الفيروسات الحيوية", "safe"]
+      ],
+      "pros": [
+        "فعال ضد اليرقات والحشرات الكاملة.",
+        "آمن للإنسان والبيئة.",
+        "لا يترك متبقيات على الثمار.",
+        "متوافق مع برامج الزراعة العضوية.",
+        "يمكن دمجه مع معظم الأعداء الحيوية الأخرى.",
+        "يمتلك نطاقًا واسعًا من الآفات المستهدفة."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة لتحقيق أعلى فعالية.",
+        "يتأثر بأشعة الشمس المباشرة.",
+        "أبطأ من المبيدات الكيميائية في إظهار النتائج.",
+        "محدود التوفر التجاري في مصر."
+      ],
+      "finalRating": "يُعتبر Cordyceps fumosorosea (Isaria fumosorosea سابقًا) من الفطريات الحيوية الواعدة في مكافحة توتا أبسلوتا، لكنه لا يزال أقل انتشارًا من Beauveria bassiana وMetarhizium anisopliae. يمكن أن يساهم بفاعلية في خفض أعداد اليرقات ضمن برامج المكافحة المتكاملة، خاصة في البيئات الرطبة والصوب الزراعية. في ظروف مصر يُنظر إليه كعامل حيوي مكمل ومفيد، لكنه ليس من الأعداء الحيوية الرئيسية المعتمد عليها حاليًا في طماطم التصنيع المكشوفة.",
+      "ratingStars": 3
+    },
+    {
+      "id": "steinernema-feltiae",
+      "category": "nematode",
+      "icon": "🪱",
+      "scientificName": "Steinernema feltiae",
+      "arabicDesc": "نيماتودا طفيلية حشرية تهاجم يرقات وعذارى توتا أبسلوتا",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "effective", "adult": "none" },
+      "badges": ["preventive-curative", "bio-safe", "needs-high-humidity", "uv-sensitive"],
+      "classification": {
+        "order": "Rhabditida",
+        "family": "Steinernematidae",
+        "genus": "Steinernema",
+        "species": "Steinernema feltiae"
+      },
+      "bioType": "نيماتودا ممرضة للحشرات (Entomopathogenic Nematode) تبحث عن العائل بنشاط وتدخل إلى جسمه عبر الفم أو فتحات التنفس أو الشرج. بعد دخولها تطلق بكتيريا تكافلية من جنس Xenorhabdus داخل جسم الحشرة، فتسبب تسممًا دمويًا سريعًا يؤدي إلى موت العائل خلال 24–72 ساعة.",
+      "morphology": {
+        "adult": "يرقة معدية (Infective Juvenile) بطول 0.7–1 مم تقريبًا.",
+        "egg": "—",
+        "larva": "شفافة إلى بيضاء مصفرة، دودية أسطوانية.",
+        "pupa": "تتكاثر داخل جسم العائل الميت لعدة أجيال قبل خروج اليرقات المعدية الجديدة."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "high", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن العائل في التربة أو الأسطح الرطبة.",
+        "دخول النيماتودا إلى جسم الحشرة.",
+        "إطلاق البكتيريا التكافلية Xenorhabdus.",
+        "موت العائل خلال 24-72 ساعة.",
+        "تكاثر النيماتودا داخل الجثة.",
+        "خروج اليرقات المعدية الجديدة للبحث عن عوائل أخرى."
+      ],
+      "cycleDuration": { "c20": "10–14 يومًا", "c25": "7–10 أيام", "c30": "5–8 أيام (مع توفر الرطوبة المناسبة)" },
+      "behavior": "يتميز بقدرته على البحث النشط عن العائل (Cruiser & Intermediate Forager) داخل التربة وعلى الأسطح الرطبة. كما يستطيع اختراق اليرقات المختبئة في الشقوق أو داخل بقايا النباتات الرطبة.",
+      "conditions": { "temp": "15–28°م", "humidity": "80–100%", "light": "منخفضة أو ظلام", "wind": "منخفضة جدًا" },
+      "egyptTolerance": { "delta": "medium", "saeed": "poor", "summer": "poor", "nile": "good", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "غير متاح", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Beauveria bassiana", "good"],
+        ["Metarhizium anisopliae", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["المبيدات النيماتودية الكيميائية", "high"],
+        ["المبيدات الفوسفاتية العضوية", "medium"],
+        ["البيرثرويدات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["الفطريات الحيوية", "safe"],
+        ["الزيوت النباتية الخفيفة", "safe"]
+      ],
+      "pros": [
+        "يقتل العائل بسرعة خلال أيام قليلة.",
+        "فعال ضد اليرقات والعذارى المختبئة.",
+        "آمن على الإنسان والنبات والحيوان.",
+        "لا يترك متبقيات على الثمار.",
+        "متوافق مع معظم برامج المكافحة الحيوية.",
+        "يمكن دمجه مع الفطريات الحيوية وBt."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة جدًا (80-100%).",
+        "حساس لأشعة الشمس المباشرة والأشعة فوق البنفسجية.",
+        "تقل كفاءته بشدة في درجات الحرارة المرتفعة.",
+        "محدود الاستخدام في الحقول المكشوفة الحارة."
+      ],
+      "finalRating": "يُعد Steinernema feltiae من أفضل النيماتودا الممرضة للحشرات المستخدمة ضد يرقات وعذارى العديد من الآفات، بما فيها توتا أبسلوتا. يحقق نتائج ممتازة داخل الصوب الزراعية والبيئات مرتفعة الرطوبة، لكنه أقل ملاءمة لظروف طماطم التصنيع المكشوفة في مصر خلال الصيف. لذلك يُنظر إليه كأداة مكملة داخل برامج المكافحة الحيوية المتكاملة أكثر من كونه عنصرًا أساسيًا في الحقول المفتوحة.",
+      "ratingStars": 3
+    },
+    {
+      "id": "steinernema-carpocapsae",
+      "category": "nematode",
+      "icon": "🪱",
+      "scientificName": "Steinernema carpocapsae",
+      "arabicDesc": "نيماتودا ممرضة للحشرات متخصصة في مهاجمة اليرقات والعذارى",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "effective", "adult": "none" },
+      "badges": ["preventive-curative", "bio-safe", "heat-tolerant", "needs-humidity"],
+      "classification": {
+        "order": "Rhabditida",
+        "family": "Steinernematidae",
+        "genus": "Steinernema",
+        "species": "Steinernema carpocapsae"
+      },
+      "bioType": "نيماتودا ممرضة للحشرات تدخل جسم العائل عبر الفتحات الطبيعية، ثم تطلق بكتيريا تكافلية من جنس Xenorhabdus تؤدي إلى قتل الحشرة خلال فترة قصيرة. بعد موت العائل تتكاثر النيماتودا داخله وتنتج أجيالًا جديدة تخرج للبحث عن عوائل أخرى.",
+      "morphology": {
+        "adult": "يرقة معدية (Infective Juvenile) بطول 0.5–0.7 مم تقريبًا.",
+        "egg": "—",
+        "larva": "أبيض شفاف، دودي أسطواني.",
+        "pupa": "يتطور ويتكاثر داخل جسم العائل الميت."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "high", "adult": "none" },
+      "lifecycleSteps": [
+        "البحث عن العائل المناسب.",
+        "دخول النيماتودا إلى جسم الحشرة.",
+        "إطلاق البكتيريا التكافلية.",
+        "موت العائل خلال 24–72 ساعة.",
+        "تكاثر النيماتودا داخل الجثة.",
+        "خروج اليرقات المعدية الجديدة."
+      ],
+      "cycleDuration": { "c20": "10–14 يومًا", "c25": "7–10 أيام", "c30": "5–8 أيام" },
+      "behavior": "يتميز باستراتيجية Ambusher (الكمين)، حيث ينتظر مرور العائل بالقرب منه ثم يهاجمه بسرعة. لذلك يكون أكثر كفاءة ضد الحشرات المتحركة واليرقات القريبة من سطح التربة أو الأسطح النباتية مقارنة ببعض أنواع النيماتودا الأخرى.",
+      "conditions": { "temp": "20–30°م", "humidity": "75–100%", "light": "منخفضة أو ظلام", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "medium", "summer": "medium", "nile": "good", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "غير متاح", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Beauveria bassiana", "good"],
+        ["Metarhizium anisopliae", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["المبيدات النيماتودية الكيميائية", "high"],
+        ["الفوسفات العضوية", "medium"],
+        ["البيرثرويدات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["الفطريات الحيوية", "safe"],
+        ["الزيوت النباتية الخفيفة", "safe"]
+      ],
+      "pros": [
+        "يقتل اليرقات والعذارى بسرعة.",
+        "يمتلك قدرة جيدة على تحمل الحرارة مقارنة ببعض أنواع النيماتودا الأخرى.",
+        "آمن على الإنسان والحيوان والنبات.",
+        "لا يترك متبقيات على الثمار.",
+        "متوافق مع برامج المكافحة الحيوية.",
+        "يمكن دمجه مع الفطريات الحيوية وBt."
+      ],
+      "cons": [
+        "يحتاج رطوبة مرتفعة للحفاظ على نشاطه.",
+        "يتأثر بأشعة الشمس المباشرة.",
+        "فعاليته محدودة في الحقول الجافة جدًا.",
+        "غير متوفر تجاريًا على نطاق واسع في مصر."
+      ],
+      "finalRating": "يُعتبر Steinernema carpocapsae من أكثر أنواع النيماتودا الممرضة للحشرات استخدامًا عالميًا. يتميز بسرعة قتل العائل وقدرته على إصابة اليرقات المختبئة، كما يتحمل الظروف الدافئة أفضل من Steinernema feltiae. في مصر يمكن أن يكون مفيدًا داخل برامج المكافحة الحيوية المتكاملة، خاصة في الصوب الزراعية أو عند استخدام الري والرطوبة المناسبة، لكنه يظل أداة مساعدة وليست بديلاً منفردًا لمكافحة توتا أبسلوتا في طماطم التصنيع المكشوفة.",
+      "ratingStars": 4
+    },
+    {
+      "id": "heterorhabditis-bacteriophora",
+      "category": "nematode",
+      "icon": "🪱",
+      "scientificName": "Heterorhabditis bacteriophora",
+      "arabicDesc": "نيماتودا ممرضة للحشرات تهاجم اليرقات والعذارى باستخدام بكتيريا تكافلية قاتلة",
+      "targets": { "egg": "none", "larvae": "effective", "pupae": "effective", "adult": "partial" },
+      "badges": ["preventive-curative", "heat-tolerant", "bio-safe", "needs-humidity"],
+      "classification": {
+        "order": "Rhabditida",
+        "family": "Heterorhabditidae",
+        "genus": "Heterorhabditis",
+        "species": "Heterorhabditis bacteriophora"
+      },
+      "bioType": "نيماتودا ممرضة للحشرات تبحث عن العائل داخل التربة أو الأماكن الرطبة. بعد دخولها جسم الحشرة تطلق بكتيريا تكافلية من جنس Photorhabdus، فتتكاثر البكتيريا بسرعة وتقتل العائل خلال 24–72 ساعة. بعد ذلك تتكاثر النيماتودا داخل الجثة وتخرج أجيال جديدة للبحث عن فرائس أخرى.",
+      "morphology": {
+        "adult": "يرقة معدية (Infective Juvenile) بطول 0.5–0.7 مم تقريبًا.",
+        "egg": "—",
+        "larva": "أبيض شفاف، دودي أسطواني.",
+        "pupa": "يتطور ويتكاثر داخل جسم الحشرة الميتة."
+      },
+      "importance": { "egg": "none", "larvae": "high", "pupae": "high", "adult": "low" },
+      "lifecycleSteps": [
+        "البحث عن العائل في التربة.",
+        "اختراق جسم الحشرة.",
+        "إطلاق بكتيريا Photorhabdus التكافلية.",
+        "موت العائل خلال أيام قليلة.",
+        "تكاثر النيماتودا داخل الجثة.",
+        "خروج اليرقات المعدية الجديدة."
+      ],
+      "cycleDuration": { "c20": "12–16 يومًا", "c25": "8–12 يومًا", "c30": "6–9 أيام" },
+      "behavior": "تتميز بقدرتها العالية على الحركة داخل التربة والبحث النشط عن العائل (Cruiser Strategy)، ولذلك تكون فعالة ضد اليرقات والعذارى الموجودة في التربة أو المخلفات النباتية. كما أنها أكثر قدرة على اختراق بعض الحشرات مقارنةً بأنواع Steinernema.",
+      "conditions": { "temp": "22–32°م", "humidity": "70–100%", "light": "منخفضة أو ظلام", "wind": "منخفضة" },
+      "egyptTolerance": { "delta": "good", "saeed": "good", "summer": "good", "nile": "excellent", "greenhouse": "excellent" },
+      "egyptPresence": { "natural": "محتمل", "commercial": "غير متاح", "research": "نعم" },
+      "plants": [],
+      "compatibility": [
+        ["Trichogramma achaeae", "excellent"],
+        ["Nesidiocoris tenuis", "excellent"],
+        ["Chrysoperla carnea", "excellent"],
+        ["Beauveria bassiana", "good"],
+        ["Metarhizium anisopliae", "good"],
+        ["Bacillus thuringiensis (Bt)", "excellent"]
+      ],
+      "pesticides": [
+        ["المبيدات النيماتودية الكيميائية", "high"],
+        ["الفوسفات العضوية", "medium"],
+        ["البيرثرويدات", "medium"],
+        ["Bacillus thuringiensis (Bt)", "safe"],
+        ["الفطريات الحيوية", "safe"],
+        ["الزيوت النباتية الخفيفة", "safe"]
+      ],
+      "pros": [
+        "فعالة ضد اليرقات والعذارى.",
+        "تتحمل الحرارة أكثر من Steinernema feltiae.",
+        "تقتل العائل بسرعة خلال 24-72 ساعة.",
+        "آمنة للإنسان والنبات والحيوان.",
+        "لا تترك متبقيات على الثمار.",
+        "متوافقة مع معظم برامج المكافحة الحيوية."
+      ],
+      "cons": [
+        "تحتاج رطوبة مرتفعة لتحقيق أفضل أداء.",
+        "تتأثر بأشعة الشمس المباشرة.",
+        "فعاليتها محدودة ضد الأطوار الموجودة داخل أنفاق الأوراق.",
+        "غير متوفرة تجاريًا في مصر حاليًا."
+      ],
+      "finalRating": "تُعد Heterorhabditis bacteriophora من أقوى النيماتودا الممرضة للحشرات المستخدمة عالميًا، وتمتاز بقدرتها على تحمل الحرارة نسبيًا مقارنة ببعض الأنواع الأخرى. بالنسبة لتوتا أبسلوتا، تكون أكثر فائدة في مهاجمة اليرقات والعذارى الموجودة في التربة أو بقايا النباتات بعد الحصاد، ولذلك يمكن استخدامها كجزء من برنامج خفض أعداد الآفة بين المواسم. في طماطم التصنيع المكشوفة بمصر تعتبر أداة مساعدة واعدة، لكنها ليست بديلاً عن الأعداء الحيوية الرئيسية مثل Trichogramma achaeae أو Nesidiocoris tenuis.",
+      "ratingStars": 4
+    }
+  ]
+}

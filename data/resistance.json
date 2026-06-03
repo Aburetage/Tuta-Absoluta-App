@@ -1,0 +1,28 @@
+{
+  "resistanceData": [
+    {
+      "pesticide": "البيريثرويدات",
+      "example": "مثل: لامبدا-سيهالوثرين",
+      "level": "high",
+      "levelText": "مقاومة عالية جداً (>1000 ضعف)"
+    },
+    {
+      "pesticide": "أفيرمكتينات (IRAC 6)",
+      "example": "مثل: أبامكتين",
+      "level": "medium",
+      "levelText": "مقاومة متوسطة"
+    },
+    {
+      "pesticide": "سبينوسينات (IRAC 5)",
+      "example": "مثل: سبينوساد",
+      "level": "low",
+      "levelText": "بدايات مقاومة"
+    },
+    {
+      "pesticide": "دياميدات (IRAC 28)",
+      "example": "مثل: كورايجن",
+      "level": "low",
+      "levelText": "مقاومة منخفضة"
+    }
+  ]
+}
