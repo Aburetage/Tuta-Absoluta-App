@@ -174,7 +174,6 @@ function drawChart() {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
     
-    // Set canvas size for high DPI displays
     canvas.width = rect.width * dpr;
     canvas.height = 340 * dpr;
     canvas.style.height = '340px';
@@ -196,7 +195,6 @@ function drawChart() {
     const maxDays = Math.max(...data.map(d => d.days > 0 ? d.days : 0), 80);
     const maxTemp = Math.max(...data.map(d => d.t)) + 5;
     
-    // Grid lines
     ctx.strokeStyle = 'rgba(255,255,255,.04)';
     ctx.lineWidth = 1;
     ctx.fillStyle = 'rgba(154,169,182,.4)';
@@ -212,7 +210,6 @@ function drawChart() {
         ctx.fillText(Math.round(maxDays - (maxDays / 5) * i), pad.l - 6, y + 3);
     }
     
-    // Month labels
     ctx.textAlign = 'center';
     data.forEach((d, i) => {
         const x = pad.l + (i + .5) * (cW / 12);
@@ -223,7 +220,6 @@ function drawChart() {
         ctx.fillText(d.t + '°', x, H - pad.b + 30);
     });
     
-    // Bars
     data.forEach((d, i) => {
         const x = pad.l + (i + .5) * (cW / 12);
         const bw = cW / 12 * .65;
@@ -242,7 +238,6 @@ function drawChart() {
         }
     });
     
-    // Temperature line
     ctx.beginPath();
     ctx.strokeStyle = 'rgba(231,76,60,.8)';
     ctx.lineWidth = 2.5;
@@ -253,7 +248,6 @@ function drawChart() {
     });
     ctx.stroke();
     
-    // Data points
     data.forEach((d, i) => {
         const x = pad.l + (i + .5) * (cW / 12);
         const y = pad.t + cH - (d.t / maxTemp) * cH;
@@ -266,7 +260,6 @@ function drawChart() {
         ctx.stroke();
     });
     
-    // Threshold lines
     [[8, 'rgba(100,180,200,.5)', 'العتبة 8°م'], [30, 'rgba(46,204,113,.5)', 'المثلى 30°م']].forEach(([t, cl, lb]) => {
         const y = pad.t + cH - (t / maxTemp) * cH;
         ctx.beginPath();
@@ -283,7 +276,6 @@ function drawChart() {
         ctx.fillText(lb, pad.l + 4, y - 5);
     });
     
-    // Generation counts
     data.forEach((d, i) => {
         const x = pad.l + (i + .5) * (cW / 12);
         ctx.fillStyle = d.gen >= 2 ? 'rgba(231,76,60,.6)' : d.gen >= 1 ? 'rgba(243,156,18,.5)' : 'rgba(154,169,182,.3)';
@@ -296,7 +288,6 @@ function drawChart() {
     if (legend) legend.innerHTML = '<span><span class="legend-dot" style="background:rgba(46,204,113,.7)"></span> نشاط عالي</span><span><span class="legend-dot" style="background:rgba(200,180,70,.65)"></span> نشاط متوسط</span><span><span class="legend-dot" style="background:rgba(100,180,200,.55)"></span> نشاط منخفض</span><span style="border-top:3px solid #e74c3c;padding-top:3px"> خط الحرارة</span>';
 }
 
-// Debounced chart redraw for performance
 const debouncedDrawChart = debounce(drawChart, 250);
 
 function buildHeatmap() {
@@ -374,7 +365,6 @@ function updSU() {
     if (curStage >= 0) { 
         updDet(); 
         p.classList.add('open'); 
-        // Use requestAnimationFrame for smooth scroll
         requestAnimationFrame(() => {
             p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
@@ -419,7 +409,7 @@ function populateTable() {
     const cData = calendarDataObj;
     
     const rows = [
-        { label: '️ متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
+        { label: ' متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
         { label: '💧 الرطوبة النسبية (%)', data: cData.humidities || [], type: 'hum' },
         { label: '🦋 شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
         { label: '🔄 عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
@@ -735,7 +725,6 @@ function buildIPMSection() {
     html += '</div>';
     container.innerHTML = html;
     
-    // Event delegation for IPM tabs
     setTimeout(() => {
         const tabsContainer = document.getElementById('ipmTabs');
         if (tabsContainer) {
@@ -812,7 +801,6 @@ function toggleFAQ(el) {
     const item = el.parentElement;
     const isOpen = item.classList.contains('open');
     
-    // Close others for better mobile experience
     document.querySelectorAll('.faq-item').forEach(x => { 
         x.classList.remove('open'); 
         const q = x.querySelector('.faq-question');
@@ -917,7 +905,6 @@ function showSingleSection(groupId, clickedItem) {
     closeDropdown();
     updateNavButtons();
     
-    // Smooth scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (groupId === 'seasonal-heatmap') { 
@@ -1310,7 +1297,6 @@ function filterBioByCategory(category, btn) {
 // ============================================
 
 document.addEventListener('keydown', function(e) {
-    // Escape closes everything
     if (e.key === 'Escape') {
         closeDropdown();
         document.querySelectorAll('.bio-modal.active').forEach(m => { 
@@ -1324,12 +1310,10 @@ document.addEventListener('keydown', function(e) {
         });
     }
     
-    // Tab key for keyboard navigation indicator
     if (e.key === 'Tab') {
         document.body.classList.add('keyboard-user');
     }
     
-    // Keyboard shortcuts
     if (e.key === 'Enter' || e.key === ' ') {
         const target = e.target;
         if (target.classList.contains('bio-header') || target.getAttribute('tabindex') === '0') {
@@ -1339,7 +1323,6 @@ document.addEventListener('keydown', function(e) {
     }
 });
 
-// Remove keyboard indicator on mouse click
 document.addEventListener('mousedown', () => {
     document.body.classList.remove('keyboard-user');
 });
@@ -1354,11 +1337,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
-        // Load data
         await loadAllData();
         console.log('✅ Data loaded successfully');
 
-        // Setup constants
         const thermal = getThermalConstants();
         T0 = thermal.T0; 
         TH = thermal.TH; 
@@ -1371,7 +1352,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         sourcesData = getSources();
         bioAgentsData = getBioAgents();
 
-        // Build dynamic sections
         buildSpreadSection();
         buildEconomicSection();
         buildIPMSection();
@@ -1380,7 +1360,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         buildSources();
         console.log('✅ Dynamic sections built');
 
-        // Slider Event with throttling for performance
         const slider = document.getElementById('tempSlider');
         if (slider) {
             slider.addEventListener('input', function () { 
@@ -1390,32 +1369,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Optimized Intersection Observer (unobserve after visible)
         const revealObs = new IntersectionObserver((entries) => { 
             entries.forEach(e => { 
                 if (e.isIntersecting) {
                     e.target.classList.add('visible');
-                    revealObs.unobserve(e.target); // Stop observing once visible
+                    revealObs.unobserve(e.target);
                 } 
             }); 
         }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
         
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-        // Build remaining UI
         buildStages();
         populateTable();
         buildPlanCards();
         updAll();
         console.log('✅ UI components built');
 
-        // Bio agents encyclopedia
         renderBioCategoryFilter();
         renderBioCards('all');
         renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
 
-        // Event Listeners
         document.getElementById('prevS').addEventListener('click', () => { 
             let n = curStage - 1; 
             if (n < 0) n = stagesData.length - 1; 
@@ -1430,24 +1405,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
-        // Debounced resize listener for performance
         window.addEventListener('resize', debouncedDrawChart);
 
-        // Landing particles
         createLandingParticles();
 
-        // Service Worker
+        // Service Worker - تحديث تلقائي بدون رسالة مزعجة
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('✅ SW registered:', reg.scope))
+                    .then(reg => {
+                        console.log('✅ SW registered:', reg.scope);
+                        
+                        // ✅ التحقق من التحديثات وتحديث تلقائي بدون رسالة
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // تحديث تلقائي بدون رسالة
+                                    console.log('🔄 New version available, reloading...');
+                                    window.location.reload();
+                                }
+                            });
+                        });
+                    })
                     .catch(err => console.log('❌ SW failed:', err)); 
             }); 
+            
+            // ✅ تحديث تلقائي عند وجود controller جديد (بدون رسالة)
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (refreshing) return;
+                refreshing = true;
+                console.log('🔄 Updating to new version...');
+                window.location.reload();
+            });
         }
         
         console.log('🎉 Application ready!');
         
-        // Hide loading spinner
         setTimeout(() => { 
             if (loadingOverlay) { 
                 loadingOverlay.classList.add('hidden'); 
