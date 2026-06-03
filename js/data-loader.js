@@ -1,225 +1,148 @@
 // ============================================
-// Tuta Absoluta App - Data Loader
-// اكاديمية المهندس الزراعي
-// النسخة النهائية المُصلحة ✅
+// Data Loader - تحميل البيانات من ملفات JSON
 // ============================================
 
-// متغيرات تخزين البيانات
-let thermalModel = {};
-let stages = [];
-let seasonalData = [];
-let calendarData = {};
-let planCards = [];
-let sources = [];
-let bioAgents = [];
-let spreadReasons = [];
-let economicStats = [];
-let economicCards = [];
-let ipmData = {};
-let faq = [];
-let resistanceData = [];
+const DataPaths = {
+  thermal: 'data/thermal-model.json',
+  seasonal: 'data/seasonal-data.json',
+  planCards: 'data/plan-cards.json',
+  sources: 'data/sources.json',
+  faq: 'data/faq.json',
+  spread: 'data/spread-reasons.json',
+  economic: 'data/economic-impact.json',
+  ipm: 'data/ipm-program.json',
+  resistance: 'data/resistance.json',
+  bioAgents: 'data/bio-agents.json'
+};
 
-// ============================================
-// دالة تحميل جميع البيانات
-// ============================================
+let APP_DATA = {
+  thermal: null,
+  seasonal: null,
+  planCards: null,
+  sources: null,
+  faq: null,
+  spread: null,
+  economic: null,
+  ipm: null,
+  resistance: null,
+  bioAgents: null
+};
+
+async function loadData(filename) {
+  try {
+    const response = await fetch(filename);
+    if (!response.ok) {
+      console.warn(`تعذر تحميل: ${filename} - سيُستخدم البيانات الاحتياطية`);
+      return null;
+    }
+    return await response.json();
+  } catch (error) {
+    console.warn(`خطأ في تحميل ${filename}:`, error);
+    return null;
+  }
+}
 
 async function loadAllData() {
-    try {
-        const files = [
-            { name: 'thermal-model.json', target: 'thermalModel' },
-            { name: 'seasonal-data.json', target: 'seasonalData' },
-            { name: 'plan-cards.json', target: 'planCards' },
-            { name: 'sources.json', target: 'sources' },
-            { name: 'bio-agents.json', target: 'bioAgents' },
-            { name: 'spread-reasons.json', target: 'spreadReasons' },
-            { name: 'economic-impact.json', target: 'economicData' },
-            { name: 'ipm-program.json', target: 'ipmData' },
-            { name: 'faq.json', target: 'faq' },
-            { name: 'resistance.json', target: 'resistanceData' }
-        ];
+  const [thermal, seasonal, planCards, sources, faq, spread, economic, ipm, resistance, bioAgents] = await Promise.all([
+    loadData(DataPaths.thermal),
+    loadData(DataPaths.seasonal),
+    loadData(DataPaths.planCards),
+    loadData(DataPaths.sources),
+    loadData(DataPaths.faq),
+    loadData(DataPaths.spread),
+    loadData(DataPaths.economic),
+    loadData(DataPaths.ipm),
+    loadData(DataPaths.resistance),
+    loadData(DataPaths.bioAgents)
+  ]);
 
-        const promises = files.map(file => 
-            fetch(`data/${file.name}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status} for ${file.name}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // معالجة خاصة لكل نوع من البيانات
-                    
-                    // 1. البيانات الاقتصادية (Object فيه Arrays)
-                    if (file.target === 'economicData') {
-                        economicStats = data.economicStats || data.stats || [];
-                        economicCards = data.economicCards || data.cards || [];
-                        console.log(`   💰 Stats: ${economicStats.length}, Cards: ${economicCards.length}`);
-                    }
-                    
-                    // 2. بيانات IPM (Object معقد)
-                    else if (file.target === 'ipmData') {
-                        window.ipmData = data;
-                    }
-                    
-                    // 3. النموذج الحراري + مراحل الحياة
-                    else if (file.target === 'thermalModel') {
-                        // استخراج thermalConstants (Object)
-                        window.thermalModel = data.thermalConstants || data;
-                        
-                        // استخراج stages (Array)
-                        window.stages = data.stages || [];
-                        
-                        console.log(`🌡️ Loaded thermal-model.json`);
-                        console.log(`   T0: ${window.thermalModel.T0}°م`);
-                        console.log(`   TH: ${window.thermalModel.TH}°م`);
-                        console.log(`   Stages: ${window.stages.length} stages`);
-                    }
-                    
-                    // 4. البيانات الموسمية
-                    else if (file.target === 'seasonalData') {
-                        window.seasonalData = data.egyptMonths || data.seasonalData || [];
-                        window.calendarData = data.calendarData || {};
-                        
-                        console.log(`📅 Loaded seasonal-data.json`);
-                        console.log(`   Months: ${window.seasonalData.length}`);
-                        console.log(`   Calendar fields: ${Object.keys(window.calendarData).length}`);
-                    }
-                    
-                    // 5. الملفات اللي Array داخل Object
-                    else if (['bioAgents', 'faq', 'planCards', 'sources', 'spreadReasons', 'resistanceData'].includes(file.target)) {
-                        window[file.target] = data[file.target] || data;
-                    }
-                    
-                    // 6. باقي الملفات
-                    else {
-                        window[file.target] = data;
-                    }
-                    
-                    console.log(`✅ Loaded ${file.name}`);
-                })
-                .catch(err => {
-                    console.error(`❌ Error loading ${file.name}:`, err);
-                    // تعيين قيم افتراضية
-                    if (file.target === 'economicData') {
-                        economicStats = [];
-                        economicCards = [];
-                    } else if (file.target === 'seasonalData') {
-                        window.seasonalData = [];
-                        window.calendarData = {};
-                    } else if (file.target === 'thermalModel') {
-                        window.thermalModel = { T0: 8, TH: 37, K: { egg: 80, larva: 150, pupa: 100 } };
-                        window.stages = [];
-                    } else {
-                        window[file.target] = [];
-                    }
-                })
-        );
+  APP_DATA.thermal = thermal;
+  APP_DATA.seasonal = seasonal;
+  APP_DATA.planCards = planCards;
+  APP_DATA.sources = sources;
+  APP_DATA.faq = faq;
+  APP_DATA.spread = spread;
+  APP_DATA.economic = economic;
+  APP_DATA.ipm = ipm;
+  APP_DATA.resistance = resistance;
+  APP_DATA.bioAgents = bioAgents;
 
-        await Promise.all(promises);
-        
-        // تعيين المتغيرات المحلية
-        thermalModel = window.thermalModel || { T0: 8, TH: 37, K: { egg: 80, larva: 150, pupa: 100 } };
-        stages = window.stages || [];
-        seasonalData = window.seasonalData || [];
-        calendarData = window.calendarData || {};
-        planCards = window.planCards || [];
-        sources = window.sources || [];
-        bioAgents = window.bioAgents || [];
-        spreadReasons = window.spreadReasons || [];
-        ipmData = window.ipmData || {};
-        faq = window.faq || [];
-        resistanceData = window.resistanceData || [];
-        
-        console.log('='.repeat(60));
-        console.log('✅ All data loaded successfully!');
-        console.log('='.repeat(60));
-        console.log(`🌡️  Thermal Model: T0=${thermalModel.T0}°م, TH=${thermalModel.TH}°م`);
-        console.log(`🔄 Stages: ${stages.length} stages`);
-        console.log(`📅 Seasonal Data: ${seasonalData.length} months`);
-        console.log(`📆 Calendar Data: ${Object.keys(calendarData).length} fields`);
-        console.log(`📊 Bio Agents: ${bioAgents.length} agents`);
-        console.log(`❓ FAQ: ${faq.length} questions`);
-        console.log(`📉 Economic Stats: ${economicStats.length} stats`);
-        console.log(`💰 Economic Cards: ${economicCards.length} cards`);
-        console.log(`📋 Plan Cards: ${planCards.length} cards`);
-        console.log(`🛡️  IPM Sections: ${Object.keys(ipmData).length}`);
-        console.log(`⚠️  Resistance: ${resistanceData.length} pesticides`);
-        console.log(`📚 Sources: ${sources.length} references`);
-        console.log(`🌍 Spread Reasons: ${spreadReasons.length} reasons`);
-        console.log('='.repeat(60));
-        
-    } catch (error) {
-        console.error('❌ Error loading data:', error);
-        throw error;
-    }
+  console.log('✅ تم تحميل جميع البيانات:', APP_DATA);
 }
 
 // ============================================
-// دوال Getter للبيانات
+// دوال مساعدة للوصول للبيانات
 // ============================================
 
 function getThermalConstants() {
-    return {
-        T0: thermalModel.T0 || 8,
-        TH: thermalModel.TH || 37,
-        K: {
-            egg: thermalModel.K?.egg || 75.5,
-            larva: thermalModel.K?.larva || 160.8,
-            pupa: thermalModel.K?.pupa || 182.3
-        }
-    };
+  return APP_DATA.thermal?.thermalConstants || {
+    T0: 8,
+    TH: 37,
+    K: { egg: 75.5, larva: 160.8, pupa: 182.3 }
+  };
 }
 
 function getStages() {
-    return stages;
+  return APP_DATA.thermal?.stages || [];
 }
 
 function getEgyptMonths() {
-    return seasonalData;
+  return APP_DATA.seasonal?.egyptMonths || [];
 }
 
 function getCalendarData() {
-    return calendarData;
+  return APP_DATA.seasonal?.calendarData || {};
 }
 
 function getPlanCards() {
-    return planCards;
+  return APP_DATA.planCards?.planCards || [];
 }
 
 function getSources() {
-    return sources;
-}
-
-function getBioAgents() {
-    return bioAgents;
-}
-
-function getSpreadReasons() {
-    return spreadReasons;
-}
-
-function getEconomicStats() {
-    return economicStats;
-}
-
-function getEconomicCards() {
-    return economicCards;
-}
-
-function getIPMData() {
-    return ipmData;
+  return APP_DATA.sources?.sources || [];
 }
 
 function getFAQ() {
-    return faq;
+  return APP_DATA.faq?.faq || [];
+}
+
+function getSpreadReasons() {
+  return APP_DATA.spread?.spreadReasons || [];
+}
+
+function getEconomicStats() {
+  return APP_DATA.economic?.economicStats || [];
+}
+
+function getEconomicCards() {
+  return APP_DATA.economic?.economicCards || [];
+}
+
+function getIPMData() {
+  return APP_DATA.ipm || {};
 }
 
 function getResistanceData() {
-    return resistanceData;
+  return APP_DATA.resistance?.resistanceData || [];
 }
 
-// ============================================
-// Export
-// ============================================
+function getBioAgents() {
+  return APP_DATA.bioAgents?.bioAgents || [];
+}
 
-console.log('📦 Data Loader initialized - Agricultural Engineer Academy');
+// تصدير الدوال عالمياً
+window.APP_DATA = APP_DATA;
+window.loadAllData = loadAllData;
+window.getThermalConstants = getThermalConstants;
+window.getStages = getStages;
+window.getEgyptMonths = getEgyptMonths;
+window.getCalendarData = getCalendarData;
+window.getPlanCards = getPlanCards;
+window.getSources = getSources;
+window.getFAQ = getFAQ;
+window.getSpreadReasons = getSpreadReasons;
+window.getEconomicStats = getEconomicStats;
+window.getEconomicCards = getEconomicCards;
+window.getIPMData = getIPMData;
+window.getResistanceData = getResistanceData;
+window.getBioAgents = getBioAgents;

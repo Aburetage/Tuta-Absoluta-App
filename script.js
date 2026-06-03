@@ -1,12 +1,12 @@
 // ============================================
 // Tuta Absoluta App - Script.js
-// النسخة Pro الكاملة - اكاديمية المهندس الزراعي
-// جميع المشاكل مُصلحة ✅
+// الإصدار المحسن مع تحديث تلقائي بدون رسالة
 // ============================================
 
 // ============================================
 // Global Variables
 // ============================================
+
 let curTemp = 25, curStage = -1, autoInt = null, isAuto = false;
 let currentSingleGroup = null;
 let T0, TH, K;
@@ -18,55 +18,29 @@ let planCardsData = [];
 let sourcesData = [];
 let bioAgentsData = [];
 
-// Multi-language
-let currentLang = localStorage.getItem('tuta-lang') || 'ar';
-const translations = {
-    ar: {
-        search: 'البحث الذكي', searchPlaceholder: 'ابحث عن كائن حيوي، مبيد، مرحلة...',
-        all: 'الكل', bio: 'أعداء حيوية', stages: 'مراحل الحياة', faq: 'أسئلة شائعة',
-        startTyping: 'ابدأ الكتابة للبحث...', noResults: 'لا توجد نتائج', resultsFound: 'نتائج',
-        home: 'الرئيسية', biology: 'البيولوجيا', control: 'المكافحة', enemies: 'الأعداء', contact: 'تواصل',
-        whatsapp: 'واتساب', email: 'البريد الإلكتروني', twitter: 'Twitter', top: 'أعلى',
-        pullToRefresh: 'اسحب للتحديث', refreshing: 'جاري التحديث...',
-        skip: 'تخطي', next: 'التالي', getStarted: 'ابدأ',
-        langChanged: 'تم تغيير اللغة إلى العربية',
-        onboarding1Title: 'أهلاً بك في اكاديمية المهندس الزراعي', onboarding1Desc: 'دليلك الشامل لمكافحة آفة توتا أبسولوتا في مصر',
-        onboarding2Title: 'تصفح سهل وسريع', onboarding2Desc: 'استخدم الشريط السفلي للتنقل بين الأقسام أو اسحب يميناً ويساراً',
-        onboarding3Title: 'بحث ذكي', onboarding3Desc: 'اضغط على أيقونة البحث للعثور على أي معلومة بسرعة',
-        onboarding4Title: 'جاهز للبدء!', onboarding4Desc: 'استمتع بتجربة تفاعلية شاملة مع أحدث التقنيات الزراعية'
-    },
-    en: {
-        search: 'Smart Search', searchPlaceholder: 'Search for bio-agent, pesticide, stage...',
-        all: 'All', bio: 'Bio-agents', stages: 'Stages', faq: 'FAQ',
-        startTyping: 'Start typing to search...', noResults: 'No results found', resultsFound: 'results',
-        home: 'Home', biology: 'Biology', control: 'Control', enemies: 'Enemies', contact: 'Contact',
-        whatsapp: 'WhatsApp', email: 'Email', twitter: 'Twitter', top: 'Top',
-        pullToRefresh: 'Pull to refresh', refreshing: 'Refreshing...',
-        skip: 'Skip', next: 'Next', getStarted: 'Get Started',
-        langChanged: 'Language changed to English',
-        onboarding1Title: 'Welcome to Agricultural Engineer Academy', onboarding1Desc: 'Your comprehensive guide to combat Tuta Absoluta in Egypt',
-        onboarding2Title: 'Easy Navigation', onboarding2Desc: 'Use bottom navigation or swipe left/right',
-        onboarding3Title: 'Smart Search', onboarding3Desc: 'Tap search icon to find any information',
-        onboarding4Title: 'Ready to Start!', onboarding4Desc: 'Enjoy an interactive experience'
-    }
-};
-
 // ============================================
 // Performance Utilities
 // ============================================
+
 function debounce(func, wait) {
     let timeout;
-    return function(...args) {
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
         clearTimeout(timeout);
-        timeout = setTimeout(() => func(...args), wait);
+        timeout = setTimeout(later, wait);
     };
 }
 
 function throttle(func, limit) {
     let inThrottle;
-    return function(...args) {
+    return function() {
+        const args = arguments;
+        const context = this;
         if (!inThrottle) {
-            func.apply(this, args);
+            func.apply(context, args);
             inThrottle = true;
             setTimeout(() => inThrottle = false, limit);
         }
@@ -74,74 +48,9 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// Translation Functions
-// ============================================
-function t(key) {
-    return translations[currentLang][key] || translations['ar'][key] || key;
-}
-
-function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    localStorage.setItem('tuta-lang', currentLang);
-    updateLanguage();
-    haptic(20);
-    showToast(t('langChanged'), 'info');
-}
-
-function updateLanguage() {
-    document.documentElement.lang = currentLang;
-    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    
-    const searchHeader = document.querySelector('.search-header h3');
-    if (searchHeader) searchHeader.innerHTML = `<i class="fas fa-search"></i> ${t('search')}`;
-    
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.placeholder = t('searchPlaceholder');
-    
-    const bottomNavSpans = document.querySelectorAll('.bottom-nav-item span');
-    const navTexts = [t('home'), t('biology'), t('control'), t('enemies'), t('contact')];
-    bottomNavSpans.forEach((span, i) => { if (navTexts[i]) span.textContent = navTexts[i]; });
-    
-    const fabSpans = document.querySelectorAll('.fab-menu-item span');
-    const fabTexts = [t('whatsapp'), t('email'), t('twitter'), t('top')];
-    fabSpans.forEach((span, i) => { if (fabTexts[i]) span.textContent = fabTexts[i]; });
-    
-    const ptr = document.querySelector('.pull-to-refresh span');
-    if (ptr && !document.querySelector('.pull-to-refresh.refreshing')) ptr.textContent = t('pullToRefresh');
-    
-    for (let i = 1; i <= 4; i++) {
-        const slide = document.querySelector(`.onboarding-slide[data-slide="${i}"]`);
-        if (slide) {
-            const h2 = slide.querySelector('h2');
-            const p = slide.querySelector('p');
-            if (h2) h2.textContent = t(`onboarding${i}Title`);
-            if (p) p.textContent = t(`onboarding${i}Desc`);
-        }
-    }
-    
-    const skipBtn = document.querySelector('.onboarding-skip');
-    if (skipBtn) skipBtn.textContent = t('skip');
-    updateOnboardingSlide();
-}
-
-// ============================================
-// Haptic Feedback
-// ============================================
-function haptic(pattern = 10) {
-    if (navigator.vibrate) navigator.vibrate(pattern);
-}
-
-function hapticButton(element) {
-    haptic(10);
-    if (element) {
-        element.classList.add('haptic');
-        setTimeout(() => element.classList.remove('haptic'), 150);
-    }
-}
-
-// ============================================
 // Group Mapping
 // ============================================
+
 const groupMap = {
     'biology': ['about', 'thermal', 'daysSection', 'lifecycle'],
     'spread-economic': ['spread', 'economic'],
@@ -169,11 +78,14 @@ const groupNames = {
 const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'faq', 'resistance', 'sources'];
 
 // ============================================
-// Thermal Functions
+// Thermal Calculation Functions
 // ============================================
+
 function calcDays(T) {
     if (T <= T0 || T >= TH) return { egg: -1, larva: -1, pupa: -1, adult: -1, dev: -1, gen: -1 };
-    const dE = K.egg / (T - T0), dL = K.larva / (T - T0), dP = K.pupa / (T - T0);
+    const dE = K.egg / (T - T0);
+    const dL = K.larva / (T - T0);
+    const dP = K.pupa / (T - T0);
     let dA = T <= 30 ? 24 - .8 * (T - 10) : Math.max(4, 8 - (T - 30) * .5);
     const dev = Math.round((dE + dL + dP) * 10) / 10;
     const gen = Math.round((dE + dL + dP + dA) * 10) / 10;
@@ -192,25 +104,43 @@ function getZone(T) {
 }
 
 function tClr(T) {
-    if (T < 12) return '#6a9cc8'; if (T < 18) return '#68b8c8'; if (T < 22) return '#90c050';
-    if (T < 26) return '#c8c040'; if (T < 30) return '#e8a838'; if (T < 34) return '#e87030';
+    if (T < 12) return '#6a9cc8';
+    if (T < 18) return '#68b8c8';
+    if (T < 22) return '#90c050';
+    if (T < 26) return '#c8c040';
+    if (T < 30) return '#e8a838';
+    if (T < 34) return '#e87030';
     return '#e74c3c';
 }
 
 function hmClr(v) {
-    if (v <= 30) return 'rgba(100,180,200,.35)'; if (v <= 50) return 'rgba(200,180,70,.5)';
-    if (v <= 75) return 'rgba(46,204,113,.55)'; return 'rgba(231,76,60,.65)';
+    if (v <= 30) return 'rgba(100,180,200,.35)';
+    if (v <= 50) return 'rgba(200,180,70,.5)';
+    if (v <= 75) return 'rgba(46,204,113,.55)';
+    return 'rgba(231,76,60,.65)';
 }
 
+// ============================================
+// Update Functions
+// ============================================
+
 function updAll() {
-    const d = calcDays(curTemp), z = getZone(curTemp), tc = tClr(curTemp);
+    const d = calcDays(curTemp);
+    const z = getZone(curTemp);
+    const tc = tClr(curTemp);
     document.getElementById('tempVal').textContent = curTemp;
     document.getElementById('tempVal').style.color = tc;
     document.getElementById('tempDesc').textContent = z.l;
     const zb = document.getElementById('tempZone');
-    zb.textContent = z.z; zb.style.background = z.c + '20'; zb.style.color = z.c;
-    updTempGrid(d); updDaysBars(d); drawChart(); buildHeatmap();
-    if (curStage >= 0) updDet(); updSD(d);
+    zb.textContent = z.z;
+    zb.style.background = z.c + '20';
+    zb.style.color = z.c;
+    updTempGrid(d);
+    updDaysBars(d);
+    drawChart();
+    buildHeatmap();
+    if (curStage >= 0) updDet();
+    updSD(d);
 }
 
 function updTempGrid(d) {
@@ -228,177 +158,503 @@ function updDaysBars(d) {
 // ============================================
 // Chart Functions
 // ============================================
+
 function drawRoundedRect(ctx, x, y, w, h, r) {
     r = Math.min(r, w / 2, h / 2);
-    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y);
-    ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h);
-    ctx.lineTo(x, y + h); ctx.lineTo(x, y + r);
-    ctx.quadraticCurveTo(x, y, x + r, y); ctx.closePath();
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x, y + h);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
 }
 
 function drawChart() {
-    const canvas = document.getElementById('seasonChart'); if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1; const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr; canvas.height = 340 * dpr; canvas.style.height = '340px';
-    const ctx = canvas.getContext('2d'); ctx.scale(dpr, dpr);
-    const W = rect.width, H = 340; const pad = { t: 30, r: 35, b: 55, l: 45 };
+    const canvas = document.getElementById('seasonChart');
+    if (!canvas) return;
+    
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    
+    canvas.width = rect.width * dpr;
+    canvas.height = 340 * dpr;
+    canvas.style.height = '340px';
+    
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    
+    const W = rect.width, H = 340;
+    const pad = { t: 30, r: 35, b: 55, l: 45 };
     const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+    
     ctx.clearRect(0, 0, W, H);
-    const data = egyptMonthsData.map(em => { const d = calcDays(em.temp); return { m: em.month, t: em.temp, days: d.dev, gen: d.dev > 0 ? Math.floor(30 / d.dev) : 0 }; });
+    
+    const data = egyptMonthsData.map(em => { 
+        const d = calcDays(em.temp); 
+        return { m: em.month, t: em.temp, days: d.dev, gen: d.dev > 0 ? Math.floor(30 / d.dev) : 0 }; 
+    });
+    
     const maxDays = Math.max(...data.map(d => d.days > 0 ? d.days : 0), 80);
     const maxTemp = Math.max(...data.map(d => d.t)) + 5;
-    ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = 1; ctx.fillStyle = 'rgba(154,169,182,.4)';
-    ctx.font = '9px Tajawal'; ctx.textAlign = 'right';
-    for (let i = 0; i <= 5; i++) { const y = pad.t + (cH / 5) * i; ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + cW, y); ctx.stroke(); ctx.fillText(Math.round(maxDays - (maxDays / 5) * i), pad.l - 6, y + 3); }
+    
+    ctx.strokeStyle = 'rgba(255,255,255,.04)';
+    ctx.lineWidth = 1;
+    ctx.fillStyle = 'rgba(154,169,182,.4)';
+    ctx.font = '9px Tajawal';
+    ctx.textAlign = 'right';
+    
+    for (let i = 0; i <= 5; i++) {
+        const y = pad.t + (cH / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(pad.l, y);
+        ctx.lineTo(pad.l + cW, y);
+        ctx.stroke();
+        ctx.fillText(Math.round(maxDays - (maxDays / 5) * i), pad.l - 6, y + 3);
+    }
+    
     ctx.textAlign = 'center';
-    data.forEach((d, i) => { const x = pad.l + (i + .5) * (cW / 12); ctx.fillStyle = 'rgba(154,169,182,.4)'; ctx.fillText(d.m, x, H - pad.b + 16); ctx.fillStyle = tClr(d.t); ctx.font = '8px Tajawal'; ctx.fillText(d.t + '°', x, H - pad.b + 30); });
-    data.forEach((d, i) => { const x = pad.l + (i + .5) * (cW / 12); const bw = cW / 12 * .65; const bh = d.days > 0 ? (d.days / maxDays) * cH : 0; const by = pad.t + cH - bh; let clr = d.t <= T0 ? 'rgba(100,130,180,.35)' : d.t < 18 ? 'rgba(100,180,200,.55)' : d.t < 22 ? 'rgba(200,180,70,.65)' : d.t <= 30 ? 'rgba(46,204,113,.7)' : 'rgba(230,120,50,.65)'; if (d.days > 0) { ctx.fillStyle = clr; drawRoundedRect(ctx, x - bw / 2, by, bw, bh, 4); ctx.fill(); ctx.fillStyle = '#fff'; ctx.font = 'bold 9px Cairo'; ctx.fillText(d.days, x, by - 4); } });
-    ctx.beginPath(); ctx.strokeStyle = 'rgba(231,76,60,.8)'; ctx.lineWidth = 2.5;
-    data.forEach((d, i) => { const x = pad.l + (i + .5) * (cW / 12); const y = pad.t + cH - (d.t / maxTemp) * cH; i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }); ctx.stroke();
-    data.forEach((d, i) => { const x = pad.l + (i + .5) * (cW / 12); const y = pad.t + cH - (d.t / maxTemp) * cH; ctx.beginPath(); ctx.arc(x, y, 4.5, 0, Math.PI * 2); ctx.fillStyle = tClr(d.t); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke(); });
-    [[8, 'rgba(100,180,200,.5)', 'العتبة 8°م'], [30, 'rgba(46,204,113,.5)', 'المثلى 30°م']].forEach(([t, cl, lb]) => { const y = pad.t + cH - (t / maxTemp) * cH; ctx.beginPath(); ctx.strokeStyle = cl; ctx.lineWidth = 1; ctx.setLineDash([5, 5]); ctx.moveTo(pad.l, y); ctx.lineTo(pad.l + cW, y); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = cl; ctx.font = '8px Tajawal'; ctx.textAlign = 'left'; ctx.fillText(lb, pad.l + 4, y - 5); });
-    data.forEach((d, i) => { const x = pad.l + (i + .5) * (cW / 12); ctx.fillStyle = d.gen >= 2 ? 'rgba(231,76,60,.6)' : d.gen >= 1 ? 'rgba(243,156,18,.5)' : 'rgba(154,169,182,.3)'; ctx.font = 'bold 8px Cairo'; ctx.textAlign = 'center'; ctx.fillText(d.gen + ' جيل', x, H - pad.b + 44); });
-    const legend = document.getElementById('chartLegend'); if (legend) legend.innerHTML = '<span><span class="legend-dot" style="background:rgba(46,204,113,.7)"></span> نشاط عالي</span><span><span class="legend-dot" style="background:rgba(200,180,70,.65)"></span> نشاط متوسط</span><span><span class="legend-dot" style="background:rgba(100,180,200,.55)"></span> نشاط منخفض</span><span style="border-top:3px solid #e74c3c;padding-top:3px"> خط الحرارة</span>';
+    data.forEach((d, i) => {
+        const x = pad.l + (i + .5) * (cW / 12);
+        ctx.fillStyle = 'rgba(154,169,182,.4)';
+        ctx.fillText(d.m, x, H - pad.b + 16);
+        ctx.fillStyle = tClr(d.t);
+        ctx.font = '8px Tajawal';
+        ctx.fillText(d.t + '°', x, H - pad.b + 30);
+    });
+    
+    data.forEach((d, i) => {
+        const x = pad.l + (i + .5) * (cW / 12);
+        const bw = cW / 12 * .65;
+        const bh = d.days > 0 ? (d.days / maxDays) * cH : 0;
+        const by = pad.t + cH - bh;
+        
+        let clr = d.t <= T0 ? 'rgba(100,130,180,.35)' : d.t < 18 ? 'rgba(100,180,200,.55)' : d.t < 22 ? 'rgba(200,180,70,.65)' : d.t <= 30 ? 'rgba(46,204,113,.7)' : 'rgba(230,120,50,.65)';
+        
+        if (d.days > 0) { 
+            ctx.fillStyle = clr; 
+            drawRoundedRect(ctx, x - bw / 2, by, bw, bh, 4); 
+            ctx.fill(); 
+            ctx.fillStyle = '#fff'; 
+            ctx.font = 'bold 9px Cairo'; 
+            ctx.fillText(d.days, x, by - 4); 
+        }
+    });
+    
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(231,76,60,.8)';
+    ctx.lineWidth = 2.5;
+    data.forEach((d, i) => { 
+        const x = pad.l + (i + .5) * (cW / 12);
+        const y = pad.t + cH - (d.t / maxTemp) * cH; 
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); 
+    });
+    ctx.stroke();
+    
+    data.forEach((d, i) => {
+        const x = pad.l + (i + .5) * (cW / 12);
+        const y = pad.t + cH - (d.t / maxTemp) * cH;
+        ctx.beginPath();
+        ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+        ctx.fillStyle = tClr(d.t);
+        ctx.fill();
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    });
+    
+    [[8, 'rgba(100,180,200,.5)', 'العتبة 8°م'], [30, 'rgba(46,204,113,.5)', 'المثلى 30°م']].forEach(([t, cl, lb]) => {
+        const y = pad.t + cH - (t / maxTemp) * cH;
+        ctx.beginPath();
+        ctx.strokeStyle = cl;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([5, 5]);
+        ctx.moveTo(pad.l, y);
+        ctx.lineTo(pad.l + cW, y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = cl;
+        ctx.font = '8px Tajawal';
+        ctx.textAlign = 'left';
+        ctx.fillText(lb, pad.l + 4, y - 5);
+    });
+    
+    data.forEach((d, i) => {
+        const x = pad.l + (i + .5) * (cW / 12);
+        ctx.fillStyle = d.gen >= 2 ? 'rgba(231,76,60,.6)' : d.gen >= 1 ? 'rgba(243,156,18,.5)' : 'rgba(154,169,182,.3)';
+        ctx.font = 'bold 8px Cairo';
+        ctx.textAlign = 'center';
+        ctx.fillText(d.gen + ' جيل', x, H - pad.b + 44);
+    });
+    
+    const legend = document.getElementById('chartLegend');
+    if (legend) legend.innerHTML = '<span><span class="legend-dot" style="background:rgba(46,204,113,.7)"></span> نشاط عالي</span><span><span class="legend-dot" style="background:rgba(200,180,70,.65)"></span> نشاط متوسط</span><span><span class="legend-dot" style="background:rgba(100,180,200,.55)"></span> نشاط منخفض</span><span style="border-top:3px solid #e74c3c;padding-top:3px"> خط الحرارة</span>';
 }
+
 const debouncedDrawChart = debounce(drawChart, 250);
 
 function buildHeatmap() {
-    const grid = document.getElementById('heatmapGrid'), labels = document.getElementById('heatmapLabels');
+    const grid = document.getElementById('heatmapGrid');
+    const labels = document.getElementById('heatmapLabels');
     if (!grid) return;
-    const fragment = document.createDocumentFragment(), labelFragment = document.createDocumentFragment();
-    egyptMonthsData.forEach(em => { const d = calcDays(em.temp); let act = d.dev <= 0 ? 0 : d.dev <= 25 ? 90 + (25 - d.dev) * 2 : d.dev <= 35 ? 70 + (35 - d.dev) * 2 : d.dev <= 50 ? 45 + (50 - d.dev) * 1.5 : 20 + (75 - d.dev) * .5; act = Math.max(0, Math.min(100, act)); const cell = document.createElement('div'); cell.className = 'heatmap-cell'; cell.style.background = hmClr(act); cell.style.color = act > 70 ? '#fff' : 'var(--text2)'; cell.innerHTML = `${Math.round(act)}%<div class="heatmap-tip">${em.month} | نشاط ${Math.round(act)}% | حرارة ${em.temp}°م</div>`; fragment.appendChild(cell); const lbl = document.createElement('div'); lbl.textContent = em.month; labelFragment.appendChild(lbl); });
-    grid.innerHTML = ''; grid.appendChild(fragment); labels.innerHTML = ''; labels.appendChild(labelFragment);
+    
+    const fragment = document.createDocumentFragment();
+    const labelFragment = document.createDocumentFragment();
+    
+    egyptMonthsData.forEach(em => {
+        const d = calcDays(em.temp);
+        let act = d.dev <= 0 ? 0 : d.dev <= 25 ? 90 + (25 - d.dev) * 2 : d.dev <= 35 ? 70 + (35 - d.dev) * 2 : d.dev <= 50 ? 45 + (50 - d.dev) * 1.5 : 20 + (75 - d.dev) * .5;
+        act = Math.max(0, Math.min(100, act));
+        
+        const cell = document.createElement('div');
+        cell.className = 'heatmap-cell';
+        cell.style.background = hmClr(act);
+        cell.style.color = act > 70 ? '#fff' : 'var(--text2)';
+        cell.innerHTML = `${Math.round(act)}%<div class="heatmap-tip">${em.month} | نشاط ${Math.round(act)}% | حرارة ${em.temp}°م</div>`;
+        fragment.appendChild(cell);
+        
+        const lbl = document.createElement('div');
+        lbl.textContent = em.month;
+        labelFragment.appendChild(lbl);
+    });
+    
+    grid.innerHTML = '';
+    grid.appendChild(fragment);
+    labels.innerHTML = '';
+    labels.appendChild(labelFragment);
 }
 
 // ============================================
 // Stages Functions
 // ============================================
+
 function buildStages() {
-    const g = document.getElementById('sGrid'), d = calcDays(curTemp); g.innerHTML = '';
+    const g = document.getElementById('sGrid');
+    const d = calcDays(curTemp);
+    g.innerHTML = '';
+    
     const fragment = document.createDocumentFragment();
-    stagesData.forEach((s, i) => { const c = document.createElement('div'); c.className = 'sc2'; c.dataset.i = i; c.tabIndex = 0; c.innerHTML = `<div class="sico" style="background:${s.color}15;color:${s.color}"><span style="font-size:1.8rem">${s.icon}</span><span class="snm" style="background:${s.color}">${i + 1}</span></div><div class="snme">${s.name}</div><div class="sdys" data-s="${s.id}" style="color:${s.color}">${d[s.id] < 0 ? '—' : d[s.id]}</div><div class="sdyl">يوم عند ${curTemp}°م</div><div class="sbrf">${s.brief}</div>`; c.addEventListener('click', () => selS(i)); fragment.appendChild(c); });
+    
+    stagesData.forEach((s, i) => {
+        const c = document.createElement('div');
+        c.className = 'sc2';
+        c.style.setProperty('--sc2', s.color);
+        c.dataset.i = i;
+        c.tabIndex = 0;
+        c.setAttribute('role', 'listitem');
+        c.setAttribute('aria-label', `${s.name} - ${d[s.id] > 0 ? d[s.id] + ' يوم' : 'لا تطور'}`);
+        c.innerHTML = `<div class="sico" style="background:${s.color}15;color:${s.color}"><span style="font-size:1.8rem">${s.icon}</span><span class="snm" style="background:${s.color}">${i + 1}</span></div><div class="snme">${s.name}</div><div class="sdys" data-s="${s.id}" style="color:${s.color}">${d[s.id] < 0 ? '—' : d[s.id]}</div><div class="sdyl">يوم عند ${curTemp}°م</div><div class="sbrf">${s.brief}</div>`;
+        c.addEventListener('click', () => selS(i));
+        c.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selS(i); } });
+        fragment.appendChild(c);
+    });
+    
     g.appendChild(fragment);
 }
 
-function updSD(d) { stagesData.forEach(s => { const el = document.querySelector(`.sdys[data-s="${s.id}"]`); if (el) el.textContent = d[s.id] < 0 ? '—' : d[s.id]; }); }
+function updSD(d) {
+    stagesData.forEach(s => {
+        const el = document.querySelector(`.sdys[data-s="${s.id}"]`);
+        if (el) el.textContent = d[s.id] < 0 ? '—' : d[s.id];
+    });
+    document.querySelectorAll('.sdyl').forEach(el => el.textContent = `يوم عند ${curTemp}°م`);
+}
+
 function selS(i) { curStage = i; updSU(); }
+
 function updSU() {
     document.querySelectorAll('.sc2').forEach((c, i) => c.classList.toggle('on', i === curStage));
     const p = document.getElementById('detP');
-    if (curStage >= 0) { updDet(); p.classList.add('open'); requestAnimationFrame(() => p.scrollIntoView({ behavior: 'smooth', block: 'nearest' })); }
-    else p.classList.remove('open');
+    if (curStage >= 0) { 
+        updDet(); 
+        p.classList.add('open'); 
+        requestAnimationFrame(() => {
+            p.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    } else {
+        p.classList.remove('open');
+    }
 }
+
 function updDet() {
     if (curStage < 0) return;
     const s = stagesData[curStage], d = calcDays(curTemp), v = d[s.id];
-    document.getElementById('detI').innerHTML = `<div class="dvis" style="background:linear-gradient(135deg,${s.color}05,${s.color}10)"><div class="dvico" style="background:${s.color}15;color:${s.color}"><span style="font-size:3.5rem">${s.icon}</span><div class="dvr" style="border-color:${s.color}"></div></div><div style="font-family:Cairo;font-weight:900;font-size:1.2rem;margin-top:.5rem">${s.name}</div><div style="font-size:2.2rem;font-weight:900;color:${s.color};font-family:Cairo">${v < 0 ? 'لا تطور' : v + ' يوم'}</div><div style="font-size:.78rem;color:#9a8e82">عند متوسط يومي ${curTemp}°م</div></div><div class="dinf"><h3 style="color:${s.color}">${s.title}</h3><div class="dbdg" style="background:${s.color}10;color:${s.color}"><i class="fas fa-hourglass-half"></i>${v < 0 ? 'لا تطور' : v + ' يوم'} عند ${curTemp}°م</div><p>${s.description}</p><ul class="fl">${s.features.map(f => `<li><i class="fas fa-circle" style="color:${s.color}"></i><span>${f}</span></li>`).join('')}</ul></div>`;
+    document.getElementById('detI').innerHTML = `<div class="dvis" style="background:linear-gradient(135deg,${s.color}05,${s.color}10)"><div class="dvico" style="background:${s.color}15;color:${s.color}"><span style="font-size:3.5rem">${s.icon}</span><div class="dvr" style="border-color:${s.color}"></div></div><div style="font-family:Cairo;font-weight:900;font-size:1.2rem;margin-top:.5rem">${s.name}</div><div style="font-size:2.2rem;font-weight:900;color:${s.color};font-family:Cairo">${v < 0 ? 'لا تطور' : v + ' يوم'}</div><div style="font-size:.78rem;color:#9a8e82">عند متوسط يومي ${curTemp}°م</div></div><div class="dinf"><h3 style="color:${s.color}">${s.title}</h3><div class="dbdg" style="background:${s.color}10;color:${s.color}"><i class="fas fa-hourglass-half" aria-hidden="true"></i>${v < 0 ? 'لا تطور' : v + ' يوم'} عند ${curTemp}°م</div><p>${s.description}</p><ul class="fl">${s.features.map(f => `<li><i class="fas fa-circle" style="color:${s.color}" aria-hidden="true"></i><span>${f}</span></li>`).join('')}</ul></div>`;
 }
+
 function toggleA() {
     const b = document.getElementById('autoBtn');
-    if (isAuto) { clearInterval(autoInt); isAuto = false; b.innerHTML = '<i class="fas fa-play"></i><span>تشغيل تلقائي</span>'; }
-    else { isAuto = true; b.innerHTML = '<i class="fas fa-pause"></i><span>إيقاف</span>'; let s = 0; selS(s); autoInt = setInterval(() => { s = (s + 1) % stagesData.length; selS(s); }, 3500); }
+    if (isAuto) { 
+        clearInterval(autoInt); 
+        isAuto = false; 
+        b.innerHTML = '<i class="fas fa-play" aria-hidden="true"></i><span>تشغيل تلقائي</span>'; 
+    } else { 
+        isAuto = true; 
+        b.innerHTML = '<i class="fas fa-pause" aria-hidden="true"></i><span>إيقاف</span>'; 
+        let s = 0; 
+        selS(s); 
+        autoInt = setInterval(() => { 
+            s = (s + 1) % stagesData.length; 
+            selS(s); 
+        }, 3500); 
+    }
 }
 
 // ============================================
 // Calendar Functions
 // ============================================
+
 function populateTable() {
-    const tbody = document.querySelector('#calendarTable tbody'); if (!tbody) return; tbody.innerHTML = '';
+    const tbody = document.querySelector('#calendarTable tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
     const cData = calendarDataObj;
+    
     const rows = [
-        { label: '🌡️ متوسط الحرارة (°م)', data: cData.temperatures || [], type: 'temp' },
-        { label: '💧 الرطوبة (%)', data: cData.humidities || [], type: 'hum' },
-        { label: '🦋 نشاط الآفة', data: cData.activities || [], type: 'act' },
-        { label: '🔄 الأجيال', data: cData.generations || [], type: 'gen' },
-        { label: '🪤 المصائد', data: cData.traps || [], type: 'trap' },
-        { label: '🦠 بيولوجية', data: cData.bioStatus || [], type: 'bio' },
-        { label: '💊 كيميائية', data: cData.chemStatus || [], type: 'chem' },
-        { label: '🌞 تعقيم', data: cData.soilStatus || [], type: 'soil' }
+        { label: '🌡️ متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
+        { label: '💧 الرطوبة النسبية (%)', data: cData.humidities || [], type: 'hum' },
+        { label: '🦋 شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
+        { label: ' عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
+        { label: '🪤 مصائد فرمونية (للمراقبة)', data: cData.traps || [], type: 'trap' },
+        { label: '🦠 المكافحة البيولوجية', data: cData.bioStatus || [], type: 'bio' },
+        { label: '💊 المكافحة الكيميائية', data: cData.chemStatus || [], type: 'chem' },
+        { label: '🌞 الحرث والتعقيم الشمسي', data: cData.soilStatus || [], type: 'soil' }
     ];
+    
     const getTempColor = t => t < 20 ? '#3b82f6' : t <= 25 ? '#22c55e' : t <= 30 ? '#eab308' : t <= 34 ? '#f97316' : '#ef4444';
+    const getHumidityColor = h => h < 55 ? '#f97316' : h <= 70 ? '#22c55e' : '#3b82f6';
     const getGenColor = g => g <= .5 ? '#22c55e' : g <= 1 ? '#eab308' : g <= 1.5 ? '#f97316' : '#ef4444';
+    const getActivityLevel = a => a.includes('منخفض') ? 'low' : a.includes('متوسط') ? 'moderate' : a.includes('جداً') ? 'extreme' : 'high';
+    const getActivityColor = l => ({ low: '#22c55e', moderate: '#eab308', high: '#f97316', extreme: '#ef4444' }[l] || '#aaa');
+
     const fragment = document.createDocumentFragment();
+
     rows.forEach(row => {
-        const tr = document.createElement('tr'); const tdLabel = document.createElement('td'); tdLabel.textContent = row.label; tr.appendChild(tdLabel);
+        const tr = document.createElement('tr');
+        const tdLabel = document.createElement('td');
+        tdLabel.textContent = row.label;
+        tr.appendChild(tdLabel);
+
         row.data.forEach((val, i) => {
-            const td = document.createElement('td'); td.setAttribute('data-month', i);
-            if (row.type === 'temp') td.innerHTML = `<span class="circle-badge" style="background:${getTempColor(val)}">${val}</span>`;
-            else if (row.type === 'hum') td.innerHTML = `<span class="circle-badge" style="background:#3498db">${val}</span>`;
-            else if (row.type === 'gen') td.innerHTML = `<span class="circle-badge" style="background:${getGenColor(val)}">${val}</span>`;
-            else td.textContent = val;
+            const td = document.createElement('td');
+            td.setAttribute('data-month', i);
+            
+            if (row.type === 'temp') {
+                td.innerHTML = `<span class="circle-badge" style="background:${getTempColor(val)};">${val}</span>`;
+            } else if (row.type === 'hum') {
+                td.innerHTML = `<span class="circle-badge" style="background:${getHumidityColor(val)};">${val}</span>`;
+            } else if (row.type === 'act') {
+                const level = getActivityLevel(val);
+                const color = getActivityColor(level);
+                td.innerHTML = `<span class="level-badge" style="background:${color}22;border:1px solid ${color};color:${color};"><span class="level-icon" style="background:${color};"></span> ${val}</span>`;
+            } else if (row.type === 'gen') {
+                td.innerHTML = `<span class="circle-badge" style="background:${getGenColor(val)};">${val}</span>`;
+            } else if (row.type === 'trap') {
+                td.textContent = val;
+            } else if (row.type === 'bio' || row.type === 'chem') {
+                let emoji = '🛑', bg = '#2d3748', color = '#a0aec0';
+                if (val.includes('مثالية') || val.includes('ضرورية')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
+                else if (val.includes('نشطة')) { emoji = '✅'; bg = '#14532d'; color = '#86efac'; } 
+                else if (val.includes('موصى بها')) { emoji = '✅'; bg = '#064e3b'; color = '#6ee7b7'; } 
+                else if (val.includes('عند الدفء')) { emoji = '⚠️'; bg = '#78350f'; color = '#fcd34d'; }
+                td.innerHTML = `<span class="control-badge" style="background:${bg};color:${color};">${emoji} ${val}</span>`;
+            } else if (row.type === 'soil') {
+                let emoji = '⛔', bg = '#2d3748', color = '#a0aec0';
+                if (val.includes('تعقيم شمسي')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
+                else if (val.includes('حرث')) { emoji = ''; bg = '#14532d'; color = '#86efac'; }
+                td.innerHTML = `<span class="control-badge" style="background:${bg};color:${color};">${emoji} ${val}</span>`;
+            }
             tr.appendChild(td);
         });
         fragment.appendChild(tr);
     });
+
     tbody.appendChild(fragment);
 }
 
 function buildPlanCards() {
-    const wrapper = document.getElementById('planCardWrapper'); if (!wrapper) return; wrapper.innerHTML = '';
+    const wrapper = document.getElementById('planCardWrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = '';
+    
     const fragment = document.createDocumentFragment();
-    planCardsData.forEach((p, idx) => {
-        const card = document.createElement('div'); card.className = 'plan-card'; card.id = 'card-' + p.id; card.style.borderRight = `4px solid ${p.color}`;
+    
+    planCardsData.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'plan-card';
+        card.id = 'card-' + p.id;
+        card.style.borderRight = `4px solid ${p.color}`;
+        card.style.padding = '1rem';
+        
         const contextHtml = p.context.map(c => `<p><strong>${c.label}:</strong> ${c.text}</p>`).join('');
-        card.innerHTML = `<div class="plan-card-header"><span>${p.months}</span><span class="plan-card-badge" style="background:rgba(255,255,255,.1);color:${p.color}">${p.level}</span></div><h3 style="color:#fff;margin-bottom:1rem;font-size:1.1rem">${p.title}</h3><div class="plan-card-context">${contextHtml}</div><ul class="plan-card-list">${p.items.map(item => `<li>${item}</li>`).join('')}</ul>`;
-        if (idx !== 0) card.classList.add('hidden-card');
+        card.innerHTML = `<div class="plan-card-header"><span>${p.months}</span><span class="plan-card-badge" style="background:rgba(${hexToRgb(p.color)},.2);color:${p.color};">${p.level}</span></div><h3 style="color:#fff;margin-bottom:1rem;font-size:1.1rem;">${p.title}</h3><div class="plan-card-context">${contextHtml}</div><ul class="plan-card-list">${p.items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+        
+        if (p.id !== 'jan-feb') card.classList.add('hidden-card');
         fragment.appendChild(card);
     });
+    
     wrapper.appendChild(fragment);
 }
 
-function hexToRgb(hex) { const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16); return `${r},${g},${b}`; }
+function hexToRgb(hex) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `${r},${g},${b}`;
+}
 
 function showPlanCard(period, btn) {
-    document.querySelectorAll('#planFilterCol .filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) { btn.classList.add('active'); hapticButton(btn); }
-    document.querySelectorAll('.plan-card').forEach(c => c.classList.add('hidden-card'));
+    document.querySelectorAll('#planFilterCol .filter-btn').forEach(b => { 
+        b.classList.remove('active'); 
+        b.setAttribute('aria-pressed', 'false'); 
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    
+    const cards = document.querySelectorAll('.plan-card');
+    cards.forEach(c => { 
+        c.classList.add('hidden-card'); 
+        c.style.opacity = '0'; 
+        c.style.transform = 'translateX(-20px)'; 
+    });
+    
     const target = document.getElementById('card-' + period);
-    if (target) { target.classList.remove('hidden-card'); requestAnimationFrame(() => target.style.opacity = '1'); }
+    if (target) {
+        target.classList.remove('hidden-card');
+        requestAnimationFrame(() => { 
+            target.style.opacity = '1'; 
+            target.style.transform = 'translateX(0)'; 
+        });
+    }
 }
 
 function filterSeason(season, btn) {
-    document.querySelectorAll('#calendar .filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
-    if (btn) { btn.classList.add('active'); hapticButton(btn); }
-    const visible = season === 'all' ? [0,1,2,3,4,5,6,7,8,9,10,11] : season === 'spring' ? [2,3,4] : season === 'summer' ? [5,6,7] : season === 'autumn' ? [8,9,10] : [11,0,1];
-    document.querySelectorAll('#calendarTable th[data-month], #calendarTable td[data-month]').forEach(el => {
-        el.classList.toggle('hidden-col', !visible.includes(parseInt(el.getAttribute('data-month'))));
+    document.querySelectorAll('.filter-bar .filter-btn').forEach(b => { 
+        b.classList.remove('active'); 
+        b.setAttribute('aria-pressed', 'false'); 
     });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    
+    const allMonths = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    let visible;
+    if (season === 'all') visible = allMonths;
+    else if (season === 'spring') visible = [2, 3, 4];
+    else if (season === 'summer') visible = [5, 6, 7];
+    else if (season === 'autumn') visible = [8, 9, 10];
+    else if (season === 'winter') visible = [11, 0, 1];
+    
+    document.querySelectorAll('th[data-month]').forEach(th => { 
+        const month = parseInt(th.getAttribute('data-month')); 
+        th.classList.toggle('hidden-col', !visible.includes(month)); 
+    });
+    document.querySelectorAll('td[data-month]').forEach(td => { 
+        const month = parseInt(td.getAttribute('data-month')); 
+        td.classList.toggle('hidden-col', !visible.includes(month)); 
+    });
+}
+
+// ============================================
+// Build Sources
+// ============================================
+
+function buildSources() {
+    const box = document.getElementById('sourcesBox');
+    if (!box || sourcesData.length === 0) return;
+    
+    const fragment = document.createDocumentFragment();
+    
+    sourcesData.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'source-card';
+        card.setAttribute('role', 'listitem');
+        card.innerHTML = `<span class="source-tag">${s.tag}</span><h4>${s.title}</h4><p>${s.description}</p>`;
+        fragment.appendChild(card);
+    });
+    
+    box.appendChild(fragment);
 }
 
 // ============================================
 // Build Dynamic Sections
 // ============================================
-function buildSources() {
-    const box = document.getElementById('sourcesBox'); if (!box || sourcesData.length === 0) return;
-    const fragment = document.createDocumentFragment();
-    sourcesData.forEach(s => { const card = document.createElement('div'); card.className = 'source-card'; card.innerHTML = `<span class="source-tag">${s.tag}</span><h4>${s.title}</h4><p>${s.description}</p>`; fragment.appendChild(card); });
-    box.appendChild(fragment);
-}
 
 function buildSpreadSection() {
-    const container = document.getElementById('spreadAccordion'); if (!container) return;
+    const container = document.getElementById('spreadAccordion');
+    if (!container) return;
+    const reasons = getSpreadReasons();
+    
     const fragment = document.createDocumentFragment();
-    getSpreadReasons().forEach(r => {
-        const card = document.createElement('div'); card.className = 'bio-card'; card.dataset.category = r.category;
-        card.innerHTML = `<div class="bio-header" onclick="toggleAccordion(this.closest('.bio-card'), 'spreadAccordion')" tabindex="0"><span style="font-size: 2rem">${r.icon}</span><div style="flex:1"><h3 style="font-size:1.05rem;color:#fff">${r.title}</h3><span style="font-size:0.75rem;color:var(--plan-accent)">${r.type}</span></div><i class="fas fa-chevron-down"></i></div><div class="bio-body"><p>${r.description}</p><h4>🔑 الأثر</h4><p>${r.impact}</p></div>`;
+    
+    reasons.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'bio-card';
+        card.setAttribute('role', 'listitem');
+        card.dataset.category = r.category;
+        card.innerHTML = `
+            <div class="bio-header" onclick="toggleAccordion(this.closest('.bio-card'), 'spreadAccordion')" tabindex="0" aria-label="${r.title}">
+                <span style="font-size: 2rem;">${r.icon}</span>
+                <div style="flex:1">
+                    <h3 style="font-size:1.05rem; color:#fff;">${r.title}</h3>
+                    <span style="font-size:0.75rem; color: var(--plan-accent);">${r.type}</span>
+                </div>
+                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </div>
+            <div class="bio-body">
+                <p>${r.description}</p>
+                <h4>🔑 الأثر</h4>
+                <p>${r.impact}</p>
+            </div>
+        `;
         fragment.appendChild(card);
     });
+    
     container.appendChild(fragment);
 }
 
 function buildEconomicSection() {
     const statsContainer = document.getElementById('econStats');
-    if (statsContainer && getEconomicStats().length > 0) {
+    const cardsContainer = document.getElementById('econAccordion');
+    
+    if (statsContainer) {
+        const stats = getEconomicStats();
         const fragment = document.createDocumentFragment();
-        getEconomicStats().forEach(s => { const stat = document.createElement('div'); stat.className = 'econ-stat'; stat.innerHTML = `<div class="econ-stat-num">${s.value}</div><div class="econ-stat-lbl">${s.label}</div>`; fragment.appendChild(stat); });
+        stats.forEach(s => {
+            const stat = document.createElement('div');
+            stat.className = 'econ-stat';
+            stat.setAttribute('role', 'listitem');
+            stat.innerHTML = `<div class="econ-stat-num">${s.value}</div><div class="econ-stat-lbl">${s.label}</div>`;
+            fragment.appendChild(stat);
+        });
         statsContainer.appendChild(fragment);
     }
-    const cardsContainer = document.getElementById('econAccordion');
-    if (cardsContainer && getEconomicCards().length > 0) {
+    
+    if (cardsContainer) {
+        const cards = getEconomicCards();
         const fragment = document.createDocumentFragment();
-        getEconomicCards().forEach(c => {
-            const card = document.createElement('div'); card.className = 'bio-card'; card.dataset.category = c.category;
-            card.innerHTML = `<div class="bio-header" onclick="toggleAccordion(this.closest('.bio-card'), 'econAccordion')" tabindex="0"><span style="font-size: 2rem">${c.icon}</span><div style="flex:1"><h3 style="font-size:1.05rem;color:#fff">${c.title}</h3><span style="font-size:0.75rem;color:var(--plan-accent)">${c.type}</span></div><i class="fas fa-chevron-down"></i></div><div class="bio-body"><p>${c.description}</p><h4>💰 الأثر المالي</h4><p>${c.financialImpact}</p></div>`;
+        cards.forEach(c => {
+            const card = document.createElement('div');
+            card.className = 'bio-card';
+            card.setAttribute('role', 'listitem');
+            card.dataset.category = c.category;
+            card.innerHTML = `
+                <div class="bio-header" onclick="toggleAccordion(this.closest('.bio-card'), 'econAccordion')" tabindex="0">
+                    <span style="font-size: 2rem;">${c.icon}</span>
+                    <div style="flex:1">
+                        <h3 style="font-size:1.05rem; color:#fff;">${c.title}</h3>
+                        <span style="font-size:0.75rem; color: var(--plan-accent);">${c.type}</span>
+                    </div>
+                    <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                </div>
+                <div class="bio-body">
+                    <p>${c.description}</p>
+                    <h4>💰 الأثر المالي</h4>
+                    <p>${c.financialImpact}</p>
+                </div>
+            `;
             fragment.appendChild(card);
         });
         cardsContainer.appendChild(fragment);
@@ -406,572 +662,798 @@ function buildEconomicSection() {
 }
 
 function buildIPMSection() {
-    const container = document.getElementById('ipmContent'); if (!container) return;
-    const ipmData = getIPMData(), tabs = ipmData.ipmTabs || [], panels = ipmData.panels || {};
-    let html = '<div class="ipm-tabs" id="ipmTabs">';
-    tabs.forEach((tab, i) => { html += `<button class="ipm-tab ${i === 0 ? 'active' : ''}" data-tab="${tab.id}">${tab.title}</button>`; });
-    html += '</div><div class="ipm-panels">';
+    const container = document.getElementById('ipmContent');
+    if (!container) return;
+    
+    const ipmData = getIPMData();
+    const tabs = ipmData.ipmTabs || [];
+    const panels = ipmData.panels || {};
+    
+    let html = '<div class="ipm-tabs" id="ipmTabs" role="tablist" aria-label="أقسام المكافحة المتكاملة">';
     tabs.forEach((tab, i) => {
-        const panel = panels[tab.id]; if (!panel) return;
-        html += `<div class="ipm-panel ${i === 0 ? 'active' : ''}" id="panel-${tab.id}">`;
-        if (panel.warning) html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem"><p style="font-size:0.9rem;color:var(--text2)"><strong style="color:var(--accent)">⚠️ تحذير:</strong> ${panel.warning}</p></div>`;
-        if (panel.cards) { html += '<div class="ipm-grid">'; panel.cards.forEach(card => { html += `<div class="ipm-card"><div class="ipm-card-icon">${card.icon}</div><h4>${card.title}</h4><p>${card.description}</p><span class="ipm-tag ${card.tagClass}">${card.tag}</span></div>`; }); html += '</div>'; }
-        if (panel.instructions) html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem"><h4 style="color:var(--amber);margin-bottom:0.5rem">⚠️ إرشادات</h4><ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2">${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}</ul></div>`;
-        if (panel.rotationSchedule) html += `<div style="margin-top:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)"><h4 style="color:var(--plan-accent);margin-bottom:0.8rem">🗓️ جدول التناوب</h4><p style="color:var(--text2);font-size:0.9rem;line-height:1.9">${panel.rotationSchedule}</p></div>`;
+        html += `<button class="ipm-tab ${i === 0 ? 'active' : ''}" data-tab="${tab.id}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}">${tab.title}</button>`;
+    });
+    html += '</div><div class="ipm-panels">';
+    
+    tabs.forEach((tab, i) => {
+        const panel = panels[tab.id];
+        if (!panel) return;
+        
+        html += `<div class="ipm-panel ${i === 0 ? 'active' : ''}" id="panel-${tab.id}" role="tabpanel">`;
+        
+        if (panel.warning) {
+            html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start;">
+                <span style="font-size:1.5rem;">⚠️</span>
+                <p style="font-size:0.9rem;color:var(--text2);line-height:1.7;"><strong style="color:var(--accent);">تحذير:</strong> ${panel.warning}</p>
+            </div>`;
+        }
+        
+        if (panel.intro) {
+            html += `<div style="margin-bottom:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+                <h3 style="color:#fff;font-size:1.2rem;margin-bottom:0.8rem;">مبادئ إدارة مقاومة المبيدات (IRM)</h3>
+                <p style="color:var(--text2);font-size:0.9rem;line-height:1.8;">${panel.intro}</p>
+            </div>`;
+        }
+        
+        if (panel.cards) {
+            html += '<div class="ipm-grid">';
+            panel.cards.forEach(card => {
+                html += `<div class="ipm-card">
+                    <div class="ipm-card-icon">${card.icon}</div>
+                    <h4>${card.title}</h4>
+                    <p>${card.description}</p>
+                    <span class="ipm-tag ${card.tagClass}">${card.tag}</span>
+                </div>`;
+            });
+            html += '</div>';
+        }
+        
+        if (panel.instructions) {
+            html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem;">
+                <h4 style="color:var(--amber);margin-bottom:0.5rem;">⚠️ إرشادات هامة لاستخدام المبيدات</h4>
+                <ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2;">
+                    ${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}
+                </ul>
+            </div>`;
+        }
+        
+        if (panel.rotationSchedule) {
+            html += `<div style="margin-top:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
+                <h4 style="color:var(--plan-accent);margin-bottom:0.8rem;">🗓️ جدول تناوب IRAC المقترح</h4>
+                <p style="color:var(--text2);font-size:0.9rem;line-height:1.9;">${panel.rotationSchedule}</p>
+            </div>`;
+        }
+        
         html += '</div>';
     });
-    html += '</div>'; container.innerHTML = html;
+    
+    html += '</div>';
+    container.innerHTML = html;
+    
     setTimeout(() => {
         const tabsContainer = document.getElementById('ipmTabs');
         if (tabsContainer) {
-            tabsContainer.addEventListener('click', (e) => {
-                const tab = e.target.closest('.ipm-tab'); if (!tab) return; hapticButton(tab);
-                document.querySelectorAll('.ipm-tab').forEach(t => t.classList.remove('active'));
+            tabsContainer.addEventListener('click', function(e) {
+                const tab = e.target.closest('.ipm-tab');
+                if (!tab) return;
+                
+                const target = tab.dataset.tab;
+                document.querySelectorAll('.ipm-tab').forEach(t => { 
+                    t.classList.remove('active'); 
+                    t.setAttribute('aria-selected', 'false'); 
+                });
                 tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
                 document.querySelectorAll('.ipm-panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+                document.getElementById('panel-' + target).classList.add('active');
             });
         }
     }, 100);
 }
 
 function buildFAQSection() {
-    const container = document.getElementById('faqList'); if (!container) return;
+    const container = document.getElementById('faqList');
+    if (!container) return;
+    const faqs = getFAQ();
+    
     const fragment = document.createDocumentFragment();
-    getFAQ().forEach(f => { const item = document.createElement('div'); item.className = 'faq-item'; item.innerHTML = `<div class="faq-question" onclick="toggleFAQ(this)" tabindex="0"><span>${f.question}</span><i class="fas fa-chevron-down faq-icon"></i></div><div class="faq-answer">${f.answer}</div>`; fragment.appendChild(item); });
+    
+    faqs.forEach(f => {
+        const item = document.createElement('div');
+        item.className = 'faq-item';
+        item.setAttribute('role', 'listitem');
+        item.innerHTML = `
+            <div class="faq-question" onclick="toggleFAQ(this)" tabindex="0" aria-expanded="false" role="button">
+                <span>${f.question}</span>
+                <i class="fas fa-chevron-down faq-icon" aria-hidden="true"></i>
+            </div>
+            <div class="faq-answer" role="region">${f.answer}</div>
+        `;
+        fragment.appendChild(item);
+    });
+    
     container.appendChild(fragment);
 }
 
 function buildResistanceSection() {
-    const container = document.getElementById('resistanceGrid'); if (!container) return;
+    const container = document.getElementById('resistanceGrid');
+    if (!container) return;
+    const data = getResistanceData();
+    
     const fragment = document.createDocumentFragment();
-    getResistanceData().forEach(r => { const levelClass = r.level === 'high' ? 'level-high' : r.level === 'medium' ? 'level-medium' : 'level-low'; const card = document.createElement('div'); card.className = 'resistance-card'; card.innerHTML = `<h4>${r.pesticide}</h4><p style="font-size:0.8rem;color:var(--text2)">${r.example}</p><div class="resistance-level ${levelClass}">${r.levelText}</div>`; fragment.appendChild(card); });
+    
+    data.forEach(r => {
+        const levelClass = r.level === 'high' ? 'level-high' : r.level === 'medium' ? 'level-medium' : 'level-low';
+        const card = document.createElement('div');
+        card.className = 'resistance-card';
+        card.setAttribute('role', 'listitem');
+        card.innerHTML = `
+            <h4>${r.pesticide}</h4>
+            <p style="font-size:0.8rem;color:var(--text2)">${r.example}</p>
+            <div class="resistance-level ${levelClass}">${r.levelText}</div>
+        `;
+        fragment.appendChild(card);
+    });
+    
     container.appendChild(fragment);
 }
 
 // ============================================
 // Accordion & Filter Functions
 // ============================================
-function toggleFAQ(el) { const item = el.parentElement; const isOpen = item.classList.contains('open'); haptic(10); document.querySelectorAll('.faq-item').forEach(x => x.classList.remove('open')); if (!isOpen) item.classList.add('open'); }
-function toggleAccordion(el, containerId) { const card = el.closest('.bio-card'); const o = card.classList.contains('open'); const c = document.getElementById(containerId); haptic(10); c.querySelectorAll('.bio-card').forEach(x => x.classList.remove('open')); if (!o) card.classList.add('open'); }
+
+function toggleFAQ(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    
+    document.querySelectorAll('.faq-item').forEach(x => { 
+        x.classList.remove('open'); 
+        const q = x.querySelector('.faq-question');
+        if(q) q.setAttribute('aria-expanded', 'false'); 
+    });
+    
+    if (!isOpen) {
+        item.classList.add('open');
+        el.setAttribute('aria-expanded', 'true');
+    }
+}
+
+function toggleAccordion(el, containerId) {
+    const card = el.closest('.bio-card');
+    const o = card.classList.contains('open');
+    const c = document.getElementById(containerId);
+    c.querySelectorAll('.bio-card').forEach(x => x.classList.remove('open'));
+    if (!o) {
+        card.classList.add('open');
+        setTimeout(() => { 
+            const r = card.getBoundingClientRect(); 
+            if (r.top < 0 || r.bottom > window.innerHeight) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); 
+            }
+        }, 300);
+    }
+}
+
 function filterBioCards(category, containerId, btn) {
-    btn.parentElement.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active'); hapticButton(btn);
-    document.getElementById(containerId).querySelectorAll('.bio-card').forEach(card => {
-        if (category === 'all' || card.dataset.category === category) { card.style.display = ''; requestAnimationFrame(() => card.style.opacity = '1'); }
-        else { card.style.opacity = '0'; setTimeout(() => card.style.display = 'none', 300); }
+    const parent = btn.parentElement;
+    parent.querySelectorAll('.filter-btn').forEach(b => { 
+        b.classList.remove('active'); 
+        b.setAttribute('aria-pressed', 'false'); 
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
+    
+    const container = document.getElementById(containerId);
+    const cards = container.querySelectorAll('.bio-card');
+    
+    cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.style.display = '';
+            requestAnimationFrame(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            });
+        } else {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => { card.style.display = 'none'; }, 300);
+        }
     });
 }
 
 // ============================================
-// Navigation
+// Single Section Logic
 // ============================================
+
 function showSingleSection(groupId, clickedItem) {
-    document.querySelectorAll('.section').forEach(s => { s.classList.add('section-hidden'); s.classList.remove('section-visible'); });
-    (groupMap[groupId] || []).forEach(id => { const sec = document.getElementById(id); if (sec) { sec.classList.remove('section-hidden'); sec.classList.add('section-visible'); } });
-    document.getElementById('heroSection').classList.add('hero-hidden');
+    document.querySelectorAll('.section').forEach(s => { 
+        s.classList.add('section-hidden'); 
+        s.classList.remove('section-visible'); 
+    });
+    
+    const ids = groupMap[groupId] || [];
+    ids.forEach(id => { 
+        const sec = document.getElementById(id); 
+        if (sec) { 
+            sec.classList.remove('section-hidden'); 
+            sec.classList.add('section-visible'); 
+        } 
+    });
+    
+    const hero = document.getElementById('heroSection');
+    if (hero) hero.classList.add('hero-hidden');
+    
     document.querySelectorAll('.dropdown-item').forEach(l => l.classList.remove('active'));
     if (clickedItem) clickedItem.classList.add('active');
+    
     currentSingleGroup = groupId;
-    const label = document.getElementById('currentGroupLabel'); if (label) { label.textContent = groupNames[groupId] || ''; label.classList.add('visible'); }
-    closeDropdown(); updateNavButtons(); window.scrollTo({ top: 0, behavior: 'smooth' });
-    updateBottomNavActive(groupId);
-}
-
-function updateBottomNavActive(groupId) {
-    document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
-    let activeItem = null;
-    if (groupId === 'biology' || groupId === 'spread-economic' || groupId === 'seasonal-heatmap') activeItem = document.querySelector('[data-section="biology"]');
-    else if (groupId === 'calendar' || groupId === 'ipm' || groupId === 'resistance') activeItem = document.querySelector('[data-section="ipm"]');
-    else if (groupId === 'bioagents' || groupId === 'faq' || groupId === 'sources') activeItem = document.querySelector('[data-section="bioagents"]');
-    if (activeItem) activeItem.classList.add('active');
+    const label = document.getElementById('currentGroupLabel');
+    if (label) { 
+        label.textContent = groupNames[groupId] || ''; 
+        label.classList.add('visible'); 
+    }
+    
+    closeDropdown();
+    updateNavButtons();
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    if (groupId === 'seasonal-heatmap') { 
+        setTimeout(() => { drawChart(); }, 400); 
+    }
 }
 
 function goHome() {
-    document.querySelectorAll('.section').forEach(s => { s.classList.add('section-hidden'); s.classList.remove('section-visible'); });
-    document.getElementById('heroSection').classList.add('hero-hidden');
+    document.querySelectorAll('.section').forEach(s => { 
+        s.classList.add('section-hidden'); 
+        s.classList.remove('section-visible'); 
+    });
+    const hero = document.getElementById('heroSection');
+    if (hero) hero.classList.add('hero-hidden');
     currentSingleGroup = null;
     document.querySelectorAll('.dropdown-item').forEach(l => l.classList.remove('active'));
-    document.getElementById('currentGroupLabel').classList.remove('visible');
-    updateNavButtons(); closeDropdown();
+    const label = document.getElementById('currentGroupLabel');
+    if (label) label.classList.remove('visible');
+    updateNavButtons();
+    closeDropdown();
     document.getElementById('landingOverlay').classList.remove('hidden');
-    document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
-    document.querySelector('[data-section="home"]').classList.add('active');
 }
+
+// ============================================
+// Dropdown Functions
+// ============================================
 
 function toggleDropdown() {
-    const panel = document.getElementById('dropdownPanel'), overlay = document.getElementById('menuOverlay'), btn = document.getElementById('navMenuBtn');
-    haptic(15);
-    if (panel.classList.contains('open')) closeDropdown();
-    else { panel.classList.add('open'); overlay.classList.add('active'); btn.setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; }
+    const panel = document.getElementById('dropdownPanel');
+    const overlay = document.getElementById('menuOverlay');
+    const btn = document.getElementById('navMenuBtn');
+    const isOpen = panel.classList.contains('open');
+    
+    if (isOpen) { 
+        closeDropdown(); 
+    } else { 
+        panel.classList.add('open'); 
+        overlay.classList.add('active'); 
+        btn.setAttribute('aria-expanded', 'true'); 
+        document.body.style.overflow = 'hidden'; 
+    }
 }
-function closeDropdown() { document.getElementById('dropdownPanel').classList.remove('open'); document.getElementById('menuOverlay').classList.remove('active'); document.getElementById('navMenuBtn').setAttribute('aria-expanded', 'false'); document.body.style.overflow = ''; }
+
+function closeDropdown() {
+    const panel = document.getElementById('dropdownPanel');
+    const overlay = document.getElementById('menuOverlay');
+    const btn = document.getElementById('navMenuBtn');
+    panel.classList.remove('open'); 
+    overlay.classList.remove('active'); 
+    btn.setAttribute('aria-expanded', 'false'); 
+    document.body.style.overflow = ''; 
+}
+
+// ============================================
+// Navigation Buttons
+// ============================================
 
 function navigateGroup(direction) {
-    haptic(10);
-    if (!currentSingleGroup) { showSingleSection(direction === 1 ? groupOrder[0] : groupOrder[groupOrder.length - 1], document.querySelector(`.dropdown-item[data-group="${direction === 1 ? groupOrder[0] : groupOrder[groupOrder.length - 1]}"]`)); return; }
-    const idx = groupOrder.indexOf(currentSingleGroup); let newIdx = idx + direction;
-    if (newIdx < 0) newIdx = 0; if (newIdx >= groupOrder.length) newIdx = groupOrder.length - 1;
-    showSingleSection(groupOrder[newIdx], document.querySelector(`.dropdown-item[data-group="${groupOrder[newIdx]}"]`));
+    if (!currentSingleGroup) {
+        if (direction === 1) showSingleSection(groupOrder[0], document.querySelector(`.dropdown-item[data-group="${groupOrder[0]}"]`));
+        else showSingleSection(groupOrder[groupOrder.length - 1], document.querySelector(`.dropdown-item[data-group="${groupOrder[groupOrder.length - 1]}"]`));
+        return;
+    }
+    const idx = groupOrder.indexOf(currentSingleGroup);
+    if (idx === -1) return;
+    let newIdx = idx + direction;
+    if (newIdx < 0) newIdx = 0;
+    if (newIdx >= groupOrder.length) newIdx = groupOrder.length - 1;
+    const newGroup = groupOrder[newIdx];
+    showSingleSection(newGroup, document.querySelector(`.dropdown-item[data-group="${newGroup}"]`));
 }
 
 function updateNavButtons() {
-    const prevBtn = document.getElementById('navPrevBtn'), nextBtn = document.getElementById('navNextBtn');
-    if (!currentSingleGroup) { prevBtn.classList.remove('disabled'); nextBtn.classList.remove('disabled'); return; }
+    const prevBtn = document.getElementById('navPrevBtn');
+    const nextBtn = document.getElementById('navNextBtn');
+    if (!currentSingleGroup) { 
+        prevBtn.classList.remove('disabled'); 
+        nextBtn.classList.remove('disabled'); 
+        return; 
+    }
     const idx = groupOrder.indexOf(currentSingleGroup);
-    prevBtn.classList.toggle('disabled', idx === 0); nextBtn.classList.toggle('disabled', idx === groupOrder.length - 1);
+    if (idx === 0) prevBtn.classList.add('disabled');
+    else prevBtn.classList.remove('disabled');
+    
+    if (idx === groupOrder.length - 1) nextBtn.classList.add('disabled');
+    else nextBtn.classList.remove('disabled');
 }
 
 // ============================================
-// Landing
+// Landing Functions
 // ============================================
+
 function createLandingParticles() {
-    const c = document.getElementById('landingParticles'); if (!c) return;
-    const cols = ['#e74c3c', '#f39c12', '#2ecc71', '#3498db'], fragment = document.createDocumentFragment();
-    for (let i = 0; i < 25; i++) { const p = document.createElement('div'); p.className = 'landing-particle'; const s = Math.random() * 4 + 2; p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;background:${cols[i % cols.length]};animation-duration:${Math.random() * 12 + 8}s;animation-delay:${Math.random() * 8}s`; fragment.appendChild(p); }
+    const c = document.getElementById('landingParticles');
+    if (!c) return;
+    const cols = ['#e74c3c', '#f39c12', '#2ecc71', '#3498db'];
+    
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'landing-particle';
+        const s = Math.random() * 4 + 2;
+        p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;background:${cols[i % cols.length]};animation-duration:${Math.random() * 12 + 8}s;animation-delay:${Math.random() * 8}s;`;
+        fragment.appendChild(p);
+    }
+    
     c.appendChild(fragment);
 }
 
 function closeLanding() {
-    haptic(20);
     document.getElementById('landingOverlay').classList.add('hidden');
-    showSingleSection('biology', document.querySelector('[data-group="biology"]'));
-    
-    // ✅ إصلاح Onboarding
-    const hasSeenOnboarding = localStorage.getItem('tuta-onboarding-shown');
-    if (!hasSeenOnboarding) {
-        setTimeout(() => {
-            showOnboarding();
-            localStorage.setItem('tuta-onboarding-shown', 'true');
-        }, 800);
-    }
+    const biologyItem = document.querySelector('.dropdown-item[data-group="biology"]');
+    showSingleSection('biology', biologyItem);
 }
 
 // ============================================
-// Bio Agents
+// Bio Agents Encyclopedia
 // ============================================
-const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: '🦋 الكاملة' };
+
+const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
 const targetStatusText = { effective: 'فعّال', partial: 'جزئي', none: 'لا يؤثر' };
 const targetClass = { effective: 'active-target', partial: 'partial-target', none: 'inactive-target' };
-const badgeMap = { 'preventive': { text: '🛡️ وقائي', class: 'badge-blue' }, 'curative': { text: '💊 علاجي', class: 'badge-amber' }, 'preventive-curative': { text: '🛡️ وقائي وعلاجي', class: 'badge-green' }, 'heat-tolerant': { text: '🌡️ متحمل', class: 'badge-green' }, 'egypt-native': { text: '🇪🇬 متوطن', class: 'badge-purple' }, 'pesticide-sensitive': { text: '⚠️ حساس', class: 'badge-red' }, 'bio-safe': { text: '✅ آمن', class: 'badge-green' }, 'needs-humidity': { text: '💧 رطوبة', class: 'badge-amber' }, 'needs-high-humidity': { text: '💧 رطوبة عالية', class: 'badge-red' }, 'good-heat': { text: '🌡️ تحمل جيد', class: 'badge-green' }, 'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' } };
+
+const badgeMap = {
+    'preventive': { text: '🛡️ وقائي فقط', class: 'badge-blue' },
+    'curative': { text: '💊 علاجي فقط', class: 'badge-amber' },
+    'preventive-curative': { text: '🛡️💊 وقائي وعلاجي', class: 'badge-green' },
+    'heat-tolerant': { text: '🌡️ متحمل للحرارة', class: 'badge-green' },
+    'egypt-native': { text: '🇪🇬 متوطن في مصر', class: 'badge-purple' },
+    'pesticide-sensitive': { text: '️ حساس للمبيدات', class: 'badge-red' },
+    'bio-safe': { text: '✅ آمن مع المبيدات الحيوية', class: 'badge-green' },
+    'needs-humidity': { text: '💧 يحتاج رطوبة', class: 'badge-amber' },
+    'needs-high-humidity': { text: '💧 يحتاج رطوبة عالية', class: 'badge-red' },
+    'medium-heat': { text: '️ تحمل حراري متوسط', class: 'badge-amber' },
+    'good-heat': { text: '🌡️ تحمل حراري جيد', class: 'badge-green' },
+    'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' },
+    'uv-sensitive': { text: '⚠️ حساس للأشعة فوق البنفسجية', class: 'badge-red' }
+};
+
 const importanceText = { high: 'عالي', medium: 'متوسط', low: 'منخفض', none: 'لا يؤثر' };
 const toleranceText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
-const toxicityText = { high: 'شديد', medium: 'متوسط', safe: 'آمن' };
-const categoryMap = { 'all': { name: '📋 الكل' }, 'egg-parasitoid': { name: '🐝 طفيل بيض' }, 'larval-parasitoid': { name: '🐝 طفيل يرقات' }, 'predator': { name: '🪲 مفترس' }, 'fungi': { name: '🍄 فطريات' }, 'nematode': { name: '🪱 نيماتودا' } };
+const toxicityText = { high: 'شديد السمية', medium: 'متوسط', safe: 'آمن' };
 
-function openModal(modalId) { const m = document.getElementById(modalId); if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; } }
-function openBioModal(id) { haptic(15); openModal(`modal-${id}`); }
-function closeModal(modalId) { const m = document.getElementById(modalId); if (m) { m.classList.remove('active'); document.body.style.overflow = ''; } }
-function closeModalOnBg(e, id) { if (e.target === e.currentTarget) closeModal(id); }
+const categoryMap = {
+    'all': { name: '📋 جميع الأعداء الحيوية' },
+    'egg-parasitoid': { name: '🐝 طفيلات البيض' },
+    'larval-parasitoid': { name: '🐝 طفيلات اليرقات' },
+    'predator': { name: '🪲 المفترسات' },
+    'fungi': { name: '🍄 الفطريات الممرضة' },
+    'nematode': { name: '🪱 النيماتودا الممرضة' }
+};
+
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) { 
+        modal.classList.add('active'); 
+        document.body.style.overflow = 'hidden'; 
+    }
+}
+
+function openBioModal(agentId) { 
+    openModal(`modal-${agentId}`); 
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) { 
+        modal.classList.remove('active'); 
+        document.body.style.overflow = ''; 
+    }
+}
+
+function closeModalOnBg(event, modalId) { 
+    if (event.target === event.currentTarget) closeModal(modalId); 
+}
 
 function renderBioCategoryFilter() {
-    const fc = document.getElementById('bioCategoryFilter'); if (!fc) return;
+    const fc = document.getElementById('bioCategoryFilter');
+    if (!fc) return;
+    
     const fragment = document.createDocumentFragment();
-    Object.keys(categoryMap).forEach(key => { const btn = document.createElement('button'); btn.className = `bio-filter-btn ${key === 'all' ? 'active' : ''}`; btn.textContent = categoryMap[key].name; btn.onclick = function() { filterBioByCategory(key, this); }; fragment.appendChild(btn); });
+    
+    Object.keys(categoryMap).forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = `bio-filter-btn ${key === 'all' ? 'active' : ''}`;
+        btn.setAttribute('aria-pressed', key === 'all' ? 'true' : 'false');
+        btn.textContent = categoryMap[key].name;
+        btn.onclick = function() { filterBioByCategory(key, this); };
+        fragment.appendChild(btn);
+    });
+    
     fc.appendChild(fragment);
 }
 
 function renderBioCards(filter = 'all') {
-    const container = document.getElementById('bioCardsContainer'); if (!container) return; container.innerHTML = '';
+    const container = document.getElementById('bioCardsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    
     const filtered = filter === 'all' ? bioAgentsData : bioAgentsData.filter(a => a.category === filter);
     const fragment = document.createDocumentFragment();
+    
     filtered.forEach(agent => {
-        const card = document.createElement('div'); card.className = 'bio-card-advanced'; card.onclick = () => openBioModal(agent.id);
-        let html = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div><div class="bio-targets">`;
-        Object.keys(agent.targets).forEach(key => { const s = agent.targets[key]; html += `<div class="target-row ${targetClass[s]}"><span class="target-label">${targetLabels[key]}</span><span class="target-status">${targetStatusText[s]}</span></div>`; });
-        html += '</div><div class="bio-badges">'; agent.badges.forEach(b => { const bd = badgeMap[b]; if (bd) html += `<span class="bio-badge ${bd.class}">${bd.text}</span>`; });
-        html += '</div><div class="bio-card-footer">اقرأ التفاصيل <i class="fas fa-arrow-left"></i></div>';
-        card.innerHTML = html; fragment.appendChild(card);
+        const card = document.createElement('div');
+        card.className = 'bio-card-advanced';
+        card.setAttribute('role', 'listitem');
+        card.setAttribute('aria-label', agent.scientificName);
+        card.onclick = () => openBioModal(agent.id);
+        
+        let html = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div>`;
+        html += '<div class="bio-targets">';
+        Object.keys(agent.targets).forEach(key => {
+            const s = agent.targets[key];
+            html += `<div class="target-row ${targetClass[s]}"><span class="target-label">${targetLabels[key]}</span><span class="target-status">${targetStatusText[s]}</span></div>`;
+        });
+        html += '</div>';
+        html += '<div class="bio-badges">';
+        agent.badges.forEach(b => { 
+            const bd = badgeMap[b]; 
+            if (bd) html += `<span class="bio-badge ${bd.class}">${bd.text}</span>`; 
+        });
+        html += '</div>';
+        html += `<div class="bio-card-footer">اقرأ التفاصيل الكاملة <i class="fas fa-arrow-left" aria-hidden="true"></i></div>`;
+        
+        card.innerHTML = html;
+        fragment.appendChild(card);
     });
+    
     container.appendChild(fragment);
 }
 
 function renderBioModals() {
-    const container = document.getElementById('bioModalsContainer'); if (!container) return; container.innerHTML = '';
+    const container = document.getElementById('bioModalsContainer');
+    if (!container) return;
+    container.innerHTML = '';
+    
     const fragment = document.createDocumentFragment();
+    
     bioAgentsData.forEach(agent => {
-        const modal = document.createElement('div'); modal.className = 'bio-modal'; modal.id = `modal-${agent.id}`; modal.onclick = (e) => closeModalOnBg(e, `modal-${agent.id}`);
-        modal.innerHTML = `<div class="bio-modal-content"><button class="bio-modal-close" onclick="closeModal('modal-${agent.id}')">×</button><div class="bio-modal-header"><span style="font-size:3.5rem">${agent.icon}</span><h2>${agent.scientificName}</h2><span class="bio-modal-badge">${agent.arabicDesc}</span></div><div class="modal-tabs"><button class="tab-btn active" onclick="switchTab('${agent.id}', 'overview', event)">نظرة عامة</button><button class="tab-btn" onclick="switchTab('${agent.id}', 'lifecycle', event)">دورة الحياة</button><button class="tab-btn" onclick="switchTab('${agent.id}', 'usage', event)">الاستخدام</button><button class="tab-btn" onclick="switchTab('${agent.id}', 'rating', event)">التقييم</button></div><div class="tab-content active" id="tab-${agent.id}-overview"><div class="modal-body-content"><h4>التصنيف</h4><table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr></table><h4>طريقة العمل</h4><p>${agent.bioType}</p><h4>الأهمية</h4><div class="importance-grid"><div class="importance-item ${agent.importance.egg}"><span>البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div><div class="importance-item ${agent.importance.larvae}"><span>اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div></div></div></div><div class="tab-content" id="tab-${agent.id}-lifecycle"><div class="modal-body-content"><h4>المراحل</h4><div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div><h4>السلوك</h4><p>${agent.behavior}</p></div></div><div class="tab-content" id="tab-${agent.id}-usage"><div class="modal-body-content"><h4>التحمل في مصر</h4><div class="conditions-grid"><div class="condition-item"><div class="cond-label">صيف الدلتا</div><div class="cond-value">${toleranceText[agent.egyptTolerance.delta]}</div></div><div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div></div></div></div><div class="tab-content" id="tab-${agent.id}-rating"><div class="modal-body-content"><h4>المزايا</h4><ul class="pros-list">${agent.pros.map(p => `<li>✅ ${p}</li>`).join('')}</ul><h4>العيوب</h4><ul class="cons-list">${agent.cons.map(c => `<li>❌ ${c}</li>`).join('')}</ul><div class="final-rating-box"><div style="font-size:1.5rem;color:var(--amber)">${'⭐'.repeat(agent.ratingStars)}${'☆'.repeat(5 - agent.ratingStars)}</div><p>${agent.finalRating}</p></div></div></div></div>`;
+        const modal = document.createElement('div');
+        modal.className = 'bio-modal';
+        modal.id = `modal-${agent.id}`;
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-label', agent.scientificName);
+        modal.onclick = (e) => closeModalOnBg(e, `modal-${agent.id}`);
+        
+        const tabsHtml = `
+            <div class="modal-tabs" role="tablist">
+                <button class="tab-btn active" onclick="switchTab('${agent.id}', 'overview', event)" role="tab" aria-selected="true"><i class="fas fa-info-circle" aria-hidden="true"></i> نظرة عامة</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'lifecycle', event)" role="tab" aria-selected="false"><i class="fas fa-sync-alt" aria-hidden="true"></i> دورة الحياة</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'usage', event)" role="tab" aria-selected="false"><i class="fas fa-leaf" aria-hidden="true"></i> الاستخدام</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'compatibility', event)" role="tab" aria-selected="false"><i class="fas fa-handshake" aria-hidden="true"></i> التوافق</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'rating', event)" role="tab" aria-selected="false"><i class="fas fa-star" aria-hidden="true"></i> التقييم</button>
+            </div>`;
+            
+        const overview = `
+            <div class="tab-content active" id="tab-${agent.id}-overview" role="tabpanel">
+                <div class="modal-body-content">
+                    <h4>🔬 التصنيف العلمي</h4>
+                    <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
+                    <h4> النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
+                    <h4>👁️ الوصف المورفولوجي</h4>
+                    <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
+                    <h4>📊 الأهمية في المكافحة</h4>
+                    <div class="importance-grid">
+                        <div class="importance-item ${agent.importance.egg}"><span> مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
+                        <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
+                        <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
+                        <div class="importance-item ${agent.importance.adult}"><span> مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
+                    </div>
+                </div>
+            </div>`;
+            
+        const lifecycle = `
+            <div class="tab-content" id="tab-${agent.id}-lifecycle" role="tabpanel">
+                <div class="modal-body-content">
+                    <h4>🔄 مراحل دورة الحياة</h4>
+                    <div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div>
+                    <h4>🌡️ مدة الدورة حسب الحرارة</h4>
+                    <table class="info-table"><tr><td>عند 20°م</td><td>${agent.cycleDuration.c20}</td></tr><tr><td>عند 25°م</td><td>${agent.cycleDuration.c25}</td></tr><tr><td>عند 30°م</td><td>${agent.cycleDuration.c30}</td></tr></table>
+                    <h4>🧠 السلوك الحيوي المميز</h4><p>${agent.behavior}</p>
+                </div>
+            </div>`;
+            
+        const usage = `
+            <div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel">
+                <div class="modal-body-content">
+                    <h4>️ الظروف المثالية</h4>
+                    <div class="conditions-grid">
+                        <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
+                        <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
+                        <div class="condition-item"><div class="cond-label">️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
+                        <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
+                    </div>
+                    <h4>🗺️ التحمل في الظروف المصرية</h4>
+                    <div class="conditions-grid">
+                        <div class="condition-item"><div class="cond-label">صيف الدلتا</div><div class="cond-value">${toleranceText[agent.egyptTolerance.delta]}</div></div>
+                        <div class="condition-item"><div class="cond-label">صيف الصعيد</div><div class="cond-value">${toleranceText[agent.egyptTolerance.saeed]}</div></div>
+                        <div class="condition-item"><div class="cond-label">العروة الصيفية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.summer]}</div></div>
+                        <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
+                        <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
+                    </div>
+                    <h4>🇬 التواجد الحالي في مصر</h4>
+                    <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
+                    ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+            
+        const compat = `
+            <div class="tab-content" id="tab-${agent.id}-compatibility" role="tabpanel">
+                <div class="modal-body-content">
+                    <h4>🤝 التوافق مع الأعداء الحيوية الأخرى</h4>
+                    <table class="compatibility-table">${agent.compatibility.map(([n, l]) => `<tr><td>${n}</td><td><span class="compat-level compat-${l}">${compatText[l]}</span></td></tr>`).join('')}</table>
+                    <h4>🧪 الحساسية للمبيدات</h4>
+                    ${agent.pesticides.map(([n, l]) => `<div class="pesticide-item"><span class="pesticide-name">${n}</span><span class="compat-level toxicity-${l}">${toxicityText[l]}</span></div>`).join('')}
+                </div>
+            </div>`;
+            
+        const rating = `
+            <div class="tab-content" id="tab-${agent.id}-rating" role="tabpanel">
+                <div class="modal-body-content">
+                    <h4>✅ المزايا</h4><ul class="pros-list">${agent.pros.map(p => `<li><i class="fas fa-check-circle" aria-hidden="true"></i> ${p}</li>`).join('')}</ul>
+                    <h4>❌ العيوب</h4><ul class="cons-list">${agent.cons.map(c => `<li><i class="fas fa-times-circle" aria-hidden="true"></i> ${c}</li>`).join('')}</ul>
+                    <h4>⭐ التقييم النهائي</h4>
+                    <div class="final-rating-box">
+                        <div style="margin-bottom:0.8rem;color:var(--amber);font-size:1.5rem">${'⭐'.repeat(agent.ratingStars)}${'☆'.repeat(5 - agent.ratingStars)} <span style="font-size:0.8rem;color:var(--text2)">(${agent.ratingStars}/5)</span></div>
+                        <p>${agent.finalRating}</p>
+                    </div>
+                </div>
+            </div>`;
+            
+        modal.innerHTML = `
+            <div class="bio-modal-content">
+                <button class="bio-modal-close" onclick="closeModal('modal-${agent.id}')" aria-label="إغلاق">×</button>
+                <div class="bio-modal-header">
+                    <span style="font-size:3.5rem">${agent.icon}</span>
+                    <h2>${agent.scientificName}</h2>
+                    <span class="bio-modal-badge">${agent.arabicDesc}</span>
+                </div>
+                ${tabsHtml}
+                ${overview}
+                ${lifecycle}
+                ${usage}
+                ${compat}
+                ${rating}
+            </div>`;
         fragment.appendChild(modal);
     });
+    
     container.appendChild(fragment);
 }
 
 function switchTab(agentId, tabName, event) {
-    if (event) event.preventDefault();
-    const modal = document.getElementById(`modal-${agentId}`); if (!modal) return; haptic(10);
+    const modal = document.getElementById(`modal-${agentId}`);
+    if (!modal) return;
+    
     modal.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-    modal.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
-    document.getElementById(`tab-${agentId}-${tabName}`).classList.add('active');
-    if (event && event.target.closest) event.target.closest('.tab-btn').classList.add('active');
-}
-
-function filterBioByCategory(category, btn) { document.querySelectorAll('.bio-filter-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); hapticButton(btn); renderBioCards(category); }
-
-// ============================================
-// Progress Bar
-// ============================================
-function updateProgressBar() {
-    const fill = document.getElementById('progressFill'); if (!fill) return;
-    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    if (docHeight <= 0) { fill.style.width = '0%'; return; }
-    const progress = Math.min((scrollTop / docHeight) * 100, 100);
-    fill.style.width = progress + '%';
-}
-
-// ============================================
-// Pull-to-Refresh & Swipe
-// ============================================
-let pullStartY = 0, pullStartX = 0, pullDistance = 0, isPulling = false;
-let touchStartX = 0, touchEndX = 0, touchStartY = 0;
-
-function initGestures() {
-    document.addEventListener('touchstart', (e) => {
-        pullStartY = e.touches[0].clientY;
-        pullStartX = e.touches[0].clientX;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isPulling = window.scrollY === 0;
-    }, { passive: true });
-    
-    document.addEventListener('touchmove', (e) => {
-        if (!isPulling) return;
-        const currentY = e.touches[0].clientY;
-        const currentX = e.touches[0].clientX;
-        const deltaY = currentY - pullStartY;
-        const deltaX = Math.abs(currentX - pullStartX);
-        
-        if (deltaX > deltaY && deltaX > 30) { isPulling = false; return; }
-        
-        if (deltaY > 0 && window.scrollY === 0) {
-            pullDistance = deltaY;
-            const ptr = document.getElementById('pullToRefresh');
-            if (ptr) {
-                ptr.style.opacity = Math.min(pullDistance / 100, 1);
-                ptr.style.transform = `translateY(${Math.min(pullDistance - 60, 0)}px)`;
-                if (pullDistance > 80) ptr.classList.add('visible');
-            }
-        }
-    }, { passive: true });
-    
-    document.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].clientX;
-        const ptr = document.getElementById('pullToRefresh');
-        
-        if (pullDistance > 80) triggerRefresh();
-        if (ptr) { ptr.classList.remove('visible'); ptr.style.transform = 'translateY(-100%)'; ptr.style.opacity = 0; }
-        
-        const swipeDiff = touchStartX - touchEndX;
-        const swipeDiffY = Math.abs(touchStartY - e.changedTouches[0].clientY);
-        if (Math.abs(swipeDiff) > 100 && swipeDiffY < 100) {
-            if (!document.querySelector('.bio-modal.active') && !document.querySelector('.search-modal.active') && !document.querySelector('.contact-modal.active')) {
-                haptic(10);
-                if (swipeDiff > 0) navigateGroup(1); else navigateGroup(-1);
-            }
-        }
-        
-        isPulling = false; pullDistance = 0;
+    modal.querySelectorAll('.tab-btn').forEach(tb => { 
+        tb.classList.remove('active'); 
+        tb.setAttribute('aria-selected', 'false'); 
     });
-}
-
-function triggerRefresh() {
-    const ptr = document.getElementById('pullToRefresh'); haptic(30);
-    ptr.classList.add('refreshing'); ptr.querySelector('span').textContent = t('refreshing');
-    setTimeout(() => location.reload(), 1000);
-}
-
-// ============================================
-// Sticky Headers
-// ============================================
-function initStickyHeaders() {
-    const handleScroll = () => {
-        const navHeight = (document.getElementById('topNav')?.offsetHeight || 60) + 10;
-        document.querySelectorAll('.sticky-header').forEach(header => {
-            const rect = header.getBoundingClientRect();
-            if (rect.top <= navHeight) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-        });
-    };
-    window.addEventListener('scroll', () => requestAnimationFrame(handleScroll), { passive: true });
-    handleScroll();
-}
-
-// ============================================
-// Onboarding
-// ============================================
-let currentOnboardingSlide = 1;
-const totalOnboardingSlides = 4;
-
-function showOnboarding() {
-    const overlay = document.getElementById('onboardingOverlay');
-    if (overlay) {
-        overlay.style.display = 'flex';
-        updateOnboardingSlide();
+    
+    const target = document.getElementById(`tab-${agentId}-${tabName}`);
+    if (target) target.classList.add('active');
+    
+    if (event) { 
+        const btn = event.target.closest('.tab-btn'); 
+        if (btn) { 
+            btn.classList.add('active'); 
+            btn.setAttribute('aria-selected', 'true'); 
+        } 
     }
 }
 
-function updateOnboardingSlide() {
-    document.querySelectorAll('.onboarding-slide').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.onboarding-dot').forEach(d => d.classList.remove('active'));
-    const slide = document.querySelector(`.onboarding-slide[data-slide="${currentOnboardingSlide}"]`);
-    if (slide) slide.classList.add('active');
-    const dots = document.querySelectorAll('.onboarding-dot');
-    if (dots[currentOnboardingSlide - 1]) dots[currentOnboardingSlide - 1].classList.add('active');
-    const nextBtn = document.querySelector('.onboarding-next');
-    if (nextBtn) nextBtn.innerHTML = currentOnboardingSlide === totalOnboardingSlides ? `${t('getStarted')} <i class="fas fa-check"></i>` : `${t('next')} <i class="fas fa-arrow-left"></i>`;
-}
-
-function nextOnboarding() {
-    haptic(15);
-    if (currentOnboardingSlide < totalOnboardingSlides) { currentOnboardingSlide++; updateOnboardingSlide(); }
-    else skipOnboarding();
-}
-
-function skipOnboarding() {
-    const overlay = document.getElementById('onboardingOverlay');
-    if (overlay) {
-        overlay.style.display = 'none';
-    }
-    currentOnboardingSlide = 1;
-    localStorage.setItem('tuta-onboarding-shown', 'true');
-}
-
-// ============================================
-// Smart Search
-// ============================================
-let currentSearchFilter = 'all';
-let searchTimeout = null;
-let currentSearchResults = [];
-
-function openSearch() {
-    haptic(15);
-    document.getElementById('searchModal').classList.add('active');
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => document.getElementById('searchInput').focus(), 100);
-}
-
-function closeSearch() {
-    document.getElementById('searchModal').classList.remove('active');
-    document.body.style.overflow = '';
-    document.getElementById('searchInput').value = '';
-    document.getElementById('searchResults').innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('startTyping')}</p></div>`;
-    currentSearchResults = [];
-}
-
-function setSearchFilter(filter, btn) {
-    currentSearchFilter = filter;
-    document.querySelectorAll('.search-filter').forEach(b => b.classList.remove('active'));
+function filterBioByCategory(category, btn) {
+    document.querySelectorAll('.bio-filter-btn').forEach(b => { 
+        b.classList.remove('active'); 
+        b.setAttribute('aria-pressed', 'false'); 
+    });
     btn.classList.add('active');
-    hapticButton(btn);
-    const query = document.getElementById('searchInput').value.trim();
-    if (query) performSearch(query);
+    btn.setAttribute('aria-pressed', 'true');
+    renderBioCards(category);
 }
 
-function performSearch(query) {
-    const resultsContainer = document.getElementById('searchResults');
-    const lowerQuery = query.toLowerCase();
-    currentSearchResults = [];
-    
-    if (currentSearchFilter === 'all' || currentSearchFilter === 'bio') {
-        bioAgentsData.forEach(agent => {
-            if (agent.scientificName.toLowerCase().includes(lowerQuery) || agent.arabicDesc.includes(query)) {
-                currentSearchResults.push({ type: 'bio', id: agent.id, category: '🦠 عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc });
-            }
+// ============================================
+// Keyboard & Mobile Navigation
+// ============================================
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeDropdown();
+        document.querySelectorAll('.bio-modal.active').forEach(m => { 
+            m.classList.remove('active'); 
+            document.body.style.overflow = ''; 
         });
-    }
-    if (currentSearchFilter === 'all' || currentSearchFilter === 'stages') {
-        stagesData.forEach((stage, idx) => {
-            if (stage.name.includes(query) || stage.brief.includes(query)) {
-                currentSearchResults.push({ type: 'stage', idx: idx, category: '🔄 مرحلة حياة', title: stage.name, desc: stage.brief });
-            }
-        });
-    }
-    if (currentSearchFilter === 'all' || currentSearchFilter === 'faq') {
-        getFAQ().forEach((f, idx) => {
-            if (f.question.includes(query) || f.answer.includes(query)) {
-                currentSearchResults.push({ type: 'faq', idx: idx, category: '❓ سؤال شائع', title: f.question, desc: f.answer.substring(0, 80) });
-            }
+        document.querySelectorAll('.faq-item.open').forEach(item => { 
+            item.classList.remove('open'); 
+            const q = item.querySelector('.faq-question');
+            if(q) q.setAttribute('aria-expanded', 'false'); 
         });
     }
     
-    if (currentSearchResults.length === 0) {
-        resultsContainer.innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('noResults')}</p></div>`;
-        return;
+    if (e.key === 'Tab') {
+        document.body.classList.add('keyboard-user');
     }
     
-    let html = `<div class="search-stats">${currentSearchResults.length} ${t('resultsFound')}</div>`;
-    currentSearchResults.slice(0, 20).forEach((result, idx) => {
-        html += `<div class="search-result-item" data-index="${idx}" tabindex="0">
-            <div class="search-result-category">${result.category}</div>
-            <div class="search-result-title">${highlightText(result.title, query)}</div>
-            <div class="search-result-desc">${highlightText(result.desc, query)}</div>
-        </div>`;
-    });
-    resultsContainer.innerHTML = html;
-    
-    resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
-        item.addEventListener('click', function() {
-            const index = parseInt(this.dataset.index);
-            const result = currentSearchResults[index];
-            if (!result) return;
-            
-            closeSearch();
-            if (result.type === 'bio') openBioModal(result.id);
-            else if (result.type === 'stage') {
-                showSingleSection('biology', document.querySelector('[data-group="biology"]'));
-                setTimeout(() => selS(result.idx), 500);
-            }
-            else if (result.type === 'faq') showSingleSection('faq', document.querySelector('[data-group="faq"]'));
-        });
-    });
-}
+    if (e.key === 'Enter' || e.key === ' ') {
+        const target = e.target;
+        if (target.classList.contains('bio-header') || target.getAttribute('tabindex') === '0') {
+            e.preventDefault();
+            target.click();
+        }
+    }
+});
 
-function highlightText(text, query) {
-    if (!query) return text;
-    return text.replace(new RegExp(`(${query})`, 'gi'), '<span class="search-result-highlight">$1</span>');
-}
-
-// ============================================
-// FAB
-// ============================================
-function toggleFab() { haptic(15); document.getElementById('fabMain').classList.toggle('open'); document.getElementById('fabMenu').classList.toggle('open'); }
-function closeFab() { document.getElementById('fabMain').classList.remove('open'); document.getElementById('fabMenu').classList.remove('open'); }
-function fabAction(action) {
-    haptic(20); closeFab();
-    if (action === 'contact') openContact();
-    else if (action === 'email') window.location.href = 'mailto:aliazmy30@gmail.com';
-    else if (action === 'twitter') window.open('https://x.com/abu_retage0', '_blank');
-    else if (action === 'top') window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-// ============================================
-// Contact Modal
-// ============================================
-function openContact() { haptic(15); document.getElementById('contactModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
-function closeContact() { document.getElementById('contactModal').classList.remove('active'); document.body.style.overflow = ''; }
-
-// ============================================
-// Bottom Navigation
-// ============================================
-function bottomNavAction(section, element) {
-    haptic(15);
-    document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
-    if (element) element.classList.add('active');
-    
-    if (section === 'home') goHome();
-    else if (section === 'biology') showSingleSection('biology', document.querySelector('[data-group="biology"]'));
-    else if (section === 'ipm') showSingleSection('ipm', document.querySelector('[data-group="ipm"]'));
-    else if (section === 'bioagents') showSingleSection('bioagents', document.querySelector('[data-group="bioagents"]'));
-    else if (section === 'contact') openContact();
-}
-
-// ============================================
-// Toast
-// ============================================
-function showToast(message, type = 'success') {
-    const container = document.getElementById('toastContainer'); if (!container) return;
-    const toast = document.createElement('div'); toast.className = `toast ${type}`;
-    const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle';
-    toast.innerHTML = `<i class="fas fa-${icon}"></i><span>${message}</span>`;
-    container.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(-100%)'; setTimeout(() => toast.remove(), 300); }, 3500);
-}
+document.addEventListener('mousedown', () => {
+    document.body.classList.remove('keyboard-user');
+});
 
 // ============================================
 // Main Initialization
 // ============================================
+
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Starting application...');
+    
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
         await loadAllData();
-        console.log('✅ Data loaded');
+        console.log('✅ Data loaded successfully');
+
+        const thermal = getThermalConstants();
+        T0 = thermal.T0; 
+        TH = thermal.TH; 
+        K = thermal.K;
         
-        const thermal = getThermalConstants(); T0 = thermal.T0; TH = thermal.TH; K = thermal.K;
-        stagesData = getStages(); egyptMonthsData = getEgyptMonths(); calendarDataObj = getCalendarData();
-        planCardsData = getPlanCards(); sourcesData = getSources(); bioAgentsData = getBioAgents();
-        
-        console.log(`📊 Bio Agents: ${bioAgentsData.length}`);
-        console.log(`🔄 Stages: ${stagesData.length}`);
-        
-        buildSpreadSection(); buildEconomicSection(); buildIPMSection(); buildFAQSection();
-        buildResistanceSection(); buildSources();
-        
+        stagesData = getStages();
+        egyptMonthsData = getEgyptMonths();
+        calendarDataObj = getCalendarData();
+        planCardsData = getPlanCards();
+        sourcesData = getSources();
+        bioAgentsData = getBioAgents();
+
+        buildSpreadSection();
+        buildEconomicSection();
+        buildIPMSection();
+        buildFAQSection();
+        buildResistanceSection();
+        buildSources();
+        console.log('✅ Dynamic sections built');
+
         const slider = document.getElementById('tempSlider');
-        if (slider) slider.addEventListener('input', function() { curTemp = parseInt(this.value); updAll(); });
+        if (slider) {
+            slider.addEventListener('input', function () { 
+                curTemp = parseInt(this.value); 
+                this.setAttribute('aria-valuenow', curTemp); 
+                updAll(); 
+            });
+        }
+
+        const revealObs = new IntersectionObserver((entries) => { 
+            entries.forEach(e => { 
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                } 
+            }); 
+        }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
         
-        const revealObs = new IntersectionObserver((entries) => { entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } }); }, { threshold: 0.08 });
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-        
-        buildStages(); populateTable(); buildPlanCards(); updAll();
-        
-        // ✅ إصلاح: تشغيل مكتبة الأعداء الحيوية
+
+        buildStages();
+        populateTable();
+        buildPlanCards();
+        updAll();
+        console.log('✅ UI components built');
+
         renderBioCategoryFilter();
         renderBioCards('all');
         renderBioModals();
-        console.log(`✅ Bio Agents rendered: ${bioAgentsData.length} agents`);
-        
-        document.getElementById('prevS').addEventListener('click', () => { let n = curStage - 1; if (n < 0) n = stagesData.length - 1; selS(n); });
-        document.getElementById('nextS').addEventListener('click', () => { let n = curStage + 1; if (n >= stagesData.length) n = 0; selS(n); });
-        document.getElementById('autoBtn').addEventListener('click', toggleA);
-        
-        window.addEventListener('resize', debouncedDrawChart);
-        createLandingParticles();
-        
-        initGestures();
-        initStickyHeaders();
-        updateLanguage();
-        
-        window.addEventListener('scroll', throttle(updateProgressBar, 50), { passive: true });
-        updateProgressBar();
-        
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(searchTimeout);
-                const query = e.target.value.trim();
-                if (query.length < 2) {
-                    document.getElementById('searchResults').innerHTML = `<div class="search-empty"><i class="fas fa-search"></i><p>${t('startTyping')}</p></div>`;
-                    return;
-                }
-                searchTimeout = setTimeout(() => performSearch(query), 300);
-            });
-        }
-        
-        document.addEventListener('click', (e) => { if (!e.target.closest('.fab-container')) closeFab(); });
-        
-        document.querySelectorAll('.contact-modal, .search-modal').forEach(modal => {
-            modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } });
+        console.log('✅ Bio agents encyclopedia loaded');
+
+        document.getElementById('prevS').addEventListener('click', () => { 
+            let n = curStage - 1; 
+            if (n < 0) n = stagesData.length - 1; 
+            selS(n); 
         });
         
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log(err));
-            });
+        document.getElementById('nextS').addEventListener('click', () => { 
+            let n = curStage + 1; 
+            if (n >= stagesData.length) n = 0; 
+            selS(n); 
+        });
+        
+        document.getElementById('autoBtn').addEventListener('click', toggleA);
+
+        window.addEventListener('resize', debouncedDrawChart);
+
+        createLandingParticles();
+
+        // ============================================
+        // Service Worker - تحديث تلقائي بدون أي رسالة
+        // ============================================
+        
+        if ('serviceWorker' in navigator) { 
+            window.addEventListener('load', () => { 
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => {
+                        console.log('✅ SW registered:', reg.scope);
+                        
+                        // فحص التحديثات كل دقيقتين
+                        setInterval(() => {
+                            reg.update();
+                        }, 2 * 60 * 1000);
+                        
+                        // تحديث تلقائي عند اكتشاف نسخة جديدة
+                        reg.addEventListener('updatefound', () => {
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 New version ready - auto updating...');
+                                    // إعادة تحميل تلقائية بدون أي رسالة
+                                    window.location.reload();
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => console.log('❌ SW failed:', err)); 
+            }); 
+            
+            // تحديث تلقائي عند تغيير الـ controller (بدون رسالة)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (refreshing) return; refreshing = true; window.location.reload();
+                if (refreshing) return;
+                refreshing = true;
+                console.log('🔄 Updating to new version...');
+                window.location.reload();
             });
         }
         
-        setTimeout(() => { if (loadingOverlay) { loadingOverlay.classList.add('hidden'); setTimeout(() => loadingOverlay.style.display = 'none', 500); } }, 800);
+        console.log('🎉 Application ready!');
+        
+        setTimeout(() => { 
+            if (loadingOverlay) { 
+                loadingOverlay.classList.add('hidden'); 
+                setTimeout(() => loadingOverlay.style.display = 'none', 500); 
+            } 
+        }, 800);
+        
     } catch (error) {
-        console.error('❌ Error:', error);
-        if (loadingOverlay) loadingOverlay.classList.add('hidden');
+        console.error(' Error initializing application:', error);
+        if (loadingOverlay) { 
+            loadingOverlay.classList.add('hidden'); 
+            setTimeout(() => loadingOverlay.style.display = 'none', 500); 
+        }
     }
-});
-
-// ============================================
-// Keyboard Shortcuts
-// ============================================
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        closeDropdown(); closeSearch(); closeContact();
-        document.querySelectorAll('.bio-modal.active').forEach(m => closeModal(m.id));
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'l') { e.preventDefault(); toggleLanguage(); }
 });
