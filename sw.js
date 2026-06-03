@@ -1,5 +1,5 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v3
+// Service Worker - Tuta Absoluta App v4
 // ============================================
 
 const CACHE_NAME = 'tuta-app-v3';  // ← زود الرقم هنا كل ما تعدل

@@ -1,6 +1,6 @@
 // ============================================
 // Tuta Absoluta App - Script.js
-// الإصدار المحسن مع تحديث تلقائي
+// الإصدار المحسن مع تحديث تلقائي بدون رسالة
 // ============================================
 
 // ============================================
@@ -416,8 +416,8 @@ function populateTable() {
     const rows = [
         { label: '🌡️ متوسط الحرارة العظمى (°م)', data: cData.temperatures || [], type: 'temp' },
         { label: '💧 الرطوبة النسبية (%)', data: cData.humidities || [], type: 'hum' },
-        { label: ' شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
-        { label: '🔄 عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
+        { label: '🦋 شدة نشاط الآفة', data: cData.activities || [], type: 'act' },
+        { label: ' عدد الأجيال المتوقعة', data: cData.generations || [], type: 'gen' },
         { label: '🪤 مصائد فرمونية (للمراقبة)', data: cData.traps || [], type: 'trap' },
         { label: '🦠 المكافحة البيولوجية', data: cData.bioStatus || [], type: 'bio' },
         { label: '💊 المكافحة الكيميائية', data: cData.chemStatus || [], type: 'chem' },
@@ -605,7 +605,7 @@ function buildSpreadSection() {
             </div>
             <div class="bio-body">
                 <p>${r.description}</p>
-                <h4> الأثر</h4>
+                <h4>🔑 الأثر</h4>
                 <p>${r.impact}</p>
             </div>
         `;
@@ -651,7 +651,7 @@ function buildEconomicSection() {
                 </div>
                 <div class="bio-body">
                     <p>${c.description}</p>
-                    <h4> الأثر المالي</h4>
+                    <h4>💰 الأثر المالي</h4>
                     <p>${c.financialImpact}</p>
                 </div>
             `;
@@ -1016,7 +1016,7 @@ function closeLanding() {
 // Bio Agents Encyclopedia
 // ============================================
 
-const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: '🦋 الكاملة' };
+const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
 const targetStatusText = { effective: 'فعّال', partial: 'جزئي', none: 'لا يؤثر' };
 const targetClass = { effective: 'active-target', partial: 'partial-target', none: 'inactive-target' };
 
@@ -1025,8 +1025,8 @@ const badgeMap = {
     'curative': { text: '💊 علاجي فقط', class: 'badge-amber' },
     'preventive-curative': { text: '🛡️💊 وقائي وعلاجي', class: 'badge-green' },
     'heat-tolerant': { text: '🌡️ متحمل للحرارة', class: 'badge-green' },
-    'egypt-native': { text: '🇪 متوطن في مصر', class: 'badge-purple' },
-    'pesticide-sensitive': { text: '⚠️ حساس للمبيدات', class: 'badge-red' },
+    'egypt-native': { text: '🇪🇬 متوطن في مصر', class: 'badge-purple' },
+    'pesticide-sensitive': { text: '️ حساس للمبيدات', class: 'badge-red' },
     'bio-safe': { text: '✅ آمن مع المبيدات الحيوية', class: 'badge-green' },
     'needs-humidity': { text: '💧 يحتاج رطوبة', class: 'badge-amber' },
     'needs-high-humidity': { text: '💧 يحتاج رطوبة عالية', class: 'badge-red' },
@@ -1162,12 +1162,12 @@ function renderBioModals() {
                     <h4> النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
                     <h4>👁️ الوصف المورفولوجي</h4>
                     <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
-                    <h4> الأهمية في المكافحة</h4>
+                    <h4>📊 الأهمية في المكافحة</h4>
                     <div class="importance-grid">
-                        <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
+                        <div class="importance-item ${agent.importance.egg}"><span> مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
                         <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
                         <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
-                        <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
+                        <div class="importance-item ${agent.importance.adult}"><span> مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
                     </div>
                 </div>
             </div>`;
@@ -1186,11 +1186,11 @@ function renderBioModals() {
         const usage = `
             <div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel">
                 <div class="modal-body-content">
-                    <h4>🌡️ الظروف المثالية</h4>
+                    <h4>️ الظروف المثالية</h4>
                     <div class="conditions-grid">
-                        <div class="condition-item"><div class="cond-label">️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
+                        <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
                         <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
-                        <div class="condition-item"><div class="cond-label">☀️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
+                        <div class="condition-item"><div class="cond-label">️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
                         <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
                     </div>
                     <h4>🗺️ التحمل في الظروف المصرية</h4>
@@ -1201,9 +1201,9 @@ function renderBioModals() {
                         <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
                         <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
                     </div>
-                    <h4>🇪🇬 التواجد الحالي في مصر</h4>
+                    <h4>🇬 التواجد الحالي في مصر</h4>
                     <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
-                    ${agent.plants.length > 0 ? `<h4> النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
+                    ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
                 </div>
             </div>`;
             
@@ -1401,7 +1401,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         createLandingParticles();
 
         // ============================================
-        // Service Worker - تحديث تلقائي بدون رسالة مزعجة
+        // Service Worker - تحديث تلقائي بدون أي رسالة
         // ============================================
         
         if ('serviceWorker' in navigator) { 
@@ -1410,18 +1410,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
                         
-                        // التحقق من وجود تحديث كل 5 دقائق
+                        // فحص التحديثات كل دقيقتين
                         setInterval(() => {
                             reg.update();
-                        }, 5 * 60 * 1000);
+                        }, 2 * 60 * 1000);
                         
-                        // تحديث فوري عند اكتشاف نسخة جديدة
+                        // تحديث تلقائي عند اكتشاف نسخة جديدة
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('🔄 New version available, updating...');
-                                    // تحديث تلقائي بدون رسالة
+                                    console.log('🔄 New version ready - auto updating...');
+                                    // إعادة تحميل تلقائية بدون أي رسالة
                                     window.location.reload();
                                 }
                             });
@@ -1450,7 +1450,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 800);
         
     } catch (error) {
-        console.error('❌ Error initializing application:', error);
+        console.error(' Error initializing application:', error);
         if (loadingOverlay) { 
             loadingOverlay.classList.add('hidden'); 
             setTimeout(() => loadingOverlay.style.display = 'none', 500); 
