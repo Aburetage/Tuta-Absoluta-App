@@ -310,10 +310,10 @@ function populateTable() {
         { label: '💧 الرطوبة (%)', data: cData.humidities || [], type: 'hum' },
         { label: '🦋 نشاط الآفة', data: cData.activities || [], type: 'act' },
         { label: '🔄 الأجيال', data: cData.generations || [], type: 'gen' },
-        { label: ' المصائد', data: cData.traps || [], type: 'trap' },
+        { label: '🪤 المصائد', data: cData.traps || [], type: 'trap' },
         { label: '🦠 بيولوجية', data: cData.bioStatus || [], type: 'bio' },
         { label: '💊 كيميائية', data: cData.chemStatus || [], type: 'chem' },
-        { label: ' تعقيم', data: cData.soilStatus || [], type: 'soil' }
+        { label: '🌞 تعقيم', data: cData.soilStatus || [], type: 'soil' }
     ];
     const getTempColor = t => t < 20 ? '#3b82f6' : t <= 25 ? '#22c55e' : t <= 30 ? '#eab308' : t <= 34 ? '#f97316' : '#ef4444';
     const getGenColor = g => g <= .5 ? '#22c55e' : g <= 1 ? '#eab308' : g <= 1.5 ? '#f97316' : '#ef4444';
@@ -414,9 +414,9 @@ function buildIPMSection() {
     tabs.forEach((tab, i) => {
         const panel = panels[tab.id]; if (!panel) return;
         html += `<div class="ipm-panel ${i === 0 ? 'active' : ''}" id="panel-${tab.id}">`;
-        if (panel.warning) html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem"><p style="font-size:0.9rem;color:var(--text2)"><strong style="color:var(--accent)">️ تحذير:</strong> ${panel.warning}</p></div>`;
+        if (panel.warning) html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem"><p style="font-size:0.9rem;color:var(--text2)"><strong style="color:var(--accent)">⚠️ تحذير:</strong> ${panel.warning}</p></div>`;
         if (panel.cards) { html += '<div class="ipm-grid">'; panel.cards.forEach(card => { html += `<div class="ipm-card"><div class="ipm-card-icon">${card.icon}</div><h4>${card.title}</h4><p>${card.description}</p><span class="ipm-tag ${card.tagClass}">${card.tag}</span></div>`; }); html += '</div>'; }
-        if (panel.instructions) html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem"><h4 style="color:var(--amber);margin-bottom:0.5rem">️ إرشادات</h4><ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2">${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}</ul></div>`;
+        if (panel.instructions) html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem"><h4 style="color:var(--amber);margin-bottom:0.5rem">⚠️ إرشادات</h4><ul style="list-style:none;padding:0;font-size:0.85rem;color:var(--text2);line-height:2">${panel.instructions.map(inst => `<li>✓ ${inst}</li>`).join('')}</ul></div>`;
         if (panel.rotationSchedule) html += `<div style="margin-top:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm)"><h4 style="color:var(--plan-accent);margin-bottom:0.8rem">🗓️ جدول التناوب</h4><p style="color:var(--text2);font-size:0.9rem;line-height:1.9">${panel.rotationSchedule}</p></div>`;
         html += '</div>';
     });
@@ -536,10 +536,13 @@ function closeLanding() {
     haptic(20);
     document.getElementById('landingOverlay').classList.add('hidden');
     showSingleSection('biology', document.querySelector('[data-group="biology"]'));
-    // ✅ إصلاح: تشغيل Onboarding
-    if (!localStorage.getItem('tuta-onboarding-shown')) {
+    
+    // ✅ إصلاح Onboarding
+    const hasSeenOnboarding = localStorage.getItem('tuta-onboarding-shown');
+    if (!hasSeenOnboarding) {
         setTimeout(() => {
             showOnboarding();
+            localStorage.setItem('tuta-onboarding-shown', 'true');
         }, 800);
     }
 }
@@ -550,12 +553,12 @@ function closeLanding() {
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: '🦋 الكاملة' };
 const targetStatusText = { effective: 'فعّال', partial: 'جزئي', none: 'لا يؤثر' };
 const targetClass = { effective: 'active-target', partial: 'partial-target', none: 'inactive-target' };
-const badgeMap = { 'preventive': { text: '🛡️ وقائي', class: 'badge-blue' }, 'curative': { text: ' علاجي', class: 'badge-amber' }, 'preventive-curative': { text: '️💊 وقائي وعلاجي', class: 'badge-green' }, 'heat-tolerant': { text: '🌡️ متحمل', class: 'badge-green' }, 'egypt-native': { text: '🇪🇬 متوطن', class: 'badge-purple' }, 'pesticide-sensitive': { text: '⚠️ حساس', class: 'badge-red' }, 'bio-safe': { text: '✅ آمن', class: 'badge-green' }, 'needs-humidity': { text: '💧 رطوبة', class: 'badge-amber' }, 'needs-high-humidity': { text: '💧 رطوبة عالية', class: 'badge-red' }, 'good-heat': { text: '🌡️ تحمل جيد', class: 'badge-green' }, 'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' } };
+const badgeMap = { 'preventive': { text: '🛡️ وقائي', class: 'badge-blue' }, 'curative': { text: '💊 علاجي', class: 'badge-amber' }, 'preventive-curative': { text: '🛡️ وقائي وعلاجي', class: 'badge-green' }, 'heat-tolerant': { text: '🌡️ متحمل', class: 'badge-green' }, 'egypt-native': { text: '🇪🇬 متوطن', class: 'badge-purple' }, 'pesticide-sensitive': { text: '⚠️ حساس', class: 'badge-red' }, 'bio-safe': { text: '✅ آمن', class: 'badge-green' }, 'needs-humidity': { text: '💧 رطوبة', class: 'badge-amber' }, 'needs-high-humidity': { text: '💧 رطوبة عالية', class: 'badge-red' }, 'good-heat': { text: '🌡️ تحمل جيد', class: 'badge-green' }, 'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' } };
 const importanceText = { high: 'عالي', medium: 'متوسط', low: 'منخفض', none: 'لا يؤثر' };
 const toleranceText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const toxicityText = { high: 'شديد', medium: 'متوسط', safe: 'آمن' };
-const categoryMap = { 'all': { name: ' الكل' }, 'egg-parasitoid': { name: '🐝 طفيل بيض' }, 'larval-parasitoid': { name: '🐝 طفيل يرقات' }, 'predator': { name: '🪲 مفترس' }, 'fungi': { name: '🍄 فطريات' }, 'nematode': { name: '🪱 نيماتودا' } };
+const categoryMap = { 'all': { name: '📋 الكل' }, 'egg-parasitoid': { name: '🐝 طفيل بيض' }, 'larval-parasitoid': { name: '🐝 طفيل يرقات' }, 'predator': { name: '🪲 مفترس' }, 'fungi': { name: '🍄 فطريات' }, 'nematode': { name: '🪱 نيماتودا' } };
 
 function openModal(modalId) { const m = document.getElementById(modalId); if (m) { m.classList.add('active'); document.body.style.overflow = 'hidden'; } }
 function openBioModal(id) { haptic(15); openModal(`modal-${id}`); }
@@ -696,7 +699,7 @@ function initStickyHeaders() {
 }
 
 // ============================================
-// ✅ Onboarding (تم الإصلاح)
+// Onboarding
 // ============================================
 let currentOnboardingSlide = 1;
 const totalOnboardingSlides = 4;
@@ -774,7 +777,7 @@ function performSearch(query) {
     if (currentSearchFilter === 'all' || currentSearchFilter === 'bio') {
         bioAgentsData.forEach(agent => {
             if (agent.scientificName.toLowerCase().includes(lowerQuery) || agent.arabicDesc.includes(query)) {
-                currentSearchResults.push({ type: 'bio', id: agent.id, category: ' عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc });
+                currentSearchResults.push({ type: 'bio', id: agent.id, category: '🦠 عدو حيوي', title: agent.scientificName, desc: agent.arabicDesc });
             }
         });
     }

@@ -47,7 +47,7 @@ async function loadAllData() {
                     return response.json();
                 })
                 .then(data => {
-                    // ✅ معالجة خاصة لكل نوع من البيانات
+                    // معالجة خاصة لكل نوع من البيانات
                     
                     // 1. البيانات الاقتصادية (Object فيه Arrays)
                     if (file.target === 'economicData') {
@@ -61,7 +61,7 @@ async function loadAllData() {
                         window.ipmData = data;
                     }
                     
-                    // 3. ✅ النموذج الحراري + مراحل الحياة (الأهم!)
+                    // 3. النموذج الحراري + مراحل الحياة
                     else if (file.target === 'thermalModel') {
                         // استخراج thermalConstants (Object)
                         window.thermalModel = data.thermalConstants || data;
@@ -69,13 +69,13 @@ async function loadAllData() {
                         // استخراج stages (Array)
                         window.stages = data.stages || [];
                         
-                        console.log(`️ Loaded thermal-model.json`);
+                        console.log(`🌡️ Loaded thermal-model.json`);
                         console.log(`   T0: ${window.thermalModel.T0}°م`);
                         console.log(`   TH: ${window.thermalModel.TH}°م`);
                         console.log(`   Stages: ${window.stages.length} stages`);
                     }
                     
-                    // 4. البيانات الموسمية (مهم!)
+                    // 4. البيانات الموسمية
                     else if (file.target === 'seasonalData') {
                         window.seasonalData = data.egyptMonths || data.seasonalData || [];
                         window.calendarData = data.calendarData || {};
@@ -135,15 +135,15 @@ async function loadAllData() {
         console.log('='.repeat(60));
         console.log(`🌡️  Thermal Model: T0=${thermalModel.T0}°م, TH=${thermalModel.TH}°م`);
         console.log(`🔄 Stages: ${stages.length} stages`);
-        console.log(` Seasonal Data: ${seasonalData.length} months`);
-        console.log(` Calendar Data: ${Object.keys(calendarData).length} fields`);
+        console.log(`📅 Seasonal Data: ${seasonalData.length} months`);
+        console.log(`📆 Calendar Data: ${Object.keys(calendarData).length} fields`);
         console.log(`📊 Bio Agents: ${bioAgents.length} agents`);
         console.log(`❓ FAQ: ${faq.length} questions`);
         console.log(`📉 Economic Stats: ${economicStats.length} stats`);
         console.log(`💰 Economic Cards: ${economicCards.length} cards`);
-        console.log(` Plan Cards: ${planCards.length} cards`);
+        console.log(`📋 Plan Cards: ${planCards.length} cards`);
         console.log(`🛡️  IPM Sections: ${Object.keys(ipmData).length}`);
-        console.log(`️  Resistance: ${resistanceData.length} pesticides`);
+        console.log(`⚠️  Resistance: ${resistanceData.length} pesticides`);
         console.log(`📚 Sources: ${sources.length} references`);
         console.log(`🌍 Spread Reasons: ${spreadReasons.length} reasons`);
         console.log('='.repeat(60));

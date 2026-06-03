@@ -35,14 +35,9 @@ const DATA_FILES = [
   './data/resistance.json'
 ];
 
-// ملفات الأيقونات (متطابقة مع manifest.json + index.html)
+// ملفات الأيقونات
 const ICON_FILES = [
-  './icons/icon-72.png',
-  './icons/icon-96.png',
-  './icons/icon-128.png',
   './icons/icon-192.png',
-  './icons/icon-256.png',
-  './icons/icon-384.png',
   './icons/icon-512.png',
   './icons/icon.svg',
   './icons/favicon-32x32.png',
@@ -68,7 +63,6 @@ self.addEventListener('install', event => {
     caches.open(CACHE_NAME)
       .then(cache => {
         console.log('[SW] Caching essential files...');
-        // استخدام Promise.allSettled عشان لو ملف ناقص، الباقي يتخزنوا
         return Promise.allSettled(
           ALL_CACHE_URLS.map(url => 
             cache.add(url).catch(err => {
