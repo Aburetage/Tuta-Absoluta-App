@@ -1,148 +1,163 @@
 // ============================================
-// Data Loader - تحميل البيانات من ملفات JSON
+// Tuta Absoluta App - Data Loader
+// اكاديمية المهندس الزراعي
 // ============================================
 
-const DataPaths = {
-  thermal: 'data/thermal-model.json',
-  seasonal: 'data/seasonal-data.json',
-  planCards: 'data/plan-cards.json',
-  sources: 'data/sources.json',
-  faq: 'data/faq.json',
-  spread: 'data/spread-reasons.json',
-  economic: 'data/economic-impact.json',
-  ipm: 'data/ipm-program.json',
-  resistance: 'data/resistance.json',
-  bioAgents: 'data/bio-agents.json'
-};
+// متغيرات تخزين البيانات
+let thermalModel = {};
+let stages = [];
+let seasonalData = [];
+let calendarData = {};
+let planCards = [];
+let sources = [];
+let bioAgents = [];
+let spreadReasons = [];
+let economicStats = [];
+let economicCards = [];
+let ipmData = {};
+let faq = [];
+let resistanceData = [];
 
-let APP_DATA = {
-  thermal: null,
-  seasonal: null,
-  planCards: null,
-  sources: null,
-  faq: null,
-  spread: null,
-  economic: null,
-  ipm: null,
-  resistance: null,
-  bioAgents: null
-};
-
-async function loadData(filename) {
-  try {
-    const response = await fetch(filename);
-    if (!response.ok) {
-      console.warn(`تعذر تحميل: ${filename} - سيُستخدم البيانات الاحتياطية`);
-      return null;
-    }
-    return await response.json();
-  } catch (error) {
-    console.warn(`خطأ في تحميل ${filename}:`, error);
-    return null;
-  }
-}
+// ============================================
+// دالة تحميل جميع البيانات
+// ============================================
 
 async function loadAllData() {
-  const [thermal, seasonal, planCards, sources, faq, spread, economic, ipm, resistance, bioAgents] = await Promise.all([
-    loadData(DataPaths.thermal),
-    loadData(DataPaths.seasonal),
-    loadData(DataPaths.planCards),
-    loadData(DataPaths.sources),
-    loadData(DataPaths.faq),
-    loadData(DataPaths.spread),
-    loadData(DataPaths.economic),
-    loadData(DataPaths.ipm),
-    loadData(DataPaths.resistance),
-    loadData(DataPaths.bioAgents)
-  ]);
+    try {
+        const files = [
+            { name: 'thermal-model.json', target: 'thermalModel' },
+            { name: 'stages.json', target: 'stages' },
+            { name: 'seasonal-data.json', target: 'seasonalData' },
+            { name: 'calendar-data.json', target: 'calendarData' },
+            { name: 'plan-cards.json', target: 'planCards' },
+            { name: 'sources.json', target: 'sources' },
+            { name: 'bio-agents.json', target: 'bioAgents' },
+            { name: 'spread-reasons.json', target: 'spreadReasons' },
+            { name: 'economic-impact.json', target: 'economicData' },
+            { name: 'ipm-program.json', target: 'ipmData' },
+            { name: 'faq.json', target: 'faq' },
+            { name: 'resistance.json', target: 'resistanceData' }
+        ];
 
-  APP_DATA.thermal = thermal;
-  APP_DATA.seasonal = seasonal;
-  APP_DATA.planCards = planCards;
-  APP_DATA.sources = sources;
-  APP_DATA.faq = faq;
-  APP_DATA.spread = spread;
-  APP_DATA.economic = economic;
-  APP_DATA.ipm = ipm;
-  APP_DATA.resistance = resistance;
-  APP_DATA.bioAgents = bioAgents;
+        const promises = files.map(file => 
+            fetch(`data/${file.name}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status} for ${file.name}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // معالجة خاصة للبيانات الاقتصادية
+                    if (file.target === 'economicData') {
+                        economicStats = data.stats || data.economicStats || [];
+                        economicCards = data.cards || data.economicCards || [];
+                    } else {
+                        // استخدام eval لتعيين المتغير الديناميكي
+                        window[file.target] = data;
+                    }
+                    console.log(`✅ Loaded ${file.name}`);
+                })
+                .catch(err => {
+                    console.error(`❌ Error loading ${file.name}:`, err);
+                    // تعيين قيم افتراضية لتجنب الأخطاء
+                    if (file.target === 'economicData') {
+                        economicStats = [];
+                        economicCards = [];
+                    } else {
+                        window[file.target] = Array.isArray(window[file.target]) ? window[file.target] : {};
+                    }
+                })
+        );
 
-  console.log('✅ تم تحميل جميع البيانات:', APP_DATA);
+        await Promise.all(promises);
+        
+        // تعيين المتغيرات المحلية
+        thermalModel = window.thermalModel || {};
+        stages = window.stages || [];
+        seasonalData = window.seasonalData || [];
+        calendarData = window.calendarData || {};
+        planCards = window.planCards || [];
+        sources = window.sources || [];
+        bioAgents = window.bioAgents || [];
+        spreadReasons = window.spreadReasons || [];
+        ipmData = window.ipmData || {};
+        faq = window.faq || [];
+        resistanceData = window.resistanceData || [];
+        
+        console.log('✅ All data loaded successfully');
+    } catch (error) {
+        console.error(' Error loading data:', error);
+        throw error;
+    }
 }
 
 // ============================================
-// دوال مساعدة للوصول للبيانات
+// دوال Getter للبيانات
 // ============================================
 
 function getThermalConstants() {
-  return APP_DATA.thermal?.thermalConstants || {
-    T0: 8,
-    TH: 37,
-    K: { egg: 75.5, larva: 160.8, pupa: 182.3 }
-  };
+    return {
+        T0: thermalModel.T0 || 8,
+        TH: thermalModel.TH || 37,
+        K: {
+            egg: thermalModel.K?.egg || 80,
+            larva: thermalModel.K?.larva || 150,
+            pupa: thermalModel.K?.pupa || 100
+        }
+    };
 }
 
 function getStages() {
-  return APP_DATA.thermal?.stages || [];
+    return stages;
 }
 
 function getEgyptMonths() {
-  return APP_DATA.seasonal?.egyptMonths || [];
+    return seasonalData;
 }
 
 function getCalendarData() {
-  return APP_DATA.seasonal?.calendarData || {};
+    return calendarData;
 }
 
 function getPlanCards() {
-  return APP_DATA.planCards?.planCards || [];
+    return planCards;
 }
 
 function getSources() {
-  return APP_DATA.sources?.sources || [];
-}
-
-function getFAQ() {
-  return APP_DATA.faq?.faq || [];
-}
-
-function getSpreadReasons() {
-  return APP_DATA.spread?.spreadReasons || [];
-}
-
-function getEconomicStats() {
-  return APP_DATA.economic?.economicStats || [];
-}
-
-function getEconomicCards() {
-  return APP_DATA.economic?.economicCards || [];
-}
-
-function getIPMData() {
-  return APP_DATA.ipm || {};
-}
-
-function getResistanceData() {
-  return APP_DATA.resistance?.resistanceData || [];
+    return sources;
 }
 
 function getBioAgents() {
-  return APP_DATA.bioAgents?.bioAgents || [];
+    return bioAgents;
 }
 
-// تصدير الدوال عالمياً
-window.APP_DATA = APP_DATA;
-window.loadAllData = loadAllData;
-window.getThermalConstants = getThermalConstants;
-window.getStages = getStages;
-window.getEgyptMonths = getEgyptMonths;
-window.getCalendarData = getCalendarData;
-window.getPlanCards = getPlanCards;
-window.getSources = getSources;
-window.getFAQ = getFAQ;
-window.getSpreadReasons = getSpreadReasons;
-window.getEconomicStats = getEconomicStats;
-window.getEconomicCards = getEconomicCards;
-window.getIPMData = getIPMData;
-window.getResistanceData = getResistanceData;
-window.getBioAgents = getBioAgents;
+function getSpreadReasons() {
+    return spreadReasons;
+}
+
+function getEconomicStats() {
+    return economicStats;
+}
+
+function getEconomicCards() {
+    return economicCards;
+}
+
+function getIPMData() {
+    return ipmData;
+}
+
+function getFAQ() {
+    return faq;
+}
+
+function getResistanceData() {
+    return resistanceData;
+}
+
+// ============================================
+// Export للدوال (للاستخدام في script.js)
+// ============================================
+
+console.log('📦 Data Loader initialized');
