@@ -106,11 +106,10 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text; font-size: 2rem;
 }
-.landing-stats { display: flex; gap: 1.2rem; justify-content: center; margin: 1.5rem 0; flex-wrap: wrap; }
+.landing-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin: 1.5rem 0; }
 .landing-stat {
     background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
     border-radius: 12px; padding: 0.8rem 1.2rem; text-align: center;
-    flex: 1; min-width: 100px;
 }
 .landing-stat-num { font-family: 'Cairo', sans-serif; font-size: 1.8rem; font-weight: 900; color: var(--accent); line-height: 1; }
 .landing-stat-lbl { font-size: 0.65rem; color: var(--text2); margin-top: 0.2rem; }
@@ -732,7 +731,7 @@ th.hidden-col, td.hidden-col { display: none; }
    MOBILE RESPONSIVE - تحسينات شاملة للموبايل
    ===================================================================== */
 
-/* Mobile Portrait - عمود واحد فقط */
+/* Mobile Portrait */
 @media (max-width: 768px) and (orientation: portrait) {
     .container { padding: 1rem; }
     body { padding-top: 50px; }
@@ -750,35 +749,102 @@ th.hidden-col, td.hidden-col { display: none; }
     .dropdown-title { font-size: 0.82rem; }
     .dropdown-desc { font-size: 0.65rem; }
 
-    /* ✅ عمود واحد فقط في الوضع العمودي */
-    .about-grid,
-    .temp-grid,
+    /* ===== البطاقات الصغيرة - 2×2 (دورة الحياة، الدرجات، إلخ) ===== */
     .sg,
+    .temp-grid,
+    .importance-grid,
+    .conditions-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.6rem;
+    }
+
+    /* تحسين شكل بطاقات دورة الحياة */
+    .sg .sc2 {
+        padding: 0.8rem 0.6rem !important;
+        min-height: auto;
+    }
+    .sg .sico {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.4rem !important;
+        margin-bottom: 0.4rem;
+    }
+    .sg .snme { font-size: 0.85rem !important; }
+    .sg .sdys { font-size: 1.2rem !important; }
+    .sg .sdyl { font-size: 0.6rem !important; }
+    .sg .sbrf { font-size: 0.65rem !important; line-height: 1.4; }
+    .sg .snm { width: 18px !important; height: 18px !important; font-size: 0.55rem !important; }
+
+    /* تحسين شبكة الدرجات الحرارية */
+    .temp-item { padding: 0.6rem 0.4rem !important; }
+    .temp-item .val { font-size: 1.1rem !important; }
+    .temp-item .lbl { font-size: 0.6rem !important; line-height: 1.3; }
+    .temp-total { grid-column: 1 / -1 !important; padding: 0.8rem !important; }
+    .temp-total .val { font-size: 1.5rem !important; }
+
+    /* البطاقات الكبيرة - عمود واحد */
+    .about-grid,
     .ipm-grid,
     .resistance-grid,
     .sources-grid,
-    .bio-agent-grid,
-    .importance-grid,
-    .conditions-grid {
+    .bio-agent-grid {
         grid-template-columns: 1fr !important;
         gap: 1rem;
     }
 
-    /* Landing stats - 2 columns */
+    /* Landing stats - 2×2 */
     .landing-stats {
         grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem;
     }
+    .landing-stat { padding: 0.6rem 0.8rem !important; }
+    .landing-stat-num { font-size: 1.4rem !important; }
 
-    /* Hero stats - 2 columns */
+    /* Hero stats - 2×2 */
     .hero-stats {
         grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem;
     }
+    .hero-stat { padding: 0.8rem !important; }
+    .hero-stat-num { font-size: 1.4rem !important; }
 
-    /* Econ stats - 2 columns */
+    /* Econ stats - 2×2 */
     .econ-stats {
         grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.8rem;
     }
+    .econ-stat { padding: 0.8rem !important; }
+    .econ-stat-num { font-size: 1.6rem !important; }
 
+    /* ===== تحسين النموذج الحراري ===== */
+    .temp-card { padding: 1rem !important; }
+    .degree-explanation {
+        padding: 0.8rem !important;
+        font-size: 0.75rem !important;
+        margin-bottom: 1rem !important;
+        line-height: 1.7 !important;
+    }
+    .temp-top {
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center;
+        gap: 0.5rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .temp-display { justify-content: center; }
+    .temp-value { font-size: 2.5rem !important; }
+    .temp-unit { font-size: 1rem !important; }
+    #tempDesc { font-size: 0.75rem !important; }
+    .temp-zone { font-size: 0.7rem !important; padding: 0.3rem 0.8rem !important; }
+    .temp-slider { height: 10px !important; border-radius: 5px !important; margin: 1rem 0 !important; }
+    .temp-slider::-webkit-slider-thumb { width: 32px !important; height: 32px !important; border-width: 4px !important; }
+    .temp-slider::-moz-range-thumb { width: 32px !important; height: 32px !important; border-width: 4px !important; }
+    .temp-marks { font-size: 0.6rem !important; margin-top: 0.5rem !important; }
+    .formula-box { padding: 0.8rem !important; margin: 1rem 0 !important; }
+    .formula { font-size: 1.1rem !important; }
+    .formula-desc { font-size: 0.7rem !important; line-height: 1.5 !important; }
+
+    /* Plan layout */
     .plan-layout { flex-direction: column; }
     .plan-filter-col { 
         width: 100%; 
@@ -795,34 +861,37 @@ th.hidden-col, td.hidden-col { display: none; }
     .plan-filter-col .filter-btn { white-space: nowrap; flex-shrink: 0; padding: 0.5rem 1rem; font-size: 0.8rem; }
     .plan-card-wrapper { padding: 1rem; }
 
+    /* Table */
     .table-wrapper { border-radius: var(--radius-sm); font-size: 0.75rem; }
     th, td { padding: 0.5rem 0.3rem; font-size: 0.7rem; }
     th:first-child, td:first-child { min-width: 80px; font-size: 0.7rem; padding-right: 0.4rem; }
     .circle-badge, .level-badge, .control-badge { font-size: 0.65rem; padding: 0.1rem 0.3rem; }
 
+    /* Lifecycle detail */
     .dinn { grid-template-columns: 1fr !important; }
     .dvis, .dinf { padding: 1.5rem 1rem; }
     .dvico { width: 90px; height: 90px; font-size: 2.5rem; }
     .dvr { width: 110px; height: 110px; }
     .nbtn { height: 40px; font-size: 0.8rem; padding: 0 12px; min-width: 40px; }
 
+    /* Heatmap */
     .heatmap-grid { grid-template-columns: repeat(4,1fr); }
     .heatmap-labels { grid-template-columns: repeat(4,1fr); }
     .heatmap-cell { padding: 0.8rem 0.2rem; font-size: 0.65rem; min-height: 40px; }
     .heatmap-tip { font-size: 0.6rem; padding: 0.2rem 0.4rem; bottom: 100%; }
 
+    /* Landing */
     .landing-title { font-size: 1.8rem; }
     .landing-title span { font-size: 1.5rem; }
-    .landing-stats { gap: 0.8rem; }
-    .landing-stat { padding: 0.6rem 0.8rem; min-width: 80px; }
-    .landing-stat-num { font-size: 1.4rem; }
     .landing-icon { font-size: 3.5rem; }
     .section-header h2 { font-size: 1.3rem; }
 
+    /* Chart */
     .chart-card { padding: 1rem; }
     .chart-card canvas { height: 250px; }
     .chart-card h3 { font-size: 1rem; }
 
+    /* Modal */
     .bio-modal-content { margin: 0; max-height: 100vh; border-radius: 0; }
     .bio-modal { padding: 0; }
     .bio-modal-close { top: 0.5rem; left: 0.5rem; width: 40px; height: 40px; }
@@ -835,20 +904,26 @@ th.hidden-col, td.hidden-col { display: none; }
     .tab-content { padding: 1rem; }
     .info-table td:first-child { width: 45%; font-size: 0.8rem; }
 
+    /* Bio filter */
     .bio-filter-btn { padding: 0.4rem 0.8rem; font-size: 0.75rem; min-height: 40px; }
 
+    /* Filter bar */
     .filter-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
 
+    /* FAQ */
     .faq-question { padding: 0.8rem 1rem; font-size: 0.9rem; }
     .faq-answer { font-size: 0.85rem; }
 
+    /* IPM tabs */
     .ipm-tabs { gap: 0.4rem; }
     .ipm-tab { padding: 0.5rem 1rem; font-size: 0.82rem; }
 
+    /* Scrollbars */
     .table-wrapper::-webkit-scrollbar, .plan-filter-col::-webkit-scrollbar, .modal-tabs::-webkit-scrollbar {
         height: 3px;
     }
 
+    /* Touch targets */
     .filter-btn, .ipm-tab, .nbtn, .faq-question, .bio-header, .bio-filter-btn, .tab-btn, .landing-btn, .close-detail-btn, .bio-modal-close {
         min-height: 44px;
     }
@@ -856,7 +931,7 @@ th.hidden-col, td.hidden-col { display: none; }
     html { -webkit-text-size-adjust: 100%; }
 }
 
-/* Mobile Landscape - عمودين */
+/* Mobile Landscape */
 @media (max-width: 768px) and (orientation: landscape) {
     .about-grid,
     .temp-grid,
@@ -875,7 +950,7 @@ th.hidden-col, td.hidden-col { display: none; }
     }
 }
 
-/* Very small phones - عمود واحد دائماً */
+/* Very small phones */
 @media (max-width: 480px) {
     .about-grid,
     .temp-grid,
