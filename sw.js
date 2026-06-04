@@ -1,9 +1,9 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v5 (Silent Update)
+// Service Worker - Tuta Absoluta App v6 (Silent Update)
 // استراتيجية تخزين ذكية مع تحديث تلقائي صامت في الخلفية
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v5'; // تم ترقية الإصدار لضمان تحميل الملفات الجديدة
+const CACHE_NAME = 'tuta-app-v6'; // تم ترقية الإصدار لضمان تحميل ملفات التصميم الجديدة (FAB, Side Drawer, Clean Nav)
 
 // الملفات الأساسية التي يجب تخزينها فوراً عند التثبيت
 const PRECACHE_URLS = [

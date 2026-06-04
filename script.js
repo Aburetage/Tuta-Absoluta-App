@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Updated)
-// الميزات: Side Drawer, Silent SW Update, No Scale Hover, Phase 1 & 2 Features
+// Tuta Absoluta App - Script.js (Final Updated with FAB & Dynamic Title)
+// الميزات: Side Drawer, FAB Contact, Dynamic Section Title, Silent SW Update, Phase 1 & 2 Features
 // ============================================
 
 // ============================================
@@ -87,7 +87,7 @@ function showEmptyState(containerId, message = "لا توجد نتائج مطا�
 }
 
 // ============================================
-// Group Mapping
+// Group Mapping & Titles
 // ============================================
 
 const groupMap = {
@@ -114,10 +114,36 @@ const groupNames = {
     'sources': 'المصادر'
 };
 
-const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'resistance', 'faq', 'sources'];
+// ============================================
+// Floating Action Button (FAB) Logic
+// ============================================
+
+function toggleFab() {
+    const fabContainer = document.getElementById('fabContainer');
+    const fabMainBtn = document.getElementById('fabMainBtn');
+    const isActive = fabContainer.classList.toggle('active');
+    fabMainBtn.setAttribute('aria-expanded', isActive);
+}
+
+function closeFab() {
+    const fabContainer = document.getElementById('fabContainer');
+    const fabMainBtn = document.getElementById('fabMainBtn');
+    fabContainer.classList.remove('active');
+    fabMainBtn.setAttribute('aria-expanded', 'false');
+}
+
+// Close FAB when clicking outside of it
+document.addEventListener('click', function(event) {
+    const fabContainer = document.getElementById('fabContainer');
+    if (fabContainer && fabContainer.classList.contains('active')) {
+        if (!fabContainer.contains(event.target)) {
+            closeFab();
+        }
+    }
+});
 
 // ============================================
-// Side Drawer Logic (NEW)
+// Side Drawer Logic
 // ============================================
 
 function toggleSideDrawer() {
@@ -129,11 +155,12 @@ function toggleSideDrawer() {
     if (isOpen) {
         closeSideDrawer();
     } else {
+        closeFab(); // Close FAB when opening drawer
         drawer.classList.add('open');
         overlay.classList.add('active');
         btn.setAttribute('aria-expanded', 'true');
         drawer.setAttribute('aria-hidden', 'false');
-        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        document.body.style.overflow = 'hidden';
     }
 }
 
@@ -975,7 +1002,7 @@ function filterBioCards(category, containerId, btn) {
 }
 
 // ============================================
-// Single Section Logic
+// Single Section Logic (Dynamic Title Update)
 // ============================================
 
 function showSingleSection(groupId, clickedItem) {
@@ -996,13 +1023,12 @@ function showSingleSection(groupId, clickedItem) {
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
     
-    // Note: Drawer items don't get 'active' class permanently to keep UI clean, 
-    // but we update the top label.
     currentSingleGroup = groupId;
-    const label = document.getElementById('currentGroupLabel');
-    if (label) { 
-        label.textContent = groupNames[groupId] || ''; 
-        label.classList.add('visible'); 
+    
+    // Update the dynamic section title in the top bar
+    const titleElement = document.getElementById('currentSectionTitle');
+    if (titleElement) {
+        titleElement.textContent = groupNames[groupId] || 'الرئيسية';
     }
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1020,8 +1046,13 @@ function goHome() {
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
     currentSingleGroup = null;
-    const label = document.getElementById('currentGroupLabel');
-    if (label) label.classList.remove('visible');
+    
+    // Reset dynamic title
+    const titleElement = document.getElementById('currentSectionTitle');
+    if (titleElement) {
+        titleElement.textContent = 'الرئيسية';
+    }
+    
     document.getElementById('landingOverlay').classList.remove('hidden');
 }
 
@@ -1046,7 +1077,6 @@ function createLandingParticles() {
 
 function closeLanding() {
     document.getElementById('landingOverlay').classList.add('hidden');
-    // Default to biology section on first load
     showSingleSection('biology', null);
 }
 
@@ -1088,6 +1118,7 @@ const categoryMap = {
 };
 
 function openModal(modalId) {
+    closeFab(); // Close FAB when opening modal
     const modal = document.getElementById(modalId);
     if (modal) { 
         modal.classList.add('active'); 
@@ -1296,7 +1327,8 @@ function filterBioByCategory(category, btn) {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closeSideDrawer(); // Close drawer on Escape
+        closeSideDrawer();
+        closeFab();
         document.querySelectorAll('.bio-modal.active').forEach(m => { 
             m.classList.remove('active'); 
             document.body.style.overflow = ''; 
@@ -1312,7 +1344,6 @@ document.addEventListener('keydown', function(e) {
         document.body.classList.add('keyboard-user');
     }
     
-    // Enhanced keyboard support for custom interactive elements
     if (e.key === 'Enter' || e.key === ' ') {
         const target = e.target;
         if (target.classList.contains('bio-header') || 
@@ -1524,18 +1555,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
-                        
-                        // Check for updates every 2 minutes
-                        setInterval(() => {
-                            reg.update();
-                        }, 2 * 60 * 1000);
-                        
+                        setInterval(() => { reg.update(); }, 2 * 60 * 1000);
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     console.log('🔄 New version ready - silent updating...');
-                                    // SILENT RELOAD: No confirm() dialog
                                     window.location.reload();
                                 }
                             });
