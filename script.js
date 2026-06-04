@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Phase 1 Updated)
-// الميزات الجديدة: Skeleton Loading, Empty States, Accessibility Enhancements
+// Tuta Absoluta App - Script.js (Final Updated)
+// الميزات: Side Drawer, Silent SW Update, No Scale Hover, Phase 1 & 2 Features
 // ============================================
 
 // ============================================
@@ -115,6 +115,39 @@ const groupNames = {
 };
 
 const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'resistance', 'faq', 'sources'];
+
+// ============================================
+// Side Drawer Logic (NEW)
+// ============================================
+
+function toggleSideDrawer() {
+    const drawer = document.getElementById('sideDrawer');
+    const overlay = document.getElementById('sideDrawerOverlay');
+    const btn = document.getElementById('navMenuBtn');
+    const isOpen = drawer.classList.contains('open');
+
+    if (isOpen) {
+        closeSideDrawer();
+    } else {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
+        drawer.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+}
+
+function closeSideDrawer() {
+    const drawer = document.getElementById('sideDrawer');
+    const overlay = document.getElementById('sideDrawerOverlay');
+    const btn = document.getElementById('navMenuBtn');
+    
+    drawer.classList.remove('open');
+    overlay.classList.remove('active');
+    btn.setAttribute('aria-expanded', 'false');
+    drawer.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+}
 
 // ============================================
 // Thermal Calculation Functions
@@ -637,7 +670,6 @@ function buildSources() {
     const box = document.getElementById('sourcesBox');
     if (!box) return;
     
-    // Show skeleton first
     showSkeleton('sourcesBox', 4);
     
     setTimeout(() => {
@@ -656,11 +688,11 @@ function buildSources() {
         });
         box.innerHTML = '';
         box.appendChild(fragment);
-    }, 300); // Simulate slight delay to show skeleton effect
+    }, 300);
 }
 
 // ============================================
-// Build Dynamic Sections (with Empty States)
+// Build Dynamic Sections
 // ============================================
 
 function buildSpreadSection() {
@@ -964,9 +996,8 @@ function showSingleSection(groupId, clickedItem) {
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
     
-    document.querySelectorAll('.dropdown-item').forEach(l => l.classList.remove('active'));
-    if (clickedItem) clickedItem.classList.add('active');
-    
+    // Note: Drawer items don't get 'active' class permanently to keep UI clean, 
+    // but we update the top label.
     currentSingleGroup = groupId;
     const label = document.getElementById('currentGroupLabel');
     if (label) { 
@@ -974,7 +1005,6 @@ function showSingleSection(groupId, clickedItem) {
         label.classList.add('visible'); 
     }
     
-    closeDropdown();
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (groupId === 'seasonal-heatmap') { 
@@ -990,41 +1020,9 @@ function goHome() {
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
     currentSingleGroup = null;
-    document.querySelectorAll('.dropdown-item').forEach(l => l.classList.remove('active'));
     const label = document.getElementById('currentGroupLabel');
     if (label) label.classList.remove('visible');
-    closeDropdown();
     document.getElementById('landingOverlay').classList.remove('hidden');
-}
-
-// ============================================
-// Dropdown Functions
-// ============================================
-
-function toggleDropdown() {
-    const panel = document.getElementById('dropdownPanel');
-    const overlay = document.getElementById('menuOverlay');
-    const btn = document.getElementById('navMenuBtn');
-    const isOpen = panel.classList.contains('open');
-    
-    if (isOpen) { 
-        closeDropdown(); 
-    } else { 
-        panel.classList.add('open'); 
-        overlay.classList.add('active'); 
-        btn.setAttribute('aria-expanded', 'true'); 
-        document.body.style.overflow = 'hidden'; 
-    }
-}
-
-function closeDropdown() {
-    const panel = document.getElementById('dropdownPanel');
-    const overlay = document.getElementById('menuOverlay');
-    const btn = document.getElementById('navMenuBtn');
-    panel.classList.remove('open'); 
-    overlay.classList.remove('active'); 
-    btn.setAttribute('aria-expanded', 'false'); 
-    document.body.style.overflow = ''; 
 }
 
 // ============================================
@@ -1048,8 +1046,8 @@ function createLandingParticles() {
 
 function closeLanding() {
     document.getElementById('landingOverlay').classList.add('hidden');
-    const biologyItem = document.querySelector('.dropdown-item[data-group="biology"]');
-    showSingleSection('biology', biologyItem);
+    // Default to biology section on first load
+    showSingleSection('biology', null);
 }
 
 // ============================================
@@ -1122,7 +1120,7 @@ function renderBioCategoryFilter() {
         const btn = document.createElement('button');
         btn.className = `bio-filter-btn ${index === 0 ? 'active' : ''}`;
         btn.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
-        btn.setAttribute('tabindex', '0'); // Accessibility
+        btn.setAttribute('tabindex', '0');
         btn.textContent = categoryMap[key].name;
         btn.onclick = function() { filterBioByCategory(key, this); };
         fragment.appendChild(btn);
@@ -1139,7 +1137,6 @@ function renderBioCards(filter = 'egg-parasitoid') {
     const container = document.getElementById('bioCardsContainer');
     if (!container) return;
     
-    // Show skeleton first
     showSkeleton('bioCardsContainer', 4);
     renderedBioCards.clear();
     
@@ -1160,7 +1157,7 @@ function renderBioCards(filter = 'egg-parasitoid') {
             card.setAttribute('role', 'listitem');
             card.setAttribute('aria-label', agent.scientificName);
             card.setAttribute('data-agent-id', agent.id);
-            card.setAttribute('tabindex', '0'); // Accessibility
+            card.setAttribute('tabindex', '0');
             card.onclick = () => openBioModal(agent.id);
             
             card.innerHTML = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div><div class="bio-card-placeholder">جاري التحميل...</div>`;
@@ -1169,7 +1166,7 @@ function renderBioCards(filter = 'egg-parasitoid') {
         
         container.appendChild(fragment);
         setupBioCardsLazyLoad();
-    }, 200); // Simulate slight delay for skeleton effect
+    }, 200);
 }
 
 function setupBioCardsLazyLoad() {
@@ -1253,7 +1250,6 @@ function renderBioModals() {
             </div>
         </div>`;
         
-        // ... (lifecycle, usage, compat, rating remain the same as previous version for brevity, but are included in the full file)
         const lifecycle = `<div class="tab-content" id="tab-${agent.id}-lifecycle" role="tabpanel"><div class="modal-body-content"><h4>🔄 مراحل دورة الحياة</h4><div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div><h4>🌡️ مدة الدورة حسب الحرارة</h4><table class="info-table"><tr><td>عند 20°م</td><td>${agent.cycleDuration.c20}</td></tr><tr><td>عند 25°م</td><td>${agent.cycleDuration.c25}</td></tr><tr><td>عند 30°م</td><td>${agent.cycleDuration.c30}</td></tr></table><h4>🧠 السلوك الحيوي المميز</h4><p>${agent.behavior}</p></div></div>`;
         const usage = `<div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel"><div class="modal-body-content"><h4>⚙️ الظروف المثالية</h4><div class="conditions-grid"><div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div><div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div><div class="condition-item"><div class="cond-label">💡 الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div><div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div></div><h4>🗺️ التحمل في الظروف المصرية</h4><div class="conditions-grid"><div class="condition-item"><div class="cond-label">صيف الدلتا</div><div class="cond-value">${toleranceText[agent.egyptTolerance.delta]}</div></div><div class="condition-item"><div class="cond-label">صيف الصعيد</div><div class="cond-value">${toleranceText[agent.egyptTolerance.saeed]}</div></div><div class="condition-item"><div class="cond-label">العروة الصيفية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.summer]}</div></div><div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div><div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div></div><h4>🇪🇬 التواجد الحالي في مصر</h4><table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}</div></div>`;
         const compat = `<div class="tab-content" id="tab-${agent.id}-compatibility" role="tabpanel"><div class="modal-body-content"><h4>🤝 التوافق مع الأعداء الحيوية الأخرى</h4><table class="compatibility-table">${agent.compatibility.map(([n, l]) => `<tr><td>${n}</td><td><span class="compat-level compat-${l}">${compatText[l]}</span></td></tr>`).join('')}</table><h4>🧪 الحساسية للمبيدات</h4>${agent.pesticides.map(([n, l]) => `<div class="pesticide-item"><span class="pesticide-name">${n}</span><span class="compat-level toxicity-${l}">${toxicityText[l]}</span></div>`).join('')}</div></div>`;
@@ -1300,7 +1296,7 @@ function filterBioByCategory(category, btn) {
 
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closeDropdown();
+        closeSideDrawer(); // Close drawer on Escape
         document.querySelectorAll('.bio-modal.active').forEach(m => { 
             m.classList.remove('active'); 
             document.body.style.overflow = ''; 
@@ -1324,6 +1320,8 @@ document.addEventListener('keydown', function(e) {
             target.classList.contains('filter-btn') || 
             target.classList.contains('ipm-tab') || 
             target.classList.contains('bio-filter-btn') ||
+            target.classList.contains('drawer-nav-item') ||
+            target.classList.contains('drawer-home-btn') ||
             target.getAttribute('tabindex') === '0') {
             e.preventDefault();
             target.click();
@@ -1366,7 +1364,6 @@ function handleDoubleTap(element) {
     lastTap = currentTime;
 }
 
-// Pull-to-Refresh Implementation (Passive events optimized)
 let pullStartY = 0;
 let pullDistance = 0;
 let isPulling = false;
@@ -1381,7 +1378,7 @@ function initPullToRefresh() {
             pullStartY = e.touches[0].clientY;
             isPulling = true;
         }
-    }, { passive: true }); // Passive: true for better scroll performance
+    }, { passive: true });
     
     document.addEventListener('touchmove', (e) => {
         if (!isPulling) return;
@@ -1389,7 +1386,7 @@ function initPullToRefresh() {
         pullDistance = currentY - pullStartY;
         
         if (pullDistance > 0 && window.pageYOffset === 0) {
-            e.preventDefault(); // Must be passive: false here to prevent default scroll
+            e.preventDefault();
             
             const resistance = pullDistance * 0.5;
             pullIndicator.style.transform = `translateY(${resistance}px)`;
@@ -1403,7 +1400,7 @@ function initPullToRefresh() {
                 pullIndicator.querySelector('.pull-icon').style.transform = 'rotate(0deg)';
             }
         }
-    }, { passive: false }); // passive: false ONLY where preventDefault is called
+    }, { passive: false });
     
     document.addEventListener('touchend', () => {
         if (!isPulling) return;
@@ -1459,7 +1456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         buildIPMSection();
         buildFAQSection();
         buildResistanceSection();
-        buildSources(); // Includes skeleton logic
+        buildSources();
         console.log('✅ Dynamic sections built');
 
         const slider = document.getElementById('tempSlider');
@@ -1488,7 +1485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updAll();
         console.log('✅ UI components built');
 
-        renderBioCategoryFilter(); // Includes skeleton logic
+        renderBioCategoryFilter();
         renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
 
@@ -1519,17 +1516,26 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         initPullToRefresh();
 
+        // ============================================
+        // Service Worker - SILENT UPDATE (No Confirm Dialog)
+        // ============================================
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
-                        setInterval(() => { reg.update(); }, 2 * 60 * 1000);
+                        
+                        // Check for updates every 2 minutes
+                        setInterval(() => {
+                            reg.update();
+                        }, 2 * 60 * 1000);
+                        
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    console.log('🔄 New version ready - auto updating...');
+                                    console.log('🔄 New version ready - silent updating...');
+                                    // SILENT RELOAD: No confirm() dialog
                                     window.location.reload();
                                 }
                             });
@@ -1542,7 +1548,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
                 refreshing = true;
-                console.log('🔄 Updating to new version...');
+                console.log('🔄 Silent update applied, reloading...');
                 window.location.reload();
             });
         }

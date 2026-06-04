@@ -131,7 +131,7 @@
     <!-- Landing Page -->
     <div class="landing-overlay" id="landingOverlay">
         <div class="landing-content">
-            <div class="landing-badge">
+            <div class="landing-academy-badge">
                 <i class="fas fa-graduation-cap" aria-hidden="true"></i>
                 <span>أَكَادِيمِيَّةُ الْمُهَنْدِسِ الزِّرَاعِيِّ</span>
             </div>
@@ -150,114 +150,96 @@
         <div class="landing-particles" id="landingParticles" aria-hidden="true"></div>
     </div>
 
-    <!-- Top Navigation -->
+    <!-- Top Navigation (Clean) -->
     <nav class="top-nav" id="topNav" role="navigation" aria-label="التنقل الرئيسي">
         <div class="nav-right">
-            <button class="nav-btn nav-menu-btn" id="navMenuBtn" onclick="toggleDropdown()" title="فتح قائمة الأقسام" aria-label="فتح قائمة الأقسام" aria-expanded="false" tabindex="0"><i class="fas fa-bars-staggered" aria-hidden="true"></i></button>
-        </div>
-        <div class="nav-center">
-            <span class="academy-name" id="academyName">أَكَادِيمِيَّةُ الْمُهَنْدِسِ الزِّرَاعِيِّ</span>
-            <span class="current-group-label" id="currentGroupLabel"></span>
+            <span class="nav-academy-name">أَكَادِيمِيَّةُ الْمُهَنْدِسِ الزِّرَاعِيِّ</span>
         </div>
         <div class="nav-left">
-            <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn whatsapp-btn" title="تواصل واتساب" aria-label="واتساب" tabindex="0">
-                <i class="fab fa-whatsapp" aria-hidden="true"></i>
-            </a>
-            <a href="mailto:aliazmy30@gmail.com" class="nav-btn contact-btn email-btn" title="راسلنا بالإيميل" aria-label="البريد الإلكتروني" tabindex="0">
-                <i class="fas fa-envelope" aria-hidden="true"></i>
-            </a>
-            <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn twitter-btn" title="تابعنا على X" aria-label="تويتر" tabindex="0">
-                <i class="fab fa-x-twitter" aria-hidden="true"></i>
-            </a>
+            <button class="nav-btn nav-menu-btn" id="navMenuBtn" onclick="toggleSideDrawer()" title="فتح القائمة" aria-label="فتح القائمة" aria-expanded="false" tabindex="0">
+                <i class="fas fa-bars" aria-hidden="true"></i>
+                <span class="menu-text">القائمة</span>
+            </button>
         </div>
     </nav>
 
-    <!-- Dropdown Panel -->
-    <div class="dropdown-panel" id="dropdownPanel" role="menu" aria-label="قائمة الأقسام">
-        <div class="dropdown-grid">
-            <!-- Biology -->
-            <div class="dropdown-item" data-group="biology" onclick="showSingleSection('biology', this)" role="menuitem" tabindex="0" aria-label="البيولوجيا والنموذج الحراري">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-microscope" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">البيولوجيا والنموذج الحراري</div>
-                    <div class="dropdown-desc">دورة الحياة ودرجات الحرارة المثلى</div>
+    <!-- Side Drawer (Organized Menu) -->
+    <div class="side-drawer-overlay" id="sideDrawerOverlay" onclick="closeSideDrawer()" aria-hidden="true"></div>
+    <aside class="side-drawer" id="sideDrawer" role="dialog" aria-label="قائمة التنقل الرئيسية" aria-hidden="true">
+        <div class="drawer-header">
+            <button class="drawer-close-btn" onclick="closeSideDrawer()" aria-label="إغلاق القائمة" tabindex="0">
+                <i class="fas fa-times"></i>
+            </button>
+            <span class="drawer-title">القائمة الرئيسية</span>
+        </div>
+        
+        <div class="drawer-content">
+            <!-- Home Button -->
+            <button class="drawer-home-btn" onclick="goHome(); closeSideDrawer();" tabindex="0">
+                <i class="fas fa-house"></i>
+                <span>العودة للواجهة الرئيسية</span>
+            </button>
+
+            <!-- Navigation Grid -->
+            <div class="drawer-nav-grid">
+                <div class="drawer-nav-item" onclick="showSingleSection('biology', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-microscope"></i></div>
+                    <span>البيولوجيا والنموذج الحراري</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('spread-economic', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-globe-africa"></i></div>
+                    <span>الانتشار والتأثير الاقتصادي</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('seasonal-heatmap', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-cloud-sun"></i></div>
+                    <span>النشاط الموسمي والخريطة الحرارية</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('calendar', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-clipboard-check"></i></div>
+                    <span>تقويم المكافحة</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('ipm', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-shield-alt"></i></div>
+                    <span>برنامج المكافحة المتكاملة</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('bioagents', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-leaf"></i></div>
+                    <span>الأعداء الحيوية</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('resistance', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <span>مقاومة المبيدات</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('faq', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-comments"></i></div>
+                    <span>أسئلة شائعة</span>
+                </div>
+                <div class="drawer-nav-item" onclick="showSingleSection('sources', this); closeSideDrawer();" tabindex="0" role="button">
+                    <div class="drawer-icon"><i class="fas fa-book"></i></div>
+                    <span>المصادر والمراجع</span>
                 </div>
             </div>
-            
-            <!-- Spread & Economic -->
-            <div class="dropdown-item" data-group="spread-economic" onclick="showSingleSection('spread-economic', this)" role="menuitem" tabindex="0" aria-label="الانتشار والتأثير الاقتصادي">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-globe-africa" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">الانتشار والتأثير الاقتصادي</div>
-                    <div class="dropdown-desc">أسباب الانتشار والخسائر</div>
-                </div>
-            </div>
-            
-            <!-- Seasonal & Heatmap -->
-            <div class="dropdown-item" data-group="seasonal-heatmap" onclick="showSingleSection('seasonal-heatmap', this)" role="menuitem" tabindex="0" aria-label="النشاط الموسمي والخريطة الحرارية">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-cloud-sun" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">النشاط الموسمي والخريطة الحرارية</div>
-                    <div class="dropdown-desc">توزيع النشاط على مدار العام</div>
-                </div>
-            </div>
-            
-            <!-- Calendar -->
-            <div class="dropdown-item" data-group="calendar" onclick="showSingleSection('calendar', this)" role="menuitem" tabindex="0" aria-label="تقويم المكافحة">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-clipboard-check" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">تقويم المكافحة</div>
-                    <div class="dropdown-desc">خطة العمل الشهرية</div>
-                </div>
-            </div>
-            
-            <!-- IPM -->
-            <div class="dropdown-item" data-group="ipm" onclick="showSingleSection('ipm', this)" role="menuitem" tabindex="0" aria-label="برنامج المكافحة المتكاملة">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-shield-alt" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">برنامج المكافحة المتكاملة</div>
-                    <div class="dropdown-desc">استراتيجيات المكافحة</div>
-                </div>
-            </div>
-            
-            <!-- Bio Agents -->
-            <div class="dropdown-item" data-group="bioagents" onclick="showSingleSection('bioagents', this)" role="menuitem" tabindex="0" aria-label="الأعداء الحيوية">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-leaf" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">الأعداء الحيوية</div>
-                    <div class="dropdown-desc">موسوعة 18 كائن حيوي</div>
-                </div>
-            </div>
-            
-            <!-- Resistance -->
-            <div class="dropdown-item" data-group="resistance" onclick="showSingleSection('resistance', this)" role="menuitem" tabindex="0" aria-label="مقاومة المبيدات">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">مقاومة المبيدات</div>
-                    <div class="dropdown-desc">مستويات المقاومة</div>
-                </div>
-            </div>
-            
-            <!-- FAQ -->
-            <div class="dropdown-item" data-group="faq" onclick="showSingleSection('faq', this)" role="menuitem" tabindex="0" aria-label="أسئلة شائعة">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-comments" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">أسئلة شائعة</div>
-                    <div class="dropdown-desc">إجابات سريعة</div>
-                </div>
-            </div>
-            
-            <!-- Sources -->
-            <div class="dropdown-item" data-group="sources" onclick="showSingleSection('sources', this)" role="menuitem" tabindex="0" aria-label="المصادر والمراجع">
-                <div class="dropdown-icon-wrapper"><i class="fas fa-book" aria-hidden="true"></i></div>
-                <div class="dropdown-content">
-                    <div class="dropdown-title">المصادر والمراجع</div>
-                    <div class="dropdown-desc">المراجع العلمية</div>
+
+            <!-- Contact Info Section -->
+            <div class="drawer-contact-section">
+                <h4>تواصل معنا</h4>
+                <div class="contact-links">
+                    <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="contact-link whatsapp" tabindex="0">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>01091777099</span>
+                    </a>
+                    <a href="mailto:aliazmy30@gmail.com" class="contact-link email" tabindex="0">
+                        <i class="fas fa-envelope"></i>
+                        <span>aliazmy30@gmail.com</span>
+                    </a>
+                    <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="contact-link twitter" tabindex="0">
+                        <i class="fab fa-x-twitter"></i>
+                        <span>@abu_retage0</span>
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="menu-overlay" id="menuOverlay" onclick="toggleDropdown()" aria-hidden="true"></div>
+    </aside>
 
     <!-- PWA Install Button -->
     <button id="installBtn" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999;padding:12px 20px;background:var(--plan-accent);color:#000;border:none;border-radius:50px;font-family:Cairo;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-size:0.9rem;" onclick="installPWA()" aria-label="تثبيت التطبيق" tabindex="0">
@@ -484,17 +466,12 @@
         const section = urlParams.get('section');
         if (section && typeof showSingleSection === 'function') {
             setTimeout(() => {
-                const item = document.querySelector(`.dropdown-item[data-group="${section}"]`);
-                if (item) showSingleSection(section, item);
-            }, 1500);
-        }
-
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.addEventListener('controllerchange', () => {
-                if (confirm('🔄 يوجد تحديث جديد! هل تريد إعادة تحميل الصفحة؟')) {
-                    window.location.reload();
+                // Find the item in the side drawer and simulate click
+                const item = document.querySelector(`.drawer-nav-item[onclick*="'${section}'"]`);
+                if (item) {
+                    item.click();
                 }
-            });
+            }, 1500);
         }
     </script>
 </body>

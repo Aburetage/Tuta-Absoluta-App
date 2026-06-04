@@ -1,11 +1,11 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v4 (Smart Caching)
-// استراتيجية تخزين ذكية: Network First للبيانات، Stale-While-Revalidate للأكواد، Cache First للأصول
+// Service Worker - Tuta Absoluta App v5 (Silent Update)
+// استراتيجية تخزين ذكية مع تحديث تلقائي صامت في الخلفية
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v4'; // تم تحديث الإصدار لضمان تحميل الملفات الجديدة
+const CACHE_NAME = 'tuta-app-v5'; // تم ترقية الإصدار لضمان تحميل الملفات الجديدة
 
-// الملفات الأساسية التي يجب تخزينها فوراً
+// الملفات الأساسية التي يجب تخزينها فوراً عند التثبيت
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -15,7 +15,7 @@ const PRECACHE_URLS = [
   './robots.txt',
   './sitemap.xml',
   './js/data-loader.js',
-  './js/worker.js' // إضافة Web Worker الجديد
+  './js/worker.js'
 ];
 
 // ملفات البيانات (JSON)
@@ -49,7 +49,7 @@ const ALL_CACHE_URLS = [
 ];
 
 // ============================================
-// Install Event - تثبيت Service Worker
+// Install Event - تثبيت Service Worker وتخزين الملفات
 // ============================================
 self.addEventListener('install', event => {
   console.log('[SW] Installing new version:', CACHE_NAME);
@@ -62,21 +62,24 @@ self.addEventListener('install', event => {
       })
       .then(() => {
         console.log('[SW] All files cached successfully');
-        return self.skipWaiting(); // تفعيل النسخة الجديدة فوراً
+        // تفعيل النسخة الجديدة فوراً بدون انتظار إغلاق الصفحات القديمة
+        return self.skipWaiting(); 
       })
       .catch(err => {
         console.error('[SW] Failed to cache some files:', err);
+        // لا نمنع التثبيت حتى لو فشل تخزين بعض الملفات الثانوية
       })
   );
 });
 
 // ============================================
-// Activate Event - تنشيط Service Worker وتنظيف القديم
+// Activate Event - تنشيط Service Worker وتنظيف الكاش القديم
 // ============================================
 self.addEventListener('activate', event => {
   console.log('[SW] Activating new version:', CACHE_NAME);
   
   event.waitUntil(
+    // حذف جميع نسخ الكاش القديمة
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
@@ -89,7 +92,8 @@ self.addEventListener('activate', event => {
     })
     .then(() => {
       console.log('[SW] Old caches deleted');
-      return self.clients.claim(); // السيطرة على جميع الصفحات المفتوحة فوراً
+      // السيطرة على جميع الصفحات المفتوحة فوراً لتطبيق التحديث
+      return self.clients.claim(); 
     })
   );
 });
@@ -105,8 +109,8 @@ self.addEventListener('fetch', event => {
   
   const url = new URL(request.url);
   
-  // 1. ملفات البيانات (JSON) - Network First (الشبكة أولاً، ثم الكاش)
-  // يضمن دائماً الحصول على أحدث البيانات إذا كان هناك إنترنت
+  // 1. ملفات البيانات (JSON) - Network First (الشبكة أولاً)
+  // يضمن دائماً الحصول على أحدث البيانات إذا كان هناك إنترنت، مع الاحتفاظ بنسخة احتياطية
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request)
@@ -163,7 +167,7 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // 4. كل الملفات الأخرى (بما في ذلك HTML) - Cache First مع Fallback لصفحة Offline
+  // 4. كل الملفات الأخرى (بما في ذلك HTML) - Cache First مع Fallback
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) return cached;
@@ -200,4 +204,4 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('[SW] Smart Service Worker loaded successfully');
+console.log('[SW] Smart Silent-Update Service Worker loaded successfully');
