@@ -1,6 +1,7 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Phase 2 Updated)
-// الميزات الجديدة: Web Worker, Double-tap Zoom, Dynamic Color Scheme
+// Tuta Absoluta App - Script.js (Updated)
+// الميزات: Web Worker, Double-tap Zoom, Dynamic Color Scheme
+// (تم إزالة High Contrast Mode حسب الطلب)
 // ============================================
 
 // ============================================
@@ -91,7 +92,7 @@ const groupNames = {
 const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'resistance', 'faq', 'sources'];
 
 // ============================================
-// Thermal Calculation Functions (Main Thread Fallback & Worker Trigger)
+// Thermal Calculation Functions
 // ============================================
 
 function calcDaysSync(T) {
@@ -169,7 +170,7 @@ function hmClr(v) {
 }
 
 // ============================================
-// Dynamic Color Scheme (New Feature)
+// Dynamic Color Scheme
 // ============================================
 function updateDynamicTheme(riskLevel) {
     const root = document.documentElement;
@@ -1373,36 +1374,8 @@ document.addEventListener('mousedown', () => {
 });
 
 // ============================================
-// New Features: High Contrast, Progress Bar, Double-Tap Zoom
+// New Features: Progress Bar, Double-Tap Zoom
 // ============================================
-
-function toggleContrast() {
-    const body = document.body;
-    const btn = document.getElementById('contrastBtn');
-    const isHighContrast = body.classList.toggle('high-contrast');
-    
-    localStorage.setItem('highContrast', isHighContrast);
-    
-    if (isHighContrast) {
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed', 'true');
-    } else {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-pressed', 'false');
-    }
-}
-
-function loadContrastPreference() {
-    const isHighContrast = localStorage.getItem('highContrast') === 'true';
-    if (isHighContrast) {
-        document.body.classList.add('high-contrast');
-        const btn = document.getElementById('contrastBtn');
-        if (btn) {
-            btn.classList.add('active');
-            btn.setAttribute('aria-pressed', 'true');
-        }
-    }
-}
 
 function updateProgressBar() {
     const progressBar = document.getElementById('progressBar');
@@ -1444,7 +1417,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
-        loadContrastPreference();
         await loadAllData();
         console.log('✅ Data loaded successfully');
 
