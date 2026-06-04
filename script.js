@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js
-// الإصدار المحسن مع تحديث تلقائي بدون رسالة
+// Tuta Absoluta App - Script.js (Updated v2)
+// التعديلات: إزالة "الكل"، ترتيب FAQ، شريط التقدم، التباين العالي، تحسين الحركات
 // ============================================
 
 // ============================================
@@ -48,7 +48,7 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// Group Mapping
+// Group Mapping (تم تحديث الترتيب: resistance ثم faq ثم sources)
 // ============================================
 
 const groupMap = {
@@ -58,8 +58,8 @@ const groupMap = {
     'calendar': ['calendar'],
     'ipm': ['ipm'],
     'bioagents': ['bioagents'],
-    'faq': ['faq'],
     'resistance': ['resistance'],
+    'faq': ['faq'],
     'sources': ['sources']
 };
 
@@ -70,12 +70,12 @@ const groupNames = {
     'calendar': 'تقويم المكافحة',
     'ipm': 'برنامج المكافحة المتكاملة',
     'bioagents': 'الأعداء الحيوية',
-    'faq': 'أسئلة شائعة',
     'resistance': 'مقاومة المبيدات',
+    'faq': 'أسئلة شائعة',
     'sources': 'المصادر'
 };
 
-const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'faq', 'resistance', 'sources'];
+const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'resistance', 'faq', 'sources'];
 
 // ============================================
 // Thermal Calculation Functions
@@ -1013,7 +1013,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia
+// Bio Agents Encyclopedia (تم تحديثها لإزالة "الكل")
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -1041,8 +1041,8 @@ const toleranceText = { excellent: 'ممتاز', good: 'جيد', medium: 'متو
 const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const toxicityText = { high: 'شديد السمية', medium: 'متوسط', safe: 'آمن' };
 
+// تم إزالة 'all' من هنا
 const categoryMap = {
-    'all': { name: '📋 جميع الأعداء الحيوية' },
     'egg-parasitoid': { name: '🐝 طفيلات البيض' },
     'larval-parasitoid': { name: '🐝 طفيلات اليرقات' },
     'predator': { name: '🪲 المفترسات' },
@@ -1079,25 +1079,32 @@ function renderBioCategoryFilter() {
     if (!fc) return;
     
     const fragment = document.createDocumentFragment();
+    const categories = Object.keys(categoryMap);
     
-    Object.keys(categoryMap).forEach(key => {
+    categories.forEach((key, index) => {
         const btn = document.createElement('button');
-        btn.className = `bio-filter-btn ${key === 'all' ? 'active' : ''}`;
-        btn.setAttribute('aria-pressed', key === 'all' ? 'true' : 'false');
+        // جعل الفئة الأولى نشطة افتراضياً بدلاً من "الكل"
+        btn.className = `bio-filter-btn ${index === 0 ? 'active' : ''}`;
+        btn.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
         btn.textContent = categoryMap[key].name;
         btn.onclick = function() { filterBioByCategory(key, this); };
         fragment.appendChild(btn);
     });
     
     fc.appendChild(fragment);
+    
+    // تحميل الفئة الأولى افتراضياً
+    if (categories.length > 0) {
+        renderBioCards(categories[0]);
+    }
 }
 
-function renderBioCards(filter = 'all') {
+function renderBioCards(filter = 'egg-parasitoid') {
     const container = document.getElementById('bioCardsContainer');
     if (!container) return;
     container.innerHTML = '';
     
-    const filtered = filter === 'all' ? bioAgentsData : bioAgentsData.filter(a => a.category === filter);
+    const filtered = bioAgentsData.filter(a => a.category === filter);
     const fragment = document.createDocumentFragment();
     
     filtered.forEach(agent => {
@@ -1319,6 +1326,57 @@ document.addEventListener('mousedown', () => {
 });
 
 // ============================================
+// New Features: High Contrast & Progress Bar
+// ============================================
+
+function toggleContrast() {
+    const body = document.body;
+    const btn = document.getElementById('contrastBtn');
+    const isHighContrast = body.classList.toggle('high-contrast');
+    
+    localStorage.setItem('highContrast', isHighContrast);
+    
+    if (isHighContrast) {
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+    } else {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    }
+}
+
+function loadContrastPreference() {
+    const isHighContrast = localStorage.getItem('highContrast') === 'true';
+    if (isHighContrast) {
+        document.body.classList.add('high-contrast');
+        const btn = document.getElementById('contrastBtn');
+        if (btn) {
+            btn.classList.add('active');
+            btn.setAttribute('aria-pressed', 'true');
+        }
+    }
+}
+
+function updateProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+    
+    if (!progressBar || !progressFill) return;
+    
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const progress = (scrollTop / scrollHeight) * 100;
+    
+    progressFill.style.width = progress + '%';
+    
+    if (scrollTop > 100) {
+        progressBar.classList.add('visible');
+    } else {
+        progressBar.classList.remove('visible');
+    }
+}
+
+// ============================================
 // Main Initialization
 // ============================================
 
@@ -1328,6 +1386,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
+        // تحميل تفضيل التباين العالي
+        loadContrastPreference();
+        
         await loadAllData();
         console.log('✅ Data loaded successfully');
 
@@ -1377,8 +1438,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         updAll();
         console.log('✅ UI components built');
 
+        // تم تحديث هذا الجزء ليعمل بدون "الكل"
         renderBioCategoryFilter();
-        renderBioCards('all');
         renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
 
@@ -1397,31 +1458,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
         window.addEventListener('resize', debouncedDrawChart);
+        
+        // مستمع شريط التقدم
+        window.addEventListener('scroll', updateProgressBar);
 
         createLandingParticles();
 
-        // ============================================
-        // Service Worker - تحديث تلقائي بدون أي رسالة
-        // ============================================
-        
+        // Service Worker
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
-                        
-                        // فحص التحديثات كل دقيقتين
                         setInterval(() => {
                             reg.update();
                         }, 2 * 60 * 1000);
-                        
-                        // تحديث تلقائي عند اكتشاف نسخة جديدة
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                                     console.log('🔄 New version ready - auto updating...');
-                                    // إعادة تحميل تلقائية بدون أي رسالة
                                     window.location.reload();
                                 }
                             });
@@ -1430,7 +1486,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .catch(err => console.log('❌ SW failed:', err)); 
             }); 
             
-            // تحديث تلقائي عند تغيير الـ controller (بدون رسالة)
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
