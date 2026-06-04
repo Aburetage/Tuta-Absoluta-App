@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Updated with FAB & Dynamic Title)
-// الميزات: Side Drawer, FAB Contact, Dynamic Section Title, Silent SW Update, Phase 1 & 2 Features
+// Tuta Absoluta App - Script.js (Final Updated with Glassmorphism & New Drawer)
+// الميزات: Side Drawer (No X, Clickable Header), Glassmorphic FABs, Dynamic Section Title, Silent SW Update
 // ============================================
 
 // ============================================
@@ -143,13 +143,12 @@ document.addEventListener('click', function(event) {
 });
 
 // ============================================
-// Side Drawer Logic
+// Side Drawer Logic (New: No X button, Clickable Header)
 // ============================================
 
 function toggleSideDrawer() {
     const drawer = document.getElementById('sideDrawer');
     const overlay = document.getElementById('sideDrawerOverlay');
-    const btn = document.getElementById('navMenuBtn');
     const isOpen = drawer.classList.contains('open');
 
     if (isOpen) {
@@ -158,7 +157,6 @@ function toggleSideDrawer() {
         closeFab(); // Close FAB when opening drawer
         drawer.classList.add('open');
         overlay.classList.add('active');
-        btn.setAttribute('aria-expanded', 'true');
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
     }
@@ -167,11 +165,9 @@ function toggleSideDrawer() {
 function closeSideDrawer() {
     const drawer = document.getElementById('sideDrawer');
     const overlay = document.getElementById('sideDrawerOverlay');
-    const btn = document.getElementById('navMenuBtn');
     
     drawer.classList.remove('open');
     overlay.classList.remove('active');
-    btn.setAttribute('aria-expanded', 'false');
     drawer.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
 }
@@ -1352,7 +1348,7 @@ document.addEventListener('keydown', function(e) {
             target.classList.contains('ipm-tab') || 
             target.classList.contains('bio-filter-btn') ||
             target.classList.contains('drawer-nav-item') ||
-            target.classList.contains('drawer-home-btn') ||
+            target.classList.contains('drawer-header-block') ||
             target.getAttribute('tabindex') === '0') {
             e.preventDefault();
             target.click();

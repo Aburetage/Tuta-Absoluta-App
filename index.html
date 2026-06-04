@@ -153,72 +153,69 @@
     <!-- Top Navigation (Clean & Professional) -->
     <nav class="top-nav" id="topNav" role="navigation" aria-label="التنقل الرئيسي">
         <div class="nav-right">
-            <button class="nav-btn nav-icon-btn" onclick="goHome()" title="العودة للرئيسية" aria-label="العودة للرئيسية">
-                <i class="fas fa-house" aria-hidden="true"></i>
+            <button class="nav-btn nav-icon-btn" onclick="toggleSideDrawer()" title="الأقسام" aria-label="الأقسام">
+                <i class="fas fa-layer-group" aria-hidden="true"></i>
             </button>
         </div>
         <div class="nav-center">
             <span class="current-section-title" id="currentSectionTitle">الرئيسية</span>
         </div>
         <div class="nav-left">
-            <button class="nav-btn nav-menu-btn" id="navMenuBtn" onclick="toggleSideDrawer()" title="فتح القائمة" aria-label="فتح القائمة" aria-expanded="false">
-                <i class="fas fa-bars" aria-hidden="true"></i>
-            </button>
+            <!-- Spacer to keep title perfectly centered -->
+            <div style="width: 44px;"></div>
         </div>
     </nav>
 
     <!-- Side Drawer (Organized Menu) -->
     <div class="side-drawer-overlay" id="sideDrawerOverlay" onclick="closeSideDrawer()" aria-hidden="true"></div>
     <aside class="side-drawer" id="sideDrawer" role="dialog" aria-label="قائمة التنقل الرئيسية" aria-hidden="true">
-        <div class="drawer-header">
-            <button class="drawer-close-btn" onclick="closeSideDrawer()" aria-label="إغلاق القائمة">
-                <i class="fas fa-times"></i>
-            </button>
-            <span class="drawer-title">القائمة الرئيسية</span>
-        </div>
-        
         <div class="drawer-content">
-            <!-- Home Button -->
-            <button class="drawer-home-btn" onclick="goHome(); closeSideDrawer();">
-                <i class="fas fa-house"></i>
-                <span>العودة للواجهة الرئيسية</span>
-            </button>
+            <!-- Clickable Header Block -->
+            <div class="drawer-header-block" onclick="goHome(); closeSideDrawer();" role="button" tabindex="0" aria-label="العودة للواجهة الرئيسية">
+                <div class="drawer-header-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="drawer-header-text">
+                    <span class="drawer-site-name">أكاديمية المهندس الزراعي</span>
+                    <span class="drawer-site-hint">اضغط للعودة للرئيسية</span>
+                </div>
+            </div>
 
             <!-- Navigation Grid -->
             <div class="drawer-nav-grid">
-                <div class="drawer-nav-item" onclick="showSingleSection('biology', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('biology', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-microscope"></i></div>
                     <span>البيولوجيا والنموذج الحراري</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('spread-economic', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('spread-economic', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-globe-africa"></i></div>
                     <span>الانتشار والتأثير الاقتصادي</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('seasonal-heatmap', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('seasonal-heatmap', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-cloud-sun"></i></div>
                     <span>النشاط الموسمي والخريطة الحرارية</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('calendar', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('calendar', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-clipboard-check"></i></div>
                     <span>تقويم المكافحة</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('ipm', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('ipm', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-shield-alt"></i></div>
                     <span>برنامج المكافحة المتكاملة</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('bioagents', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('bioagents', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-leaf"></i></div>
                     <span>الأعداء الحيوية</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('resistance', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('resistance', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-exclamation-triangle"></i></div>
                     <span>مقاومة المبيدات</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('faq', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('faq', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-comments"></i></div>
                     <span>أسئلة شائعة</span>
                 </div>
-                <div class="drawer-nav-item" onclick="showSingleSection('sources', this); closeSideDrawer();" role="button">
+                <div class="drawer-nav-item" onclick="showSingleSection('sources', this); closeSideDrawer();" role="button" tabindex="0">
                     <div class="drawer-icon"><i class="fas fa-book"></i></div>
                     <span>المصادر والمراجع</span>
                 </div>
@@ -229,25 +226,25 @@
     <!-- Floating Action Button (FAB) for Contact -->
     <div class="fab-container" id="fabContainer">
         <div class="fab-sub-buttons" id="fabSubButtons">
-            <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="fab-btn whatsapp" title="واتساب" aria-label="واتساب">
+            <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="fab-btn-glass whatsapp" title="واتساب" aria-label="واتساب">
                 <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="mailto:aliazmy30@gmail.com" class="fab-btn email" title="البريد الإلكتروني" aria-label="البريد الإلكتروني">
+            <a href="mailto:aliazmy30@gmail.com" class="fab-btn-glass email" title="البريد الإلكتروني" aria-label="البريد الإلكتروني">
                 <i class="fas fa-envelope"></i>
             </a>
-            <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="fab-btn twitter" title="X (تويتر)" aria-label="X (تويتر)">
+            <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="fab-btn-glass twitter" title="X (تويتر)" aria-label="X (تويتر)">
                 <i class="fab fa-x-twitter"></i>
             </a>
         </div>
-        <button class="fab-main-btn" id="fabMainBtn" onclick="toggleFab()" aria-label="معلومات التواصل" aria-expanded="false">
+        <button class="fab-main-btn-glass" id="fabMainBtn" onclick="toggleFab()" aria-label="معلومات التواصل" aria-expanded="false">
             <i class="fas fa-headset fab-icon-open"></i>
             <i class="fas fa-times fab-icon-close"></i>
         </button>
     </div>
 
-    <!-- PWA Install Button -->
-    <button id="installBtn" style="display:none;position:fixed;bottom:90px;left:20px;z-index:998;padding:12px 20px;background:var(--plan-accent);color:#000;border:none;border-radius:50px;font-family:Cairo;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-size:0.9rem;" onclick="installPWA()" aria-label="تثبيت التطبيق">
-        <i class="fas fa-download" aria-hidden="true"></i> تثبيت التطبيق
+    <!-- PWA Install Button (Glassmorphic, Bottom-Left) -->
+    <button id="installBtn" class="fab-btn-glass pwa-fab" onclick="installPWA()" aria-label="تثبيت التطبيق" style="display: none;">
+        <i class="fas fa-download"></i>
     </button>
 
     <div class="container" id="mainContainer">
@@ -450,7 +447,7 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'block';
+            document.getElementById('installBtn').style.display = 'flex'; // Changed to flex for centered icon
         });
 
         function installPWA() {

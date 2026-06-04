@@ -1,9 +1,9 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v6 (Silent Update)
+// Service Worker - Tuta Absoluta App v7 (Silent Update & Glassmorphism Ready)
 // استراتيجية تخزين ذكية مع تحديث تلقائي صامت في الخلفية
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v6'; // تم ترقية الإصدار لضمان تحميل ملفات التصميم الجديدة (FAB, Side Drawer, Clean Nav)
+const CACHE_NAME = 'tuta-app-v7'; // تم ترقية الإصدار لضمان تحميل ملفات التصميم الزجاجي الجديدة
 
 // الملفات الأساسية التي يجب تخزينها فوراً عند التثبيت
 const PRECACHE_URLS = [
@@ -67,7 +67,6 @@ self.addEventListener('install', event => {
       })
       .catch(err => {
         console.error('[SW] Failed to cache some files:', err);
-        // لا نمنع التثبيت حتى لو فشل تخزين بعض الملفات الثانوية
       })
   );
 });
@@ -110,7 +109,6 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   
   // 1. ملفات البيانات (JSON) - Network First (الشبكة أولاً)
-  // يضمن دائماً الحصول على أحدث البيانات إذا كان هناك إنترنت، مع الاحتفاظ بنسخة احتياطية
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request)
@@ -131,7 +129,6 @@ self.addEventListener('fetch', event => {
   }
   
   // 2. ملفات JavaScript و CSS - Stale While Revalidate (الكاش فوراً، ثم التحديث في الخلفية)
-  // يضمن سرعة تحميل فورية مع الحصول على التحديثات في الزيارات التالية
   if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(
       caches.match(request).then(cached => {
