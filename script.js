@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Phase 3 Updated)
-// الميزات: Web Worker, Double-tap Zoom, Dynamic Colors, Pull-to-Refresh, Virtual Scrolling
+// Tuta Absoluta App - Script.js (Phase 1 Updated)
+// الميزات الجديدة: Skeleton Loading, Empty States, Accessibility Enhancements
 // ============================================
 
 // ============================================
@@ -61,7 +61,33 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// Group Mapping (بدون أزرار التنقل)
+// Phase 1 Helpers: Skeleton & Empty States
+// ============================================
+
+function showSkeleton(containerId, count = 3) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '';
+    for (let i = 0; i < count; i++) {
+        html += `<div class="skeleton skeleton-card"></div>`;
+    }
+    container.innerHTML = html;
+}
+
+function showEmptyState(containerId, message = "لا توجد نتائج مطابقة لهذا الفلتر حالياً 🌿") {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = `
+        <div class="empty-state">
+            <i class="fas fa-search"></i>
+            <h3>لا توجد نتائج</h3>
+            <p>${message}</p>
+        </div>
+    `;
+}
+
+// ============================================
+// Group Mapping
 // ============================================
 
 const groupMap = {
@@ -136,7 +162,6 @@ function applyThermalResult(d) {
     if (curStage >= 0) updDet();
     updSD(d);
     
-    // Dynamic Color Scheme based on risk level
     updateDynamicTheme(z.z);
 }
 
@@ -168,9 +193,6 @@ function hmClr(v) {
     return 'rgba(231,76,60,.65)';
 }
 
-// ============================================
-// Dynamic Color Scheme
-// ============================================
 function updateDynamicTheme(riskLevel) {
     const root = document.documentElement;
     if (riskLevel === 'خطر' || riskLevel === 'مميت') {
@@ -608,28 +630,37 @@ function filterSeason(season, btn) {
 }
 
 // ============================================
-// Build Sources
+// Build Sources (with Skeleton)
 // ============================================
 
 function buildSources() {
     const box = document.getElementById('sourcesBox');
-    if (!box || sourcesData.length === 0) return;
+    if (!box) return;
     
-    const fragment = document.createDocumentFragment();
+    // Show skeleton first
+    showSkeleton('sourcesBox', 4);
     
-    sourcesData.forEach(s => {
-        const card = document.createElement('div');
-        card.className = 'source-card';
-        card.setAttribute('role', 'listitem');
-        card.innerHTML = `<span class="source-tag">${s.tag}</span><h4>${s.title}</h4><p>${s.description}</p>`;
-        fragment.appendChild(card);
-    });
-    
-    box.appendChild(fragment);
+    setTimeout(() => {
+        if (sourcesData.length === 0) {
+            showEmptyState('sourcesBox', 'لا توجد مصادر متاحة حالياً.');
+            return;
+        }
+        
+        const fragment = document.createDocumentFragment();
+        sourcesData.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'source-card';
+            card.setAttribute('role', 'listitem');
+            card.innerHTML = `<span class="source-tag">${s.tag}</span><h4>${s.title}</h4><p>${s.description}</p>`;
+            fragment.appendChild(card);
+        });
+        box.innerHTML = '';
+        box.appendChild(fragment);
+    }, 300); // Simulate slight delay to show skeleton effect
 }
 
 // ============================================
-// Build Dynamic Sections
+// Build Dynamic Sections (with Empty States)
 // ============================================
 
 function buildSpreadSection() {
@@ -638,7 +669,6 @@ function buildSpreadSection() {
     const reasons = getSpreadReasons();
     
     const fragment = document.createDocumentFragment();
-    
     reasons.forEach(r => {
         const card = document.createElement('div');
         card.className = 'bio-card';
@@ -661,7 +691,6 @@ function buildSpreadSection() {
         `;
         fragment.appendChild(card);
     });
-    
     container.appendChild(fragment);
 }
 
@@ -721,7 +750,7 @@ function buildIPMSection() {
     
     let html = '<div class="ipm-tabs" id="ipmTabs" role="tablist" aria-label="أقسام المكافحة المتكاملة">';
     tabs.forEach((tab, i) => {
-        html += `<button class="ipm-tab ${i === 0 ? 'active' : ''}" data-tab="${tab.id}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}">${tab.title}</button>`;
+        html += `<button class="ipm-tab ${i === 0 ? 'active' : ''}" data-tab="${tab.id}" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" tabindex="0">${tab.title}</button>`;
     });
     html += '</div><div class="ipm-panels">';
     
@@ -730,21 +759,18 @@ function buildIPMSection() {
         if (!panel) return;
         
         html += `<div class="ipm-panel ${i === 0 ? 'active' : ''}" id="panel-${tab.id}" role="tabpanel">`;
-        
         if (panel.warning) {
             html += `<div style="padding:1rem;background:rgba(231,76,60,0.08);border:1px solid rgba(231,76,60,0.3);border-radius:var(--radius-sm);margin-bottom:1.5rem;display:flex;gap:1rem;align-items:flex-start;">
                 <span style="font-size:1.5rem;">⚠️</span>
                 <p style="font-size:0.9rem;color:var(--text2);line-height:1.7;"><strong style="color:var(--accent);">تحذير:</strong> ${panel.warning}</p>
             </div>`;
         }
-        
         if (panel.intro) {
             html += `<div style="margin-bottom:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
                 <h3 style="color:#fff;font-size:1.2rem;margin-bottom:0.8rem;">مبادئ إدارة مقاومة المبيدات (IRM)</h3>
                 <p style="color:var(--text2);font-size:0.9rem;line-height:1.8;">${panel.intro}</p>
             </div>`;
         }
-        
         if (panel.cards) {
             html += '<div class="ipm-grid">';
             panel.cards.forEach(card => {
@@ -757,7 +783,6 @@ function buildIPMSection() {
             });
             html += '</div>';
         }
-        
         if (panel.instructions) {
             html += `<div style="background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.3);border-radius:var(--radius-sm);padding:1.2rem;margin-top:1.5rem;">
                 <h4 style="color:var(--amber);margin-bottom:0.5rem;">⚠️ إرشادات هامة لاستخدام المبيدات</h4>
@@ -766,14 +791,12 @@ function buildIPMSection() {
                 </ul>
             </div>`;
         }
-        
         if (panel.rotationSchedule) {
             html += `<div style="margin-top:1.5rem;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);">
                 <h4 style="color:var(--plan-accent);margin-bottom:0.8rem;">🗓️ جدول تناوب IRAC المقترح</h4>
                 <p style="color:var(--text2);font-size:0.9rem;line-height:1.9;">${panel.rotationSchedule}</p>
             </div>`;
         }
-        
         html += '</div>';
     });
     
@@ -786,7 +809,6 @@ function buildIPMSection() {
             tabsContainer.addEventListener('click', function(e) {
                 const tab = e.target.closest('.ipm-tab');
                 if (!tab) return;
-                
                 const target = tab.dataset.tab;
                 document.querySelectorAll('.ipm-tab').forEach(t => { 
                     t.classList.remove('active'); 
@@ -807,7 +829,6 @@ function buildFAQSection() {
     const faqs = getFAQ();
     
     const fragment = document.createDocumentFragment();
-    
     faqs.forEach(f => {
         const item = document.createElement('div');
         item.className = 'faq-item';
@@ -821,7 +842,6 @@ function buildFAQSection() {
         `;
         fragment.appendChild(item);
     });
-    
     container.appendChild(fragment);
 }
 
@@ -831,7 +851,6 @@ function buildResistanceSection() {
     const data = getResistanceData();
     
     const fragment = document.createDocumentFragment();
-    
     data.forEach(r => {
         const levelClass = r.level === 'high' ? 'level-high' : r.level === 'medium' ? 'level-medium' : 'level-low';
         const card = document.createElement('div');
@@ -844,24 +863,21 @@ function buildResistanceSection() {
         `;
         fragment.appendChild(card);
     });
-    
     container.appendChild(fragment);
 }
 
 // ============================================
-// Accordion & Filter Functions
+// Accordion & Filter Functions (with Empty States)
 // ============================================
 
 function toggleFAQ(el) {
     const item = el.parentElement;
     const isOpen = item.classList.contains('open');
-    
     document.querySelectorAll('.faq-item').forEach(x => { 
         x.classList.remove('open'); 
         const q = x.querySelector('.faq-question');
         if(q) q.setAttribute('aria-expanded', 'false'); 
     });
-    
     if (!isOpen) {
         item.classList.add('open');
         el.setAttribute('aria-expanded', 'true');
@@ -894,21 +910,36 @@ function filterBioCards(category, containerId, btn) {
     btn.setAttribute('aria-pressed', 'true');
     
     const container = document.getElementById(containerId);
-    const cards = container.querySelectorAll('.bio-card');
+    const cards = Array.from(container.querySelectorAll('.bio-card'));
     
-    cards.forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-            card.style.display = '';
-            requestAnimationFrame(() => {
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            });
-        } else {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => { card.style.display = 'none'; }, 300);
+    const visibleCards = cards.filter(card => category === 'all' || card.dataset.category === category);
+    
+    if (visibleCards.length === 0) {
+        cards.forEach(card => card.style.display = 'none');
+        if (!container.querySelector('.empty-state')) {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'empty-state';
+            emptyDiv.innerHTML = `<i class="fas fa-leaf"></i><h3>لا توجد نتائج</h3><p>لا توجد بيانات مطابقة لهذا الفلتر حالياً.</p>`;
+            container.appendChild(emptyDiv);
         }
-    });
+    } else {
+        const emptyState = container.querySelector('.empty-state');
+        if (emptyState) emptyState.remove();
+        
+        cards.forEach(card => {
+            if (category === 'all' || card.dataset.category === category) {
+                card.style.display = '';
+                requestAnimationFrame(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                });
+            } else {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => { card.style.display = 'none'; }, 300);
+            }
+        });
+    }
 }
 
 // ============================================
@@ -944,7 +975,6 @@ function showSingleSection(groupId, clickedItem) {
     }
     
     closeDropdown();
-    
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     if (groupId === 'seasonal-heatmap') { 
@@ -1005,9 +1035,7 @@ function createLandingParticles() {
     const c = document.getElementById('landingParticles');
     if (!c) return;
     const cols = ['#e74c3c', '#f39c12', '#2ecc71', '#3498db'];
-    
     const fragment = document.createDocumentFragment();
-    
     for (let i = 0; i < 25; i++) {
         const p = document.createElement('div');
         p.className = 'landing-particle';
@@ -1015,7 +1043,6 @@ function createLandingParticles() {
         p.style.cssText = `width:${s}px;height:${s}px;left:${Math.random() * 100}%;background:${cols[i % cols.length]};animation-duration:${Math.random() * 12 + 8}s;animation-delay:${Math.random() * 8}s;`;
         fragment.appendChild(p);
     }
-    
     c.appendChild(fragment);
 }
 
@@ -1026,7 +1053,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia (مع Virtual Scrolling)
+// Bio Agents Encyclopedia (with Skeleton & Empty States)
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -1089,67 +1116,69 @@ function closeModalOnBg(event, modalId) {
 function renderBioCategoryFilter() {
     const fc = document.getElementById('bioCategoryFilter');
     if (!fc) return;
-    
     const fragment = document.createDocumentFragment();
     const categories = Object.keys(categoryMap);
-    
     categories.forEach((key, index) => {
         const btn = document.createElement('button');
         btn.className = `bio-filter-btn ${index === 0 ? 'active' : ''}`;
         btn.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
+        btn.setAttribute('tabindex', '0'); // Accessibility
         btn.textContent = categoryMap[key].name;
         btn.onclick = function() { filterBioByCategory(key, this); };
         fragment.appendChild(btn);
     });
-    
     fc.appendChild(fragment);
-    
     if (categories.length > 0) {
         renderBioCards(categories[0]);
     }
 }
 
-// Virtual Scrolling for Bio Cards - Lazy Loading
 let renderedBioCards = new Set();
 
 function renderBioCards(filter = 'egg-parasitoid') {
     const container = document.getElementById('bioCardsContainer');
     if (!container) return;
-    container.innerHTML = '';
+    
+    // Show skeleton first
+    showSkeleton('bioCardsContainer', 4);
     renderedBioCards.clear();
     
-    const filtered = bioAgentsData.filter(a => a.category === filter);
-    const fragment = document.createDocumentFragment();
-    
-    filtered.forEach((agent, index) => {
-        const card = document.createElement('div');
-        card.className = 'bio-card-advanced';
-        card.setAttribute('role', 'listitem');
-        card.setAttribute('aria-label', agent.scientificName);
-        card.setAttribute('data-agent-id', agent.id);
-        card.onclick = () => openBioModal(agent.id);
+    setTimeout(() => {
+        const filtered = bioAgentsData.filter(a => a.category === filter);
         
-        // Placeholder content - will be filled by IntersectionObserver
-        card.innerHTML = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div><div class="bio-card-placeholder">جاري التحميل...</div>`;
+        if (filtered.length === 0) {
+            showEmptyState('bioCardsContainer', 'لا يوجد أعداء حيويين في هذه الفئة حالياً.');
+            return;
+        }
         
-        fragment.appendChild(card);
-    });
-    
-    container.appendChild(fragment);
-    
-    // Setup lazy loading with IntersectionObserver
-    setupBioCardsLazyLoad();
+        container.innerHTML = '';
+        const fragment = document.createDocumentFragment();
+        
+        filtered.forEach((agent, index) => {
+            const card = document.createElement('div');
+            card.className = 'bio-card-advanced';
+            card.setAttribute('role', 'listitem');
+            card.setAttribute('aria-label', agent.scientificName);
+            card.setAttribute('data-agent-id', agent.id);
+            card.setAttribute('tabindex', '0'); // Accessibility
+            card.onclick = () => openBioModal(agent.id);
+            
+            card.innerHTML = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div><div class="bio-card-placeholder">جاري التحميل...</div>`;
+            fragment.appendChild(card);
+        });
+        
+        container.appendChild(fragment);
+        setupBioCardsLazyLoad();
+    }, 200); // Simulate slight delay for skeleton effect
 }
 
 function setupBioCardsLazyLoad() {
     const cards = document.querySelectorAll('.bio-card-advanced');
-    
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const card = entry.target;
                 const agentId = card.getAttribute('data-agent-id');
-                
                 if (!renderedBioCards.has(agentId)) {
                     const agent = bioAgentsData.find(a => a.id === agentId);
                     if (agent) {
@@ -1160,33 +1189,26 @@ function setupBioCardsLazyLoad() {
                 observer.unobserve(card);
             }
         });
-    }, {
-        rootMargin: '100px',
-        threshold: 0.1
-    });
+    }, { rootMargin: '100px', threshold: 0.1 });
     
     cards.forEach(card => observer.observe(card));
 }
 
 function renderBioCardFullContent(card, agent) {
     let html = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div>`;
-    
     html += '<div class="bio-targets">';
     Object.keys(agent.targets).forEach(key => {
         const s = agent.targets[key];
         html += `<div class="target-row ${targetClass[s]}"><span class="target-label">${targetLabels[key]}</span><span class="target-status">${targetStatusText[s]}</span></div>`;
     });
     html += '</div>';
-    
     html += '<div class="bio-badges">';
     agent.badges.forEach(b => { 
         const bd = badgeMap[b]; 
         if (bd) html += `<span class="bio-badge ${bd.class}">${bd.text}</span>`; 
     });
     html += '</div>';
-    
     html += `<div class="bio-card-footer">اقرأ التفاصيل الكاملة <i class="fas fa-arrow-left" aria-hidden="true"></i></div>`;
-    
     card.innerHTML = html;
 }
 
@@ -1194,7 +1216,6 @@ function renderBioModals() {
     const container = document.getElementById('bioModalsContainer');
     if (!container) return;
     container.innerHTML = '';
-    
     const fragment = document.createDocumentFragment();
     
     bioAgentsData.forEach(agent => {
@@ -1208,123 +1229,52 @@ function renderBioModals() {
         
         const tabsHtml = `
             <div class="modal-tabs" role="tablist">
-                <button class="tab-btn active" onclick="switchTab('${agent.id}', 'overview', event)" role="tab" aria-selected="true"><i class="fas fa-info-circle" aria-hidden="true"></i> نظرة عامة</button>
-                <button class="tab-btn" onclick="switchTab('${agent.id}', 'lifecycle', event)" role="tab" aria-selected="false"><i class="fas fa-sync-alt" aria-hidden="true"></i> دورة الحياة</button>
-                <button class="tab-btn" onclick="switchTab('${agent.id}', 'usage', event)" role="tab" aria-selected="false"><i class="fas fa-leaf" aria-hidden="true"></i> الاستخدام</button>
-                <button class="tab-btn" onclick="switchTab('${agent.id}', 'compatibility', event)" role="tab" aria-selected="false"><i class="fas fa-handshake" aria-hidden="true"></i> التوافق</button>
-                <button class="tab-btn" onclick="switchTab('${agent.id}', 'rating', event)" role="tab" aria-selected="false"><i class="fas fa-star" aria-hidden="true"></i> التقييم</button>
+                <button class="tab-btn active" onclick="switchTab('${agent.id}', 'overview', event)" role="tab" aria-selected="true" tabindex="0"><i class="fas fa-info-circle" aria-hidden="true"></i> نظرة عامة</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'lifecycle', event)" role="tab" aria-selected="false" tabindex="0"><i class="fas fa-sync-alt" aria-hidden="true"></i> دورة الحياة</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'usage', event)" role="tab" aria-selected="false" tabindex="0"><i class="fas fa-leaf" aria-hidden="true"></i> الاستخدام</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'compatibility', event)" role="tab" aria-selected="false" tabindex="0"><i class="fas fa-handshake" aria-hidden="true"></i> التوافق</button>
+                <button class="tab-btn" onclick="switchTab('${agent.id}', 'rating', event)" role="tab" aria-selected="false" tabindex="0"><i class="fas fa-star" aria-hidden="true"></i> التقييم</button>
             </div>`;
             
-        const overview = `
-            <div class="tab-content active" id="tab-${agent.id}-overview" role="tabpanel">
-                <div class="modal-body-content">
-                    <h4>🔬 التصنيف العلمي</h4>
-                    <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
-                    <h4>🧬 النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
-                    <h4>👁️ الوصف المورفولوجي</h4>
-                    <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
-                    <h4>📊 الأهمية في المكافحة</h4>
-                    <div class="importance-grid">
-                        <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
-                        <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
-                        <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
-                        <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
-                    </div>
+        const overview = `<div class="tab-content active" id="tab-${agent.id}-overview" role="tabpanel">
+            <div class="modal-body-content">
+                <h4>🔬 التصنيف العلمي</h4>
+                <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
+                <h4>🧬 النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
+                <h4>👁️ الوصف المورفولوجي</h4>
+                <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
+                <h4>📊 الأهمية في المكافحة</h4>
+                <div class="importance-grid">
+                    <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
+                    <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
+                    <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
+                    <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
                 </div>
-            </div>`;
+            </div>
+        </div>`;
+        
+        // ... (lifecycle, usage, compat, rating remain the same as previous version for brevity, but are included in the full file)
+        const lifecycle = `<div class="tab-content" id="tab-${agent.id}-lifecycle" role="tabpanel"><div class="modal-body-content"><h4>🔄 مراحل دورة الحياة</h4><div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div><h4>🌡️ مدة الدورة حسب الحرارة</h4><table class="info-table"><tr><td>عند 20°م</td><td>${agent.cycleDuration.c20}</td></tr><tr><td>عند 25°م</td><td>${agent.cycleDuration.c25}</td></tr><tr><td>عند 30°م</td><td>${agent.cycleDuration.c30}</td></tr></table><h4>🧠 السلوك الحيوي المميز</h4><p>${agent.behavior}</p></div></div>`;
+        const usage = `<div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel"><div class="modal-body-content"><h4>⚙️ الظروف المثالية</h4><div class="conditions-grid"><div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div><div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div><div class="condition-item"><div class="cond-label">💡 الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div><div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div></div><h4>🗺️ التحمل في الظروف المصرية</h4><div class="conditions-grid"><div class="condition-item"><div class="cond-label">صيف الدلتا</div><div class="cond-value">${toleranceText[agent.egyptTolerance.delta]}</div></div><div class="condition-item"><div class="cond-label">صيف الصعيد</div><div class="cond-value">${toleranceText[agent.egyptTolerance.saeed]}</div></div><div class="condition-item"><div class="cond-label">العروة الصيفية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.summer]}</div></div><div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div><div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div></div><h4>🇪🇬 التواجد الحالي في مصر</h4><table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}</div></div>`;
+        const compat = `<div class="tab-content" id="tab-${agent.id}-compatibility" role="tabpanel"><div class="modal-body-content"><h4>🤝 التوافق مع الأعداء الحيوية الأخرى</h4><table class="compatibility-table">${agent.compatibility.map(([n, l]) => `<tr><td>${n}</td><td><span class="compat-level compat-${l}">${compatText[l]}</span></td></tr>`).join('')}</table><h4>🧪 الحساسية للمبيدات</h4>${agent.pesticides.map(([n, l]) => `<div class="pesticide-item"><span class="pesticide-name">${n}</span><span class="compat-level toxicity-${l}">${toxicityText[l]}</span></div>`).join('')}</div></div>`;
+        const rating = `<div class="tab-content" id="tab-${agent.id}-rating" role="tabpanel"><div class="modal-body-content"><h4>✅ المزايا</h4><ul class="pros-list">${agent.pros.map(p => `<li><i class="fas fa-check-circle" aria-hidden="true"></i> ${p}</li>`).join('')}</ul><h4>❌ العيوب</h4><ul class="cons-list">${agent.cons.map(c => `<li><i class="fas fa-times-circle" aria-hidden="true"></i> ${c}</li>`).join('')}</ul><h4>⭐ التقييم النهائي</h4><div class="final-rating-box"><div style="margin-bottom:0.8rem;color:var(--amber);font-size:1.5rem">${'⭐'.repeat(agent.ratingStars)}${'☆'.repeat(5 - agent.ratingStars)} <span style="font-size:0.8rem;color:var(--text2)">(${agent.ratingStars}/5)</span></div><p>${agent.finalRating}</p></div></div></div>`;
             
-        const lifecycle = `
-            <div class="tab-content" id="tab-${agent.id}-lifecycle" role="tabpanel">
-                <div class="modal-body-content">
-                    <h4>🔄 مراحل دورة الحياة</h4>
-                    <div class="lifecycle-steps">${agent.lifecycleSteps.map((s, i) => `<div class="lifecycle-step"><div class="step-number">${i + 1}</div><div class="step-text">${s}</div></div>`).join('')}</div>
-                    <h4>🌡️ مدة الدورة حسب الحرارة</h4>
-                    <table class="info-table"><tr><td>عند 20°م</td><td>${agent.cycleDuration.c20}</td></tr><tr><td>عند 25°م</td><td>${agent.cycleDuration.c25}</td></tr><tr><td>عند 30°م</td><td>${agent.cycleDuration.c30}</td></tr></table>
-                    <h4>🧠 السلوك الحيوي المميز</h4><p>${agent.behavior}</p>
-                </div>
-            </div>`;
-            
-        const usage = `
-            <div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel">
-                <div class="modal-body-content">
-                    <h4>⚙️ الظروف المثالية</h4>
-                    <div class="conditions-grid">
-                        <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
-                        <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
-                        <div class="condition-item"><div class="cond-label">💡 الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
-                        <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
-                    </div>
-                    <h4>🗺️ التحمل في الظروف المصرية</h4>
-                    <div class="conditions-grid">
-                        <div class="condition-item"><div class="cond-label">صيف الدلتا</div><div class="cond-value">${toleranceText[agent.egyptTolerance.delta]}</div></div>
-                        <div class="condition-item"><div class="cond-label">صيف الصعيد</div><div class="cond-value">${toleranceText[agent.egyptTolerance.saeed]}</div></div>
-                        <div class="condition-item"><div class="cond-label">العروة الصيفية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.summer]}</div></div>
-                        <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
-                        <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
-                    </div>
-                    <h4>🇪🇬 التواجد الحالي في مصر</h4>
-                    <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
-                    ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
-                </div>
-            </div>`;
-            
-        const compat = `
-            <div class="tab-content" id="tab-${agent.id}-compatibility" role="tabpanel">
-                <div class="modal-body-content">
-                    <h4>🤝 التوافق مع الأعداء الحيوية الأخرى</h4>
-                    <table class="compatibility-table">${agent.compatibility.map(([n, l]) => `<tr><td>${n}</td><td><span class="compat-level compat-${l}">${compatText[l]}</span></td></tr>`).join('')}</table>
-                    <h4>🧪 الحساسية للمبيدات</h4>
-                    ${agent.pesticides.map(([n, l]) => `<div class="pesticide-item"><span class="pesticide-name">${n}</span><span class="compat-level toxicity-${l}">${toxicityText[l]}</span></div>`).join('')}
-                </div>
-            </div>`;
-            
-        const rating = `
-            <div class="tab-content" id="tab-${agent.id}-rating" role="tabpanel">
-                <div class="modal-body-content">
-                    <h4>✅ المزايا</h4><ul class="pros-list">${agent.pros.map(p => `<li><i class="fas fa-check-circle" aria-hidden="true"></i> ${p}</li>`).join('')}</ul>
-                    <h4>❌ العيوب</h4><ul class="cons-list">${agent.cons.map(c => `<li><i class="fas fa-times-circle" aria-hidden="true"></i> ${c}</li>`).join('')}</ul>
-                    <h4>⭐ التقييم النهائي</h4>
-                    <div class="final-rating-box">
-                        <div style="margin-bottom:0.8rem;color:var(--amber);font-size:1.5rem">${'⭐'.repeat(agent.ratingStars)}${'☆'.repeat(5 - agent.ratingStars)} <span style="font-size:0.8rem;color:var(--text2)">(${agent.ratingStars}/5)</span></div>
-                        <p>${agent.finalRating}</p>
-                    </div>
-                </div>
-            </div>`;
-            
-        modal.innerHTML = `
-            <div class="bio-modal-content">
-                <button class="bio-modal-close" onclick="closeModal('modal-${agent.id}')" aria-label="إغلاق">×</button>
-                <div class="bio-modal-header">
-                    <span style="font-size:3.5rem">${agent.icon}</span>
-                    <h2>${agent.scientificName}</h2>
-                    <span class="bio-modal-badge">${agent.arabicDesc}</span>
-                </div>
-                ${tabsHtml}
-                ${overview}
-                ${lifecycle}
-                ${usage}
-                ${compat}
-                ${rating}
-            </div>`;
+        modal.innerHTML = `<div class="bio-modal-content"><button class="bio-modal-close" onclick="closeModal('modal-${agent.id}')" aria-label="إغلاق">×</button><div class="bio-modal-header"><span style="font-size:3.5rem">${agent.icon}</span><h2>${agent.scientificName}</h2><span class="bio-modal-badge">${agent.arabicDesc}</span></div>${tabsHtml}${overview}${lifecycle}${usage}${compat}${rating}</div>`;
         fragment.appendChild(modal);
     });
-    
     container.appendChild(fragment);
 }
 
 function switchTab(agentId, tabName, event) {
     const modal = document.getElementById(`modal-${agentId}`);
     if (!modal) return;
-    
     modal.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
     modal.querySelectorAll('.tab-btn').forEach(tb => { 
         tb.classList.remove('active'); 
         tb.setAttribute('aria-selected', 'false'); 
     });
-    
     const target = document.getElementById(`tab-${agentId}-${tabName}`);
     if (target) target.classList.add('active');
-    
     if (event) { 
         const btn = event.target.closest('.tab-btn'); 
         if (btn) { 
@@ -1345,7 +1295,7 @@ function filterBioByCategory(category, btn) {
 }
 
 // ============================================
-// Keyboard & Mobile Navigation
+// Keyboard & Mobile Navigation (Enhanced Accessibility)
 // ============================================
 
 document.addEventListener('keydown', function(e) {
@@ -1366,9 +1316,15 @@ document.addEventListener('keydown', function(e) {
         document.body.classList.add('keyboard-user');
     }
     
+    // Enhanced keyboard support for custom interactive elements
     if (e.key === 'Enter' || e.key === ' ') {
         const target = e.target;
-        if (target.classList.contains('bio-header') || target.getAttribute('tabindex') === '0') {
+        if (target.classList.contains('bio-header') || 
+            target.classList.contains('faq-question') || 
+            target.classList.contains('filter-btn') || 
+            target.classList.contains('ipm-tab') || 
+            target.classList.contains('bio-filter-btn') ||
+            target.getAttribute('tabindex') === '0') {
             e.preventDefault();
             target.click();
         }
@@ -1386,7 +1342,6 @@ document.addEventListener('mousedown', () => {
 function updateProgressBar() {
     const progressBar = document.getElementById('progressBar');
     const progressFill = document.getElementById('progressFill');
-    
     if (!progressBar || !progressFill) return;
     
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -1394,7 +1349,6 @@ function updateProgressBar() {
     const progress = (scrollTop / scrollHeight) * 100;
     
     progressFill.style.width = progress + '%';
-    
     if (scrollTop > 100) {
         progressBar.classList.add('visible');
     } else {
@@ -1402,7 +1356,6 @@ function updateProgressBar() {
     }
 }
 
-// Double-Tap to Zoom Logic
 let lastTap = 0;
 function handleDoubleTap(element) {
     const currentTime = new Date().getTime();
@@ -1413,7 +1366,7 @@ function handleDoubleTap(element) {
     lastTap = currentTime;
 }
 
-// Pull-to-Refresh Implementation
+// Pull-to-Refresh Implementation (Passive events optimized)
 let pullStartY = 0;
 let pullDistance = 0;
 let isPulling = false;
@@ -1428,16 +1381,15 @@ function initPullToRefresh() {
             pullStartY = e.touches[0].clientY;
             isPulling = true;
         }
-    }, { passive: true });
+    }, { passive: true }); // Passive: true for better scroll performance
     
     document.addEventListener('touchmove', (e) => {
         if (!isPulling) return;
-        
         const currentY = e.touches[0].clientY;
         pullDistance = currentY - pullStartY;
         
         if (pullDistance > 0 && window.pageYOffset === 0) {
-            e.preventDefault();
+            e.preventDefault(); // Must be passive: false here to prevent default scroll
             
             const resistance = pullDistance * 0.5;
             pullIndicator.style.transform = `translateY(${resistance}px)`;
@@ -1451,31 +1403,25 @@ function initPullToRefresh() {
                 pullIndicator.querySelector('.pull-icon').style.transform = 'rotate(0deg)';
             }
         }
-    }, { passive: false });
+    }, { passive: false }); // passive: false ONLY where preventDefault is called
     
     document.addEventListener('touchend', () => {
         if (!isPulling) return;
         isPulling = false;
-        
         if (pullDistance > PULL_THRESHOLD) {
             performRefresh(pullIndicator);
         } else {
             resetPullIndicator(pullIndicator);
         }
-        
         pullDistance = 0;
-    });
+    }, { passive: true });
 }
 
 function performRefresh(pullIndicator) {
     pullIndicator.querySelector('.pull-icon').style.animation = 'spin 1s linear infinite';
     pullIndicator.querySelector('.pull-text').textContent = 'جاري التحديث...';
     pullIndicator.style.transform = `translateY(${PULL_THRESHOLD * 0.5}px)`;
-    
-    // Simulate refresh
-    setTimeout(() => {
-        location.reload();
-    }, 1000);
+    setTimeout(() => { location.reload(); }, 1000);
 }
 
 function resetPullIndicator(pullIndicator) {
@@ -1492,7 +1438,6 @@ function resetPullIndicator(pullIndicator) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Starting application...');
-    
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
@@ -1500,9 +1445,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('✅ Data loaded successfully');
 
         const thermal = getThermalConstants();
-        T0 = thermal.T0; 
-        TH = thermal.TH; 
-        K = thermal.K;
+        T0 = thermal.T0; TH = thermal.TH; K = thermal.K;
         
         stagesData = getStages();
         egyptMonthsData = getEgyptMonths();
@@ -1516,7 +1459,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         buildIPMSection();
         buildFAQSection();
         buildResistanceSection();
-        buildSources();
+        buildSources(); // Includes skeleton logic
         console.log('✅ Dynamic sections built');
 
         const slider = document.getElementById('tempSlider');
@@ -1525,7 +1468,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 curTemp = parseInt(this.value); 
                 this.setAttribute('aria-valuenow', curTemp); 
                 updAll(); 
-            });
+            }, { passive: true });
         }
 
         const revealObs = new IntersectionObserver((entries) => { 
@@ -1545,54 +1488,43 @@ document.addEventListener('DOMContentLoaded', async () => {
         updAll();
         console.log('✅ UI components built');
 
-        renderBioCategoryFilter();
+        renderBioCategoryFilter(); // Includes skeleton logic
         renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
 
         document.getElementById('prevS').addEventListener('click', () => { 
-            let n = curStage - 1; 
-            if (n < 0) n = stagesData.length - 1; 
-            selS(n); 
+            let n = curStage - 1; if (n < 0) n = stagesData.length - 1; selS(n); 
         });
-        
         document.getElementById('nextS').addEventListener('click', () => { 
-            let n = curStage + 1; 
-            if (n >= stagesData.length) n = 0; 
-            selS(n); 
+            let n = curStage + 1; if (n >= stagesData.length) n = 0; selS(n); 
         });
-        
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
         window.addEventListener('resize', debouncedDrawChart);
-        window.addEventListener('scroll', throttle(updateProgressBar, 100));
+        window.addEventListener('scroll', throttle(updateProgressBar, 100), { passive: true });
 
         createLandingParticles();
 
-        // Double-tap to zoom for Chart and Heatmap
         const seasonChart = document.getElementById('seasonChart');
         if (seasonChart) {
             seasonChart.addEventListener('click', () => handleDoubleTap(seasonChart));
-            seasonChart.addEventListener('touchend', () => handleDoubleTap(seasonChart));
+            seasonChart.addEventListener('touchend', () => handleDoubleTap(seasonChart), { passive: true });
         }
         
         const heatmapGrid = document.getElementById('heatmapGrid');
         if (heatmapGrid) {
             heatmapGrid.addEventListener('click', () => handleDoubleTap(heatmapGrid));
-            heatmapGrid.addEventListener('touchend', () => handleDoubleTap(heatmapGrid));
+            heatmapGrid.addEventListener('touchend', () => handleDoubleTap(heatmapGrid), { passive: true });
         }
 
-        // Initialize Pull-to-Refresh
         initPullToRefresh();
 
-        // Service Worker
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
                     .then(reg => {
                         console.log('✅ SW registered:', reg.scope);
-                        setInterval(() => {
-                            reg.update();
-                        }, 2 * 60 * 1000);
+                        setInterval(() => { reg.update(); }, 2 * 60 * 1000);
                         reg.addEventListener('updatefound', () => {
                             const newWorker = reg.installing;
                             newWorker.addEventListener('statechange', () => {
@@ -1616,7 +1548,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         console.log('🎉 Application ready!');
-        
         setTimeout(() => { 
             if (loadingOverlay) { 
                 loadingOverlay.classList.add('hidden'); 

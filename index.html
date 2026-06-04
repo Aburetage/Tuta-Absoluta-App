@@ -153,20 +153,20 @@
     <!-- Top Navigation -->
     <nav class="top-nav" id="topNav" role="navigation" aria-label="التنقل الرئيسي">
         <div class="nav-right">
-            <button class="nav-btn nav-menu-btn" id="navMenuBtn" onclick="toggleDropdown()" title="فتح قائمة الأقسام" aria-label="فتح قائمة الأقسام" aria-expanded="false"><i class="fas fa-bars-staggered" aria-hidden="true"></i></button>
+            <button class="nav-btn nav-menu-btn" id="navMenuBtn" onclick="toggleDropdown()" title="فتح قائمة الأقسام" aria-label="فتح قائمة الأقسام" aria-expanded="false" tabindex="0"><i class="fas fa-bars-staggered" aria-hidden="true"></i></button>
         </div>
         <div class="nav-center">
             <span class="academy-name" id="academyName">أَكَادِيمِيَّةُ الْمُهَنْدِسِ الزِّرَاعِيِّ</span>
             <span class="current-group-label" id="currentGroupLabel"></span>
         </div>
         <div class="nav-left">
-            <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn whatsapp-btn" title="تواصل واتساب" aria-label="واتساب">
+            <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn whatsapp-btn" title="تواصل واتساب" aria-label="واتساب" tabindex="0">
                 <i class="fab fa-whatsapp" aria-hidden="true"></i>
             </a>
-            <a href="mailto:aliazmy30@gmail.com" class="nav-btn contact-btn email-btn" title="راسلنا بالإيميل" aria-label="البريد الإلكتروني">
+            <a href="mailto:aliazmy30@gmail.com" class="nav-btn contact-btn email-btn" title="راسلنا بالإيميل" aria-label="البريد الإلكتروني" tabindex="0">
                 <i class="fas fa-envelope" aria-hidden="true"></i>
             </a>
-            <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn twitter-btn" title="تابعنا على X" aria-label="تويتر">
+            <a href="https://x.com/abu_retage0" target="_blank" rel="noopener noreferrer" class="nav-btn contact-btn twitter-btn" title="تابعنا على X" aria-label="تويتر" tabindex="0">
                 <i class="fab fa-x-twitter" aria-hidden="true"></i>
             </a>
         </div>
@@ -260,7 +260,7 @@
     <div class="menu-overlay" id="menuOverlay" onclick="toggleDropdown()" aria-hidden="true"></div>
 
     <!-- PWA Install Button -->
-    <button id="installBtn" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999;padding:12px 20px;background:var(--plan-accent);color:#000;border:none;border-radius:50px;font-family:Cairo;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-size:0.9rem;" onclick="installPWA()" aria-label="تثبيت التطبيق">
+    <button id="installBtn" style="display:none;position:fixed;bottom:20px;right:20px;z-index:999;padding:12px 20px;background:var(--plan-accent);color:#000;border:none;border-radius:50px;font-family:Cairo;font-weight:700;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);font-size:0.9rem;" onclick="installPWA()" aria-label="تثبيت التطبيق" tabindex="0">
         <i class="fas fa-download" aria-hidden="true"></i> تثبيت التطبيق
     </button>
 
@@ -284,7 +284,7 @@
                 <div class="temp-top"><div><div class="temp-display"><span class="temp-value" id="tempVal">25</span><span class="temp-unit">°م</span></div><div style="font-size:.8rem;color:var(--text2);margin-top:.2rem" id="tempDesc">منطقة مثالية – دورة سريعة</div></div><span class="temp-zone" id="tempZone" style="background:rgba(46,204,113,.12);color:var(--plan-accent2)">مثالي</span></div>
                 <div class="temp-slider-wrap">
                     <label for="tempSlider" class="sr-only">اختر درجة الحرارة</label>
-                    <input type="range" min="7" max="42" value="25" step="1" class="temp-slider" id="tempSlider" aria-label="اختر درجة الحرارة" aria-valuemin="7" aria-valuemax="42" aria-valuenow="25">
+                    <input type="range" min="7" max="42" value="25" step="1" class="temp-slider" id="tempSlider" aria-label="اختر درجة الحرارة" aria-valuemin="7" aria-valuemax="42" aria-valuenow="25" tabindex="0">
                     <div class="temp-marks"><span>7°م</span><span>14°م</span><span>21°م</span><span>28°م</span><span>35°م</span><span>42°م</span></div>
                 </div>
                 <div class="formula-box"><div class="formula">D = K ÷ (T − T₀)</div><div class="formula-desc"><span>D</span> = مدة الطور (يوم) | <span>K</span> = الثابت الحراري | <span>T</span> = الحرارة اليومية | <span>T₀</span> = 8°م</div></div>
@@ -302,17 +302,21 @@
         <section class="section" id="lifecycle" data-group="biology" role="region" aria-labelledby="lifecycle-title">
             <div class="section-header reveal"><div class="section-badge"><i class="fas fa-sync-alt" aria-hidden="true"></i> دورة الحياة التفصيلية</div><h2 id="lifecycle-title">مراحل دورة الحياة بالتفصيل</h2><p>اضغط على أي مرحلة لعرض التفاصيل — الأيام تتحدث تلقائياً حسب الحرارة</p></div>
             <div class="sg reveal" id="sGrid" role="list" aria-label="مراحل دورة الحياة"></div>
-            <div class="dp" id="detP"><div class="dinn" id="detI"></div><button class="close-detail-btn" onclick="selS(-1)" aria-label="إغلاق التفاصيل">✕</button></div>
-            <div class="nr reveal"><button class="nbtn c" id="prevS" aria-label="المرحلة السابقة"><i class="fas fa-chevron-right" aria-hidden="true"></i></button><button class="nbtn" id="autoBtn" aria-label="تشغيل تلقائي"><i class="fas fa-play" aria-hidden="true"></i><span>تشغيل تلقائي</span></button><button class="nbtn c" id="nextS" aria-label="المرحلة التالية"><i class="fas fa-chevron-left" aria-hidden="true"></i></button></div>
+            <div class="dp" id="detP"><div class="dinn" id="detI"></div><button class="close-detail-btn" onclick="selS(-1)" aria-label="إغلاق التفاصيل" tabindex="0">✕</button></div>
+            <div class="nr reveal">
+                <button class="nbtn c" id="prevS" aria-label="المرحلة السابقة" tabindex="0"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                <button class="nbtn" id="autoBtn" aria-label="تشغيل تلقائي" tabindex="0"><i class="fas fa-play" aria-hidden="true"></i><span>تشغيل تلقائي</span></button>
+                <button class="nbtn c" id="nextS" aria-label="المرحلة التالية" tabindex="0"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+            </div>
         </section>
 
         <!-- Spread Reasons -->
         <section class="section" id="spread" data-group="spread-economic" role="region" aria-labelledby="spread-title">
             <div class="section-header reveal"><div class="section-badge"><i class="fas fa-chart-pie" aria-hidden="true"></i> تحليل الانتشار</div><h2 id="spread-title">أسباب انتشار توتا أبسولوتا في مصر</h2><p>اختر نوع العامل لعرض البطاقات ذات الصلة</p></div>
             <div class="filter-bar reveal" role="toolbar" aria-label="فلترة أسباب الانتشار">
-                <button class="filter-btn active" onclick="filterBioCards('env', 'spreadAccordion', this)" aria-pressed="true">🌍 بيئي وزراعي</button>
-                <button class="filter-btn" onclick="filterBioCards('human', 'spreadAccordion', this)" aria-pressed="false">🚛 بشري وتجاري</button>
-                <button class="filter-btn" onclick="filterBioCards('bio', 'spreadAccordion', this)" aria-pressed="false">🐛 حيوي وسلوكي</button>
+                <button class="filter-btn active" onclick="filterBioCards('env', 'spreadAccordion', this)" aria-pressed="true" tabindex="0">🌍 بيئي وزراعي</button>
+                <button class="filter-btn" onclick="filterBioCards('human', 'spreadAccordion', this)" aria-pressed="false" tabindex="0">🚛 بشري وتجاري</button>
+                <button class="filter-btn" onclick="filterBioCards('bio', 'spreadAccordion', this)" aria-pressed="false" tabindex="0">🐛 حيوي وسلوكي</button>
             </div>
             <div class="bio-agent-grid reveal" id="spreadAccordion" role="list"></div>
         </section>
@@ -322,9 +326,9 @@
             <div class="section-header reveal"><div class="section-badge"><i class="fas fa-coins" aria-hidden="true"></i> التأثيرات الاقتصادية</div><h2 id="economic-title">التأثيرات الاقتصادية على إنتاج الطماطم في مصر</h2><p>اختر نوع الخسارة لعرض البطاقات ذات الصلة</p></div>
             <div class="econ-stats reveal" id="econStats" role="list" aria-label="إحصائيات اقتصادية"></div>
             <div class="filter-bar reveal" role="toolbar" aria-label="فلترة التأثيرات الاقتصادية">
-                <button class="filter-btn active" onclick="filterBioCards('direct', 'econAccordion', this)" aria-pressed="true">📉 خسائر مباشرة</button>
-                <button class="filter-btn" onclick="filterBioCards('indirect', 'econAccordion', this)" aria-pressed="false">💸 خسائر غير مباشرة</button>
-                <button class="filter-btn" onclick="filterBioCards('macro', 'econAccordion', this)" aria-pressed="false"> تأثير كلي</button>
+                <button class="filter-btn active" onclick="filterBioCards('direct', 'econAccordion', this)" aria-pressed="true" tabindex="0">📉 خسائر مباشرة</button>
+                <button class="filter-btn" onclick="filterBioCards('indirect', 'econAccordion', this)" aria-pressed="false" tabindex="0">💸 خسائر غير مباشرة</button>
+                <button class="filter-btn" onclick="filterBioCards('macro', 'econAccordion', this)" aria-pressed="false" tabindex="0"> تأثير كلي</button>
             </div>
             <div class="bio-agent-grid reveal" id="econAccordion" role="list"></div>
         </section>
@@ -339,19 +343,44 @@
         <section class="section" id="heatmap" data-group="seasonal-heatmap" role="region" aria-labelledby="heatmap-title">
             <div class="section-header reveal"><div class="section-badge"><i class="fas fa-th" aria-hidden="true"></i> الخريطة الحرارية</div><h2 id="heatmap-title">الخريطة الحرارية لنشاط الآفة</h2><p>توزيع مستوى الخطورة والنشاط عبر أشهر السنة المصرية</p></div>
             <div class="reveal">
-                <div><div class="heatmap-grid" id="heatmapGrid" role="grid" aria-label="الخريطة الحرارية"></div><div class="heatmap-labels" id="heatmapLabels" aria-hidden="true"></div><div class="chart-legend" style="margin-top:1rem" role="list" aria-label="مفتاح الخريطة الحرارية"><span><span class="legend-dot" style="background:rgba(100,180,200,.4)"></span> منخفض</span><span><span class="legend-dot" style="background:rgba(200,180,70,.5)"></span> متوسط</span><span><span class="legend-dot" style="background:rgba(46,204,113,.6)"></span> عالي</span><span><span class="legend-dot" style="background:rgba(231,76,60,.7)"></span> شديد</span></div></div>
+                <div class="heatmap-wrapper">
+                    <div class="heatmap-grid" id="heatmapGrid" role="grid" aria-label="الخريطة الحرارية"></div>
+                    <div class="heatmap-labels" id="heatmapLabels" aria-hidden="true"></div>
+                </div>
+                <div class="chart-legend" style="margin-top:1rem" role="list" aria-label="مفتاح الخريطة الحرارية">
+                    <span><span class="legend-dot" style="background:rgba(100,180,200,.4)"></span> منخفض</span>
+                    <span><span class="legend-dot" style="background:rgba(200,180,70,.5)"></span> متوسط</span>
+                    <span><span class="legend-dot" style="background:rgba(46,204,113,.6)"></span> عالي</span>
+                    <span><span class="legend-dot" style="background:rgba(231,76,60,.7)"></span> شديد</span>
+                </div>
             </div>
         </section>
 
         <!-- Calendar -->
         <section class="section" id="calendar" data-group="calendar" role="region" aria-labelledby="calendar-title">
             <div class="section-header reveal"><div class="section-badge"><i class="fas fa-calendar-check" aria-hidden="true"></i> تقويم المكافحة</div><h2 id="calendar-title">التقويم الزراعي لمكافحة توتا أبسولوتا في مصر</h2><p>بيانات مناخية دقيقة ونشاط شهري للآفة مع توصيات المكافحة المتكاملة</p></div>
-            <div class="filter-bar reveal" role="toolbar" aria-label="فلترة التقويم حسب الموسم"><button class="filter-btn active" onclick="filterSeason('all', this)" aria-pressed="true">📅 الكل</button><button class="filter-btn" onclick="filterSeason('spring', this)" aria-pressed="false"> الربيع</button><button class="filter-btn" onclick="filterSeason('summer', this)" aria-pressed="false">☀️ الصيف</button><button class="filter-btn" onclick="filterSeason('autumn', this)" aria-pressed="false">🍂 الخريف</button><button class="filter-btn" onclick="filterSeason('winter', this)" aria-pressed="false">❄️ الشتاء</button></div>
+            <div class="filter-bar reveal" role="toolbar" aria-label="فلترة التقويم حسب الموسم">
+                <button class="filter-btn active" onclick="filterSeason('all', this)" aria-pressed="true" tabindex="0">📅 الكل</button>
+                <button class="filter-btn" onclick="filterSeason('spring', this)" aria-pressed="false" tabindex="0"> الربيع</button>
+                <button class="filter-btn" onclick="filterSeason('summer', this)" aria-pressed="false" tabindex="0">☀️ الصيف</button>
+                <button class="filter-btn" onclick="filterSeason('autumn', this)" aria-pressed="false" tabindex="0">🍂 الخريف</button>
+                <button class="filter-btn" onclick="filterSeason('winter', this)" aria-pressed="false" tabindex="0">❄️ الشتاء</button>
+            </div>
             <div class="table-wrapper reveal"><table id="calendarTable" role="table" aria-label="تقويم المكافحة الشهري"><thead><tr><th>العنصر</th><th data-month="0">يناير</th><th data-month="1">فبراير</th><th data-month="2">مارس</th><th data-month="3">أبريل</th><th data-month="4">مايو</th><th data-month="5">يونيو</th><th data-month="6">يوليو</th><th data-month="7">أغسطس</th><th data-month="8">سبتمبر</th><th data-month="9">أكتوبر</th><th data-month="10">نوفمبر</th><th data-month="11">ديسمبر</th></tr></thead><tbody></tbody></table></div>
             <div class="plan-cards-section reveal">
                 <h2 class="plan-cards-title">🗓️ خطة العمل الشهرية لمكافحة توتا أبسولوتا</h2>
                 <p class="plan-cards-subtitle">خطة سنوية متكاملة مصممة خصيصاً للظروف المناخية والزراعية في مصر</p>
-                <div class="plan-layout"><div class="plan-filter-col" id="planFilterCol" role="toolbar" aria-label="فلترة خطة العمل"><button class="filter-btn active" onclick="showPlanCard('jan-feb', this)" aria-pressed="true">يناير – فبراير</button><button class="filter-btn" onclick="showPlanCard('mar-apr', this)" aria-pressed="false">مارس – أبريل</button><button class="filter-btn" onclick="showPlanCard('may-jun', this)" aria-pressed="false">مايو – يونيو</button><button class="filter-btn" onclick="showPlanCard('jul-aug', this)" aria-pressed="false">يوليو – أغسطس</button><button class="filter-btn" onclick="showPlanCard('sep-oct', this)" aria-pressed="false">سبتمبر – أكتوبر</button><button class="filter-btn" onclick="showPlanCard('nov-dec', this)" aria-pressed="false">نوفمبر – ديسمبر</button></div><div class="plan-card-wrapper" id="planCardWrapper" role="region" aria-label="تفاصيل خطة العمل"></div></div>
+                <div class="plan-layout">
+                    <div class="plan-filter-col" id="planFilterCol" role="toolbar" aria-label="فلترة خطة العمل">
+                        <button class="filter-btn active" onclick="showPlanCard('jan-feb', this)" aria-pressed="true" tabindex="0">يناير – فبراير</button>
+                        <button class="filter-btn" onclick="showPlanCard('mar-apr', this)" aria-pressed="false" tabindex="0">مارس – أبريل</button>
+                        <button class="filter-btn" onclick="showPlanCard('may-jun', this)" aria-pressed="false" tabindex="0">مايو – يونيو</button>
+                        <button class="filter-btn" onclick="showPlanCard('jul-aug', this)" aria-pressed="false" tabindex="0">يوليو – أغسطس</button>
+                        <button class="filter-btn" onclick="showPlanCard('sep-oct', this)" aria-pressed="false" tabindex="0">سبتمبر – أكتوبر</button>
+                        <button class="filter-btn" onclick="showPlanCard('nov-dec', this)" aria-pressed="false" tabindex="0">نوفمبر – ديسمبر</button>
+                    </div>
+                    <div class="plan-card-wrapper" id="planCardWrapper" role="region" aria-label="تفاصيل خطة العمل"></div>
+                </div>
             </div>
         </section>
 
