@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Updated v2)
-// التعديلات: إزالة "الكل"، ترتيب FAQ، شريط التقدم، التباين العالي، تحسين الحركات
+// Tuta Absoluta App - Script.js (Phase 2 Updated)
+// الميزات الجديدة: Web Worker, Double-tap Zoom, Dynamic Color Scheme
 // ============================================
 
 // ============================================
@@ -17,6 +17,19 @@ let calendarDataObj = {};
 let planCardsData = [];
 let sourcesData = [];
 let bioAgentsData = [];
+
+// Web Worker Initialization
+let thermalWorker = null;
+try {
+    thermalWorker = new Worker('js/worker.js');
+    thermalWorker.onmessage = function(e) {
+        if (e.data.type === 'CALCULATION_RESULT') {
+            applyThermalResult(e.data.payload);
+        }
+    };
+} catch (err) {
+    console.warn('[Worker] Web Worker not supported or failed to load. Falling back to main thread.');
+}
 
 // ============================================
 // Performance Utilities
@@ -48,7 +61,7 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// Group Mapping (تم تحديث الترتيب: resistance ثم faq ثم sources)
+// Group Mapping
 // ============================================
 
 const groupMap = {
@@ -78,10 +91,10 @@ const groupNames = {
 const groupOrder = ['biology', 'spread-economic', 'seasonal-heatmap', 'calendar', 'ipm', 'bioagents', 'resistance', 'faq', 'sources'];
 
 // ============================================
-// Thermal Calculation Functions
+// Thermal Calculation Functions (Main Thread Fallback & Worker Trigger)
 // ============================================
 
-function calcDays(T) {
+function calcDaysSync(T) {
     if (T <= T0 || T >= TH) return { egg: -1, larva: -1, pupa: -1, adult: -1, dev: -1, gen: -1 };
     const dE = K.egg / (T - T0);
     const dL = K.larva / (T - T0);
@@ -90,6 +103,41 @@ function calcDays(T) {
     const dev = Math.round((dE + dL + dP) * 10) / 10;
     const gen = Math.round((dE + dL + dP + dA) * 10) / 10;
     return { egg: Math.round(dE * 10) / 10, larva: Math.round(dL * 10) / 10, pupa: Math.round(dP * 10) / 10, adult: Math.round(dA * 10) / 10, dev, gen };
+}
+
+function requestThermalCalculation(T) {
+    if (thermalWorker) {
+        thermalWorker.postMessage({
+            type: 'CALCULATE_DAYS',
+            payload: { T, T0, TH, K }
+        });
+    } else {
+        applyThermalResult(calcDaysSync(T));
+    }
+}
+
+function applyThermalResult(d) {
+    const z = getZone(curTemp);
+    const tc = tClr(curTemp);
+    
+    document.getElementById('tempVal').textContent = curTemp;
+    document.getElementById('tempVal').style.color = tc;
+    document.getElementById('tempDesc').textContent = z.l;
+    
+    const zb = document.getElementById('tempZone');
+    zb.textContent = z.z;
+    zb.style.background = z.c + '20';
+    zb.style.color = z.c;
+    
+    updTempGrid(d);
+    updDaysBars(d);
+    drawChart();
+    buildHeatmap();
+    if (curStage >= 0) updDet();
+    updSD(d);
+    
+    // Dynamic Color Scheme based on risk level
+    updateDynamicTheme(z.z);
 }
 
 function getZone(T) {
@@ -121,26 +169,28 @@ function hmClr(v) {
 }
 
 // ============================================
+// Dynamic Color Scheme (New Feature)
+// ============================================
+function updateDynamicTheme(riskLevel) {
+    const root = document.documentElement;
+    if (riskLevel === 'خطر' || riskLevel === 'مميت') {
+        root.style.setProperty('--plan-accent', '#e74c3c');
+        root.style.setProperty('--plan-accent2', '#ff5252');
+    } else if (riskLevel === 'إجهاد' || riskLevel === 'إجهاد شديد') {
+        root.style.setProperty('--plan-accent', '#f39c12');
+        root.style.setProperty('--plan-accent2', '#f1c40f');
+    } else {
+        root.style.setProperty('--plan-accent', '#27ae60');
+        root.style.setProperty('--plan-accent2', '#2ecc71');
+    }
+}
+
+// ============================================
 // Update Functions
 // ============================================
 
 function updAll() {
-    const d = calcDays(curTemp);
-    const z = getZone(curTemp);
-    const tc = tClr(curTemp);
-    document.getElementById('tempVal').textContent = curTemp;
-    document.getElementById('tempVal').style.color = tc;
-    document.getElementById('tempDesc').textContent = z.l;
-    const zb = document.getElementById('tempZone');
-    zb.textContent = z.z;
-    zb.style.background = z.c + '20';
-    zb.style.color = z.c;
-    updTempGrid(d);
-    updDaysBars(d);
-    drawChart();
-    buildHeatmap();
-    if (curStage >= 0) updDet();
-    updSD(d);
+    requestThermalCalculation(curTemp);
 }
 
 function updTempGrid(d) {
@@ -193,7 +243,7 @@ function drawChart() {
     ctx.clearRect(0, 0, W, H);
     
     const data = egyptMonthsData.map(em => { 
-        const d = calcDays(em.temp); 
+        const d = calcDaysSync(em.temp); 
         return { m: em.month, t: em.temp, days: d.dev, gen: d.dev > 0 ? Math.floor(30 / d.dev) : 0 }; 
     });
     
@@ -304,7 +354,7 @@ function buildHeatmap() {
     const labelFragment = document.createDocumentFragment();
     
     egyptMonthsData.forEach(em => {
-        const d = calcDays(em.temp);
+        const d = calcDaysSync(em.temp);
         let act = d.dev <= 0 ? 0 : d.dev <= 25 ? 90 + (25 - d.dev) * 2 : d.dev <= 35 ? 70 + (35 - d.dev) * 2 : d.dev <= 50 ? 45 + (50 - d.dev) * 1.5 : 20 + (75 - d.dev) * .5;
         act = Math.max(0, Math.min(100, act));
         
@@ -332,7 +382,7 @@ function buildHeatmap() {
 
 function buildStages() {
     const g = document.getElementById('sGrid');
-    const d = calcDays(curTemp);
+    const d = calcDaysSync(curTemp);
     g.innerHTML = '';
     
     const fragment = document.createDocumentFragment();
@@ -380,7 +430,7 @@ function updSU() {
 
 function updDet() {
     if (curStage < 0) return;
-    const s = stagesData[curStage], d = calcDays(curTemp), v = d[s.id];
+    const s = stagesData[curStage], d = calcDaysSync(curTemp), v = d[s.id];
     document.getElementById('detI').innerHTML = `<div class="dvis" style="background:linear-gradient(135deg,${s.color}05,${s.color}10)"><div class="dvico" style="background:${s.color}15;color:${s.color}"><span style="font-size:3.5rem">${s.icon}</span><div class="dvr" style="border-color:${s.color}"></div></div><div style="font-family:Cairo;font-weight:900;font-size:1.2rem;margin-top:.5rem">${s.name}</div><div style="font-size:2.2rem;font-weight:900;color:${s.color};font-family:Cairo">${v < 0 ? 'لا تطور' : v + ' يوم'}</div><div style="font-size:.78rem;color:#9a8e82">عند متوسط يومي ${curTemp}°م</div></div><div class="dinf"><h3 style="color:${s.color}">${s.title}</h3><div class="dbdg" style="background:${s.color}10;color:${s.color}"><i class="fas fa-hourglass-half" aria-hidden="true"></i>${v < 0 ? 'لا تطور' : v + ' يوم'} عند ${curTemp}°م</div><p>${s.description}</p><ul class="fl">${s.features.map(f => `<li><i class="fas fa-circle" style="color:${s.color}" aria-hidden="true"></i><span>${f}</span></li>`).join('')}</ul></div>`;
 }
 
@@ -464,7 +514,7 @@ function populateTable() {
             } else if (row.type === 'soil') {
                 let emoji = '⛔', bg = '#2d3748', color = '#a0aec0';
                 if (val.includes('تعقيم شمسي')) { emoji = '🌟'; bg = '#166534'; color = '#bbf7d0'; } 
-                else if (val.includes('حرث')) { emoji = ''; bg = '#14532d'; color = '#86efac'; }
+                else if (val.includes('حرث')) { emoji = '🚜'; bg = '#14532d'; color = '#86efac'; }
                 td.innerHTML = `<span class="control-badge" style="background:${bg};color:${color};">${emoji} ${val}</span>`;
             }
             tr.appendChild(td);
@@ -1013,7 +1063,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia (تم تحديثها لإزالة "الكل")
+// Bio Agents Encyclopedia
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -1026,11 +1076,11 @@ const badgeMap = {
     'preventive-curative': { text: '🛡️💊 وقائي وعلاجي', class: 'badge-green' },
     'heat-tolerant': { text: '🌡️ متحمل للحرارة', class: 'badge-green' },
     'egypt-native': { text: '🇪🇬 متوطن في مصر', class: 'badge-purple' },
-    'pesticide-sensitive': { text: '️ حساس للمبيدات', class: 'badge-red' },
+    'pesticide-sensitive': { text: '⚠️ حساس للمبيدات', class: 'badge-red' },
     'bio-safe': { text: '✅ آمن مع المبيدات الحيوية', class: 'badge-green' },
     'needs-humidity': { text: '💧 يحتاج رطوبة', class: 'badge-amber' },
     'needs-high-humidity': { text: '💧 يحتاج رطوبة عالية', class: 'badge-red' },
-    'medium-heat': { text: '️ تحمل حراري متوسط', class: 'badge-amber' },
+    'medium-heat': { text: '🌡️ تحمل حراري متوسط', class: 'badge-amber' },
     'good-heat': { text: '🌡️ تحمل حراري جيد', class: 'badge-green' },
     'sun-sensitive': { text: '☀️ حساس للشمس', class: 'badge-red' },
     'uv-sensitive': { text: '⚠️ حساس للأشعة فوق البنفسجية', class: 'badge-red' }
@@ -1041,7 +1091,6 @@ const toleranceText = { excellent: 'ممتاز', good: 'جيد', medium: 'متو
 const compatText = { excellent: 'ممتاز', good: 'جيد', medium: 'متوسط', poor: 'ضعيف' };
 const toxicityText = { high: 'شديد السمية', medium: 'متوسط', safe: 'آمن' };
 
-// تم إزالة 'all' من هنا
 const categoryMap = {
     'egg-parasitoid': { name: '🐝 طفيلات البيض' },
     'larval-parasitoid': { name: '🐝 طفيلات اليرقات' },
@@ -1083,7 +1132,6 @@ function renderBioCategoryFilter() {
     
     categories.forEach((key, index) => {
         const btn = document.createElement('button');
-        // جعل الفئة الأولى نشطة افتراضياً بدلاً من "الكل"
         btn.className = `bio-filter-btn ${index === 0 ? 'active' : ''}`;
         btn.setAttribute('aria-pressed', index === 0 ? 'true' : 'false');
         btn.textContent = categoryMap[key].name;
@@ -1093,7 +1141,6 @@ function renderBioCategoryFilter() {
     
     fc.appendChild(fragment);
     
-    // تحميل الفئة الأولى افتراضياً
     if (categories.length > 0) {
         renderBioCards(categories[0]);
     }
@@ -1166,15 +1213,15 @@ function renderBioModals() {
                 <div class="modal-body-content">
                     <h4>🔬 التصنيف العلمي</h4>
                     <table class="info-table"><tr><td>الرتبة</td><td>${agent.classification.order}</td></tr><tr><td>الفصيلة</td><td>${agent.classification.family}</td></tr><tr><td>الجنس</td><td>${agent.classification.genus}</td></tr><tr><td>النوع</td><td><strong>${agent.classification.species}</strong></td></tr></table>
-                    <h4> النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
+                    <h4>🧬 النوع الحيوي وطريقة العمل</h4><p>${agent.bioType}</p>
                     <h4>👁️ الوصف المورفولوجي</h4>
                     <table class="info-table"><tr><td>الحشرة الكاملة</td><td>${agent.morphology.adult}</td></tr><tr><td>البيضة</td><td>${agent.morphology.egg}</td></tr><tr><td>اليرقة</td><td>${agent.morphology.larva}</td></tr><tr><td>العذراء</td><td>${agent.morphology.pupa}</td></tr></table>
                     <h4>📊 الأهمية في المكافحة</h4>
                     <div class="importance-grid">
-                        <div class="importance-item ${agent.importance.egg}"><span> مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
+                        <div class="importance-item ${agent.importance.egg}"><span>🥚 مكافحة البيض</span><span class="importance-level ${agent.importance.egg}">${importanceText[agent.importance.egg]}</span></div>
                         <div class="importance-item ${agent.importance.larvae}"><span>🐛 مكافحة اليرقات</span><span class="importance-level ${agent.importance.larvae}">${importanceText[agent.importance.larvae]}</span></div>
                         <div class="importance-item ${agent.importance.pupae}"><span>🫘 مكافحة العذارى</span><span class="importance-level ${agent.importance.pupae}">${importanceText[agent.importance.pupae]}</span></div>
-                        <div class="importance-item ${agent.importance.adult}"><span> مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
+                        <div class="importance-item ${agent.importance.adult}"><span>🦋 مكافحة الكاملة</span><span class="importance-level ${agent.importance.adult}">${importanceText[agent.importance.adult]}</span></div>
                     </div>
                 </div>
             </div>`;
@@ -1193,11 +1240,11 @@ function renderBioModals() {
         const usage = `
             <div class="tab-content" id="tab-${agent.id}-usage" role="tabpanel">
                 <div class="modal-body-content">
-                    <h4>️ الظروف المثالية</h4>
+                    <h4>⚙️ الظروف المثالية</h4>
                     <div class="conditions-grid">
                         <div class="condition-item"><div class="cond-label">🌡️ الحرارة</div><div class="cond-value">${agent.conditions.temp}</div></div>
                         <div class="condition-item"><div class="cond-label">💧 الرطوبة</div><div class="cond-value">${agent.conditions.humidity}</div></div>
-                        <div class="condition-item"><div class="cond-label">️ الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
+                        <div class="condition-item"><div class="cond-label">💡 الإضاءة</div><div class="cond-value">${agent.conditions.light}</div></div>
                         <div class="condition-item"><div class="cond-label">🌬️ الرياح</div><div class="cond-value">${agent.conditions.wind}</div></div>
                     </div>
                     <h4>🗺️ التحمل في الظروف المصرية</h4>
@@ -1208,7 +1255,7 @@ function renderBioModals() {
                         <div class="condition-item"><div class="cond-label">العروة النيلية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.nile]}</div></div>
                         <div class="condition-item"><div class="cond-label">البيوت المحمية</div><div class="cond-value">${toleranceText[agent.egyptTolerance.greenhouse]}</div></div>
                     </div>
-                    <h4>🇬 التواجد الحالي في مصر</h4>
+                    <h4>🇪🇬 التواجد الحالي في مصر</h4>
                     <table class="info-table"><tr><td>التواجد الطبيعي</td><td>${agent.egyptPresence.natural}</td></tr><tr><td>الاستخدام التجاري</td><td>${agent.egyptPresence.commercial}</td></tr><tr><td>الاستخدام البحثي</td><td>${agent.egyptPresence.research}</td></tr></table>
                     ${agent.plants.length > 0 ? `<h4>🌱 النباتات الداعمة</h4><div class="support-plants">${agent.plants.map(p => `<span class="plant-tag">${p}</span>`).join('')}</div>` : ''}
                 </div>
@@ -1326,7 +1373,7 @@ document.addEventListener('mousedown', () => {
 });
 
 // ============================================
-// New Features: High Contrast & Progress Bar
+// New Features: High Contrast, Progress Bar, Double-Tap Zoom
 // ============================================
 
 function toggleContrast() {
@@ -1376,6 +1423,17 @@ function updateProgressBar() {
     }
 }
 
+// Double-Tap to Zoom Logic
+let lastTap = 0;
+function handleDoubleTap(element) {
+    const currentTime = new Date().getTime();
+    const tapLength = currentTime - lastTap;
+    if (tapLength < 300 && tapLength > 0) {
+        element.classList.toggle('zoomed');
+    }
+    lastTap = currentTime;
+}
+
 // ============================================
 // Main Initialization
 // ============================================
@@ -1386,9 +1444,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const loadingOverlay = document.getElementById('loadingOverlay');
     
     try {
-        // تحميل تفضيل التباين العالي
         loadContrastPreference();
-        
         await loadAllData();
         console.log('✅ Data loaded successfully');
 
@@ -1438,7 +1494,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         updAll();
         console.log('✅ UI components built');
 
-        // تم تحديث هذا الجزء ليعمل بدون "الكل"
         renderBioCategoryFilter();
         renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
@@ -1458,11 +1513,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
         window.addEventListener('resize', debouncedDrawChart);
-        
-        // مستمع شريط التقدم
         window.addEventListener('scroll', updateProgressBar);
 
         createLandingParticles();
+
+        // Double-tap to zoom for Chart and Heatmap
+        const seasonChart = document.getElementById('seasonChart');
+        if (seasonChart) {
+            seasonChart.addEventListener('click', () => handleDoubleTap(seasonChart));
+            seasonChart.addEventListener('touchend', () => handleDoubleTap(seasonChart));
+        }
+        
+        const heatmapGrid = document.getElementById('heatmapGrid');
+        if (heatmapGrid) {
+            heatmapGrid.addEventListener('click', () => handleDoubleTap(heatmapGrid));
+            heatmapGrid.addEventListener('touchend', () => handleDoubleTap(heatmapGrid));
+        }
 
         // Service Worker
         if ('serviceWorker' in navigator) { 
@@ -1505,7 +1571,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 800);
         
     } catch (error) {
-        console.error(' Error initializing application:', error);
+        console.error('❌ Error initializing application:', error);
         if (loadingOverlay) { 
             loadingOverlay.classList.add('hidden'); 
             setTimeout(() => loadingOverlay.style.display = 'none', 500); 

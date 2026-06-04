@@ -1,27 +1,24 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v4
+// Service Worker - Tuta Absoluta App v4 (Smart Caching)
+// استراتيجية تخزين ذكية: Network First للبيانات، Stale-While-Revalidate للأكواد، Cache First للأصول
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v3';  // ← زود الرقم هنا كل ما تعدل
+const CACHE_NAME = 'tuta-app-v4'; // تم تحديث الإصدار لضمان تحميل الملفات الجديدة
 
-// الملفات الأساسية التي يجب تخزينها
+// الملفات الأساسية التي يجب تخزينها فوراً
 const PRECACHE_URLS = [
   './',
   './index.html',
   './style.css',
   './script.js',
-  './admin.html',
   './manifest.json',
   './robots.txt',
-  './sitemap.xml'
+  './sitemap.xml',
+  './js/data-loader.js',
+  './js/worker.js' // إضافة Web Worker الجديد
 ];
 
-// ملفات JavaScript
-const JS_FILES = [
-  './js/data-loader.js'
-];
-
-// ملفات البيانات
+// ملفات البيانات (JSON)
 const DATA_FILES = [
   './data/faq.json',
   './data/sources.json',
@@ -35,18 +32,18 @@ const DATA_FILES = [
   './data/resistance.json'
 ];
 
-// ملفات الأيقونات
+// ملفات الأيقونات والصور
 const ICON_FILES = [
+  './icons/icon-192.png',
+  './icons/icon-512.png',
   './icons/icon.svg',
   './icons/favicon-32x32.png',
   './icons/favicon-16x16.png',
   './icons/apple-touch-icon.png'
 ];
 
-// كل الملفات مع بعض
 const ALL_CACHE_URLS = [
   ...PRECACHE_URLS,
-  ...JS_FILES,
   ...DATA_FILES,
   ...ICON_FILES
 ];
@@ -54,7 +51,6 @@ const ALL_CACHE_URLS = [
 // ============================================
 // Install Event - تثبيت Service Worker
 // ============================================
-
 self.addEventListener('install', event => {
   console.log('[SW] Installing new version:', CACHE_NAME);
   
@@ -66,25 +62,21 @@ self.addEventListener('install', event => {
       })
       .then(() => {
         console.log('[SW] All files cached successfully');
-        // تفعيل النسخة الجديدة فوراً بدون انتظار إغلاق الصفحات القديمة
-        return self.skipWaiting();
+        return self.skipWaiting(); // تفعيل النسخة الجديدة فوراً
       })
       .catch(err => {
         console.error('[SW] Failed to cache some files:', err);
-        // لا تمنع التثبيت حتى لو فشل بعض الملفات
       })
   );
 });
 
 // ============================================
-// Activate Event - تنشيط Service Worker
+// Activate Event - تنشيط Service Worker وتنظيف القديم
 // ============================================
-
 self.addEventListener('activate', event => {
   console.log('[SW] Activating new version:', CACHE_NAME);
   
   event.waitUntil(
-    // حذف كل الكاش القديم
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
@@ -97,54 +89,45 @@ self.addEventListener('activate', event => {
     })
     .then(() => {
       console.log('[SW] Old caches deleted');
-      // السيطرة على جميع الصفحات المفتوحة فوراً
-      return self.clients.claim();
+      return self.clients.claim(); // السيطرة على جميع الصفحات المفتوحة فوراً
     })
   );
 });
 
 // ============================================
-// Fetch Event - طلبات الشبكة
+// Fetch Event - طلبات الشبكة (الاستراتيجية الذكية)
 // ============================================
-
 self.addEventListener('fetch', event => {
   const { request } = event;
   
-  // تجاهل الطلبات غير GET
-  if (request.method !== 'GET') return;
+  // تجاهل الطلبات غير GET أو طلبات الامتدادات
+  if (request.method !== 'GET' || request.url.includes('chrome-extension')) return;
   
-  // تجاهل طلبات Chrome DevTools
-  if (request.url.includes('chrome-extension')) return;
-  
-  // استراتيجية مختلفة حسب نوع الملف
   const url = new URL(request.url);
   
-  // 1. ملفات البيانات - Network First (الشبكة أولاً)
+  // 1. ملفات البيانات (JSON) - Network First (الشبكة أولاً، ثم الكاش)
+  // يضمن دائماً الحصول على أحدث البيانات إذا كان هناك إنترنت
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request)
         .then(response => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(request, clone);
-            });
+            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
           }
           return response;
         })
         .catch(() => {
           return caches.match(request).then(cached => {
-            return cached || new Response('Offline', {
-              status: 503,
-              statusText: 'Service Unavailable'
-            });
+            return cached || new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
           });
         })
     );
     return;
   }
   
-  // 2. ملفات CSS و JS - Stale While Revalidate
+  // 2. ملفات JavaScript و CSS - Stale While Revalidate (الكاش فوراً، ثم التحديث في الخلفية)
+  // يضمن سرعة تحميل فورية مع الحصول على التحديثات في الزيارات التالية
   if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(
       caches.match(request).then(cached => {
@@ -152,9 +135,7 @@ self.addEventListener('fetch', event => {
           .then(response => {
             if (response.ok) {
               const clone = response.clone();
-              caches.open(CACHE_NAME).then(cache => {
-                cache.put(request, clone);
-              });
+              caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
             }
             return response;
           })
@@ -166,38 +147,47 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // 3. كل الملفات الأخرى - Cache First (الكاش أولاً)
+  // 3. الأيقونات والصور - Cache First (الكاش أولاً)
+  if (url.pathname.includes('/icons/') || request.destination === 'image') {
+    event.respondWith(
+      caches.match(request).then(cached => {
+        return cached || fetch(request).then(response => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
+          }
+          return response;
+        });
+      })
+    );
+    return;
+  }
+  
+  // 4. كل الملفات الأخرى (بما في ذلك HTML) - Cache First مع Fallback لصفحة Offline
   event.respondWith(
     caches.match(request).then(cached => {
-      if (cached) {
-        return cached;
-      }
+      if (cached) return cached;
+      
       return fetch(request).then(response => {
         if (response.ok) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(request, clone);
-          });
+          caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
         }
         return response;
       });
     }).catch(() => {
-      // صفحة Offline مخصصة
+      // إذا فشل كل شيء وكان الطلب صفحة HTML، أعد صفحة index.html المخزنة
       if (request.headers.get('accept').includes('text/html')) {
         return caches.match('./index.html');
       }
-      return new Response('Offline', {
-        status: 503,
-        statusText: 'Service Unavailable'
-      });
+      return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
     })
   );
 });
 
 // ============================================
-// Message Event - استقبال رسائل من الصفحة
+// Message Event - استقبال رسائل من الصفحة الرئيسية
 // ============================================
-
 self.addEventListener('message', event => {
   if (event.data === 'SKIP_WAITING') {
     self.skipWaiting();
@@ -205,23 +195,9 @@ self.addEventListener('message', event => {
   
   if (event.data === 'CLEAR_CACHE') {
     caches.keys().then(cacheNames => {
-      cacheNames.forEach(cacheName => {
-        caches.delete(cacheName);
-      });
+      cacheNames.forEach(cacheName => caches.delete(cacheName));
     });
   }
 });
 
-// ============================================
-// تحديث تلقائي كل ساعة
-// ============================================
-
-self.addEventListener('install', event => {
-  // افحص وجود تحديث كل ساعة
-  self.registration.addEventListener('updatefound', () => {
-    const newWorker = self.registration.installing;
-    console.log('[SW] Update found!');
-  });
-});
-
-console.log('[SW] Service Worker loaded successfully');
+console.log('[SW] Smart Service Worker loaded successfully');
