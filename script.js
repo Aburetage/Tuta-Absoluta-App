@@ -1,7 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Updated)
-// الميزات: Web Worker, Double-tap Zoom, Dynamic Color Scheme
-// (تم إزالة High Contrast Mode حسب الطلب)
+// Tuta Absoluta App - Script.js (Phase 3 Updated)
+// الميزات: Web Worker, Double-tap Zoom, Dynamic Colors, Pull-to-Refresh, Virtual Scrolling
 // ============================================
 
 // ============================================
@@ -62,7 +61,7 @@ function throttle(func, limit) {
 }
 
 // ============================================
-// Group Mapping
+// Group Mapping (بدون أزرار التنقل)
 // ============================================
 
 const groupMap = {
@@ -945,7 +944,6 @@ function showSingleSection(groupId, clickedItem) {
     }
     
     closeDropdown();
-    updateNavButtons();
     
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
@@ -965,7 +963,6 @@ function goHome() {
     document.querySelectorAll('.dropdown-item').forEach(l => l.classList.remove('active'));
     const label = document.getElementById('currentGroupLabel');
     if (label) label.classList.remove('visible');
-    updateNavButtons();
     closeDropdown();
     document.getElementById('landingOverlay').classList.remove('hidden');
 }
@@ -1001,41 +998,6 @@ function closeDropdown() {
 }
 
 // ============================================
-// Navigation Buttons
-// ============================================
-
-function navigateGroup(direction) {
-    if (!currentSingleGroup) {
-        if (direction === 1) showSingleSection(groupOrder[0], document.querySelector(`.dropdown-item[data-group="${groupOrder[0]}"]`));
-        else showSingleSection(groupOrder[groupOrder.length - 1], document.querySelector(`.dropdown-item[data-group="${groupOrder[groupOrder.length - 1]}"]`));
-        return;
-    }
-    const idx = groupOrder.indexOf(currentSingleGroup);
-    if (idx === -1) return;
-    let newIdx = idx + direction;
-    if (newIdx < 0) newIdx = 0;
-    if (newIdx >= groupOrder.length) newIdx = groupOrder.length - 1;
-    const newGroup = groupOrder[newIdx];
-    showSingleSection(newGroup, document.querySelector(`.dropdown-item[data-group="${newGroup}"]`));
-}
-
-function updateNavButtons() {
-    const prevBtn = document.getElementById('navPrevBtn');
-    const nextBtn = document.getElementById('navNextBtn');
-    if (!currentSingleGroup) { 
-        prevBtn.classList.remove('disabled'); 
-        nextBtn.classList.remove('disabled'); 
-        return; 
-    }
-    const idx = groupOrder.indexOf(currentSingleGroup);
-    if (idx === 0) prevBtn.classList.add('disabled');
-    else prevBtn.classList.remove('disabled');
-    
-    if (idx === groupOrder.length - 1) nextBtn.classList.add('disabled');
-    else nextBtn.classList.remove('disabled');
-}
-
-// ============================================
 // Landing Functions
 // ============================================
 
@@ -1064,7 +1026,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia
+// Bio Agents Encyclopedia (مع Virtual Scrolling)
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -1147,41 +1109,85 @@ function renderBioCategoryFilter() {
     }
 }
 
+// Virtual Scrolling for Bio Cards - Lazy Loading
+let renderedBioCards = new Set();
+
 function renderBioCards(filter = 'egg-parasitoid') {
     const container = document.getElementById('bioCardsContainer');
     if (!container) return;
     container.innerHTML = '';
+    renderedBioCards.clear();
     
     const filtered = bioAgentsData.filter(a => a.category === filter);
     const fragment = document.createDocumentFragment();
     
-    filtered.forEach(agent => {
+    filtered.forEach((agent, index) => {
         const card = document.createElement('div');
         card.className = 'bio-card-advanced';
         card.setAttribute('role', 'listitem');
         card.setAttribute('aria-label', agent.scientificName);
+        card.setAttribute('data-agent-id', agent.id);
         card.onclick = () => openBioModal(agent.id);
         
-        let html = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div>`;
-        html += '<div class="bio-targets">';
-        Object.keys(agent.targets).forEach(key => {
-            const s = agent.targets[key];
-            html += `<div class="target-row ${targetClass[s]}"><span class="target-label">${targetLabels[key]}</span><span class="target-status">${targetStatusText[s]}</span></div>`;
-        });
-        html += '</div>';
-        html += '<div class="bio-badges">';
-        agent.badges.forEach(b => { 
-            const bd = badgeMap[b]; 
-            if (bd) html += `<span class="bio-badge ${bd.class}">${bd.text}</span>`; 
-        });
-        html += '</div>';
-        html += `<div class="bio-card-footer">اقرأ التفاصيل الكاملة <i class="fas fa-arrow-left" aria-hidden="true"></i></div>`;
+        // Placeholder content - will be filled by IntersectionObserver
+        card.innerHTML = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div><div class="bio-card-placeholder">جاري التحميل...</div>`;
         
-        card.innerHTML = html;
         fragment.appendChild(card);
     });
     
     container.appendChild(fragment);
+    
+    // Setup lazy loading with IntersectionObserver
+    setupBioCardsLazyLoad();
+}
+
+function setupBioCardsLazyLoad() {
+    const cards = document.querySelectorAll('.bio-card-advanced');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const card = entry.target;
+                const agentId = card.getAttribute('data-agent-id');
+                
+                if (!renderedBioCards.has(agentId)) {
+                    const agent = bioAgentsData.find(a => a.id === agentId);
+                    if (agent) {
+                        renderBioCardFullContent(card, agent);
+                        renderedBioCards.add(agentId);
+                    }
+                }
+                observer.unobserve(card);
+            }
+        });
+    }, {
+        rootMargin: '100px',
+        threshold: 0.1
+    });
+    
+    cards.forEach(card => observer.observe(card));
+}
+
+function renderBioCardFullContent(card, agent) {
+    let html = `<div class="bio-card-advanced-header"><span class="bio-icon-large">${agent.icon}</span><div class="bio-card-titles"><h3>${agent.scientificName}</h3><span class="subtitle">${agent.arabicDesc}</span></div></div>`;
+    
+    html += '<div class="bio-targets">';
+    Object.keys(agent.targets).forEach(key => {
+        const s = agent.targets[key];
+        html += `<div class="target-row ${targetClass[s]}"><span class="target-label">${targetLabels[key]}</span><span class="target-status">${targetStatusText[s]}</span></div>`;
+    });
+    html += '</div>';
+    
+    html += '<div class="bio-badges">';
+    agent.badges.forEach(b => { 
+        const bd = badgeMap[b]; 
+        if (bd) html += `<span class="bio-badge ${bd.class}">${bd.text}</span>`; 
+    });
+    html += '</div>';
+    
+    html += `<div class="bio-card-footer">اقرأ التفاصيل الكاملة <i class="fas fa-arrow-left" aria-hidden="true"></i></div>`;
+    
+    card.innerHTML = html;
 }
 
 function renderBioModals() {
@@ -1374,7 +1380,7 @@ document.addEventListener('mousedown', () => {
 });
 
 // ============================================
-// New Features: Progress Bar, Double-Tap Zoom
+// New Features: Progress Bar, Double-Tap Zoom, Pull-to-Refresh
 // ============================================
 
 function updateProgressBar() {
@@ -1405,6 +1411,79 @@ function handleDoubleTap(element) {
         element.classList.toggle('zoomed');
     }
     lastTap = currentTime;
+}
+
+// Pull-to-Refresh Implementation
+let pullStartY = 0;
+let pullDistance = 0;
+let isPulling = false;
+const PULL_THRESHOLD = 80;
+
+function initPullToRefresh() {
+    const pullIndicator = document.getElementById('pullToRefresh');
+    if (!pullIndicator) return;
+    
+    document.addEventListener('touchstart', (e) => {
+        if (window.pageYOffset === 0) {
+            pullStartY = e.touches[0].clientY;
+            isPulling = true;
+        }
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (!isPulling) return;
+        
+        const currentY = e.touches[0].clientY;
+        pullDistance = currentY - pullStartY;
+        
+        if (pullDistance > 0 && window.pageYOffset === 0) {
+            e.preventDefault();
+            
+            const resistance = pullDistance * 0.5;
+            pullIndicator.style.transform = `translateY(${resistance}px)`;
+            pullIndicator.style.opacity = Math.min(pullDistance / PULL_THRESHOLD, 1);
+            
+            if (pullDistance > PULL_THRESHOLD) {
+                pullIndicator.querySelector('.pull-text').textContent = 'اترك للتحديث';
+                pullIndicator.querySelector('.pull-icon').style.transform = 'rotate(180deg)';
+            } else {
+                pullIndicator.querySelector('.pull-text').textContent = 'اسحب للتحديث';
+                pullIndicator.querySelector('.pull-icon').style.transform = 'rotate(0deg)';
+            }
+        }
+    }, { passive: false });
+    
+    document.addEventListener('touchend', () => {
+        if (!isPulling) return;
+        isPulling = false;
+        
+        if (pullDistance > PULL_THRESHOLD) {
+            performRefresh(pullIndicator);
+        } else {
+            resetPullIndicator(pullIndicator);
+        }
+        
+        pullDistance = 0;
+    });
+}
+
+function performRefresh(pullIndicator) {
+    pullIndicator.querySelector('.pull-icon').style.animation = 'spin 1s linear infinite';
+    pullIndicator.querySelector('.pull-text').textContent = 'جاري التحديث...';
+    pullIndicator.style.transform = `translateY(${PULL_THRESHOLD * 0.5}px)`;
+    
+    // Simulate refresh
+    setTimeout(() => {
+        location.reload();
+    }, 1000);
+}
+
+function resetPullIndicator(pullIndicator) {
+    pullIndicator.style.transform = 'translateY(-100%)';
+    pullIndicator.style.opacity = '0';
+    pullIndicator.querySelector('.pull-text').textContent = 'اسحب للتحديث';
+    pullIndicator.querySelector('.pull-icon').style.animation = '';
+    pullIndicator.querySelector('.pull-icon').style.transform = 'rotate(0deg)';
 }
 
 // ============================================
@@ -1485,7 +1564,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
         window.addEventListener('resize', debouncedDrawChart);
-        window.addEventListener('scroll', updateProgressBar);
+        window.addEventListener('scroll', throttle(updateProgressBar, 100));
 
         createLandingParticles();
 
@@ -1501,6 +1580,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             heatmapGrid.addEventListener('click', () => handleDoubleTap(heatmapGrid));
             heatmapGrid.addEventListener('touchend', () => handleDoubleTap(heatmapGrid));
         }
+
+        // Initialize Pull-to-Refresh
+        initPullToRefresh();
 
         // Service Worker
         if ('serviceWorker' in navigator) { 
