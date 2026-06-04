@@ -1,14 +1,15 @@
 // ============================================
-// Service Worker - Tuta Absoluta App v7 (Silent Update & Glassmorphism Ready)
-// استراتيجية تخزين ذكية مع تحديث تلقائي صامت في الخلفية
+// Service Worker - Tuta Absoluta App v8 (Offline Page & Silent Update)
+// استراتيجية تخزين ذكية، تحديث صامت في الخلفية، ودعم كامل للعمل بدون إنترنت
 // ============================================
 
-const CACHE_NAME = 'tuta-app-v7'; // تم ترقية الإصدار لضمان تحميل ملفات التصميم الزجاجي الجديدة
+const CACHE_NAME = 'tuta-app-v8'; // تم ترقية الإصدار لضمان تخزين ملف offline.html الجديد
 
 // الملفات الأساسية التي يجب تخزينها فوراً عند التثبيت
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './offline.html', // تمت الإضافة لدعم حالة عدم الاتصال
   './style.css',
   './script.js',
   './manifest.json',
@@ -57,7 +58,7 @@ self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[SW] Caching essential files...');
+        console.log('[SW] Caching essential files including offline page...');
         return cache.addAll(ALL_CACHE_URLS);
       })
       .then(() => {
@@ -78,7 +79,7 @@ self.addEventListener('activate', event => {
   console.log('[SW] Activating new version:', CACHE_NAME);
   
   event.waitUntil(
-    // حذف جميع نسخ الكاش القديمة
+    // حذف جميع نسخ الكاش القديمة لتوفير مساحة وضمان استخدام الملفات الجديدة
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
@@ -109,6 +110,7 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   
   // 1. ملفات البيانات (JSON) - Network First (الشبكة أولاً)
+  // يضمن دائماً الحصول على أحدث البيانات إذا كان هناك إنترنت، مع الاحتفاظ بنسخة احتياطية
   if (url.pathname.includes('/data/') && url.pathname.endsWith('.json')) {
     event.respondWith(
       fetch(request)
@@ -129,6 +131,7 @@ self.addEventListener('fetch', event => {
   }
   
   // 2. ملفات JavaScript و CSS - Stale While Revalidate (الكاش فوراً، ثم التحديث في الخلفية)
+  // يضمن سرعة تحميل فورية مع الحصول على التحديثات في الزيارات التالية
   if (url.pathname.endsWith('.css') || url.pathname.endsWith('.js')) {
     event.respondWith(
       caches.match(request).then(cached => {
@@ -164,7 +167,7 @@ self.addEventListener('fetch', event => {
     return;
   }
   
-  // 4. كل الملفات الأخرى (بما في ذلك HTML) - Cache First مع Fallback
+  // 4. كل الملفات الأخرى (بما في ذلك HTML) - Cache First مع Fallback لصفحة عدم الاتصال
   event.respondWith(
     caches.match(request).then(cached => {
       if (cached) return cached;
@@ -177,9 +180,9 @@ self.addEventListener('fetch', event => {
         return response;
       });
     }).catch(() => {
-      // إذا فشل كل شيء وكان الطلب صفحة HTML، أعد صفحة index.html المخزنة
+      // إذا فشل كل شيء (لا إنترنت ولا كاش) وكان الطلب صفحة HTML، أعد صفحة offline.html
       if (request.headers.get('accept').includes('text/html')) {
-        return caches.match('./index.html');
+        return caches.match('./offline.html');
       }
       return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
     })
@@ -201,4 +204,4 @@ self.addEventListener('message', event => {
   }
 });
 
-console.log('[SW] Smart Silent-Update Service Worker loaded successfully');
+console.log('[SW] Smart Silent-Update & Offline-Ready Service Worker loaded successfully');

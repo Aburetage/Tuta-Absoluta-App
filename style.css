@@ -21,36 +21,36 @@
     --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 @font-face {
     font-family: 'Cairo';
     font-display: swap;
 }
 
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.2)}
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
 
-body{
-    font-family:'Tajawal',sans-serif;
-    background:var(--bg);
-    color:var(--text);
-    line-height:1.8;
-    overflow-x:hidden;
-    background-image:radial-gradient(ellipse at 30% 20%,rgba(231,76,60,.04) 0%,transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(46,204,113,.04) 0%,transparent 60%);
+body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    overflow-x: hidden;
+    background-image: radial-gradient(ellipse at 30% 20%, rgba(231,76,60,.04) 0%, transparent 60%), radial-gradient(ellipse at 70% 70%, rgba(46,204,113,.04) 0%, transparent 60%);
     padding-top: var(--nav-height);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    text-rendering:optimizeLegibility;
-    overscroll-behavior-y:contain;
-    -webkit-tap-highlight-color:transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
 }
 
-h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
-.container{max-width:1200px;margin:0 auto;padding:1.5rem}
+h1, h2, h3, h4 { font-family: 'Cairo', sans-serif; font-weight: 700; }
+.container { max-width: 1200px; margin: 0 auto; padding: 1.5rem; }
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -200,7 +200,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     100% { transform: translateY(-10vh) scale(1); opacity: 0; }
 }
 
-/* ===== Top Navigation (Clean & Balanced) ===== */
+/* ===== Top Navigation ===== */
 .top-nav {
     position: fixed; top: 0; left: 0; right: 0;
     height: var(--nav-height);
@@ -212,7 +212,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     padding: 0 1.2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     padding-top: var(--safe-top);
 }
-.nav-right, .nav-left { display: flex; align-items: center; width: 44px; } /* Fixed width for perfect centering */
+.nav-right, .nav-left { display: flex; align-items: center; width: 44px; }
 .nav-center { 
     flex: 1; text-align: center; display: flex; justify-content: center; align-items: center;
     min-width: 0; padding: 0 1rem;
@@ -228,11 +228,9 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; transition: all 0.2s; font-size: 1.1rem;
 }
-.nav-icon-btn:hover {
-    background: rgba(255,255,255,0.1); color: var(--plan-accent2);
-}
+.nav-icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--plan-accent2); }
 
-/* ===== Side Drawer (New Header Block, No X) ===== */
+/* ===== Side Drawer ===== */
 .side-drawer-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.7);
     backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
@@ -257,7 +255,6 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     display: flex; flex-direction: column;
 }
 
-/* New Clickable Header Block */
 .drawer-header-block {
     display: flex; align-items: center; gap: 1rem;
     padding: 1.2rem; margin-bottom: 1.5rem;
@@ -282,13 +279,9 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     font-family: 'Cairo', sans-serif; font-weight: 700;
     font-size: 0.95rem; color: #fff; line-height: 1.3;
 }
-.drawer-site-hint {
-    font-size: 0.7rem; color: var(--text2); margin-top: 0.2rem;
-}
+.drawer-site-hint { font-size: 0.7rem; color: var(--text2); margin-top: 0.2rem; }
 
-.drawer-nav-grid {
-    display: grid; grid-template-columns: 1fr; gap: 0.8rem;
-}
+.drawer-nav-grid { display: grid; grid-template-columns: 1fr; gap: 0.8rem; }
 .drawer-nav-item {
     display: flex; align-items: center; gap: 1rem;
     padding: 0.9rem 1rem; background: var(--surface2);
@@ -323,7 +316,6 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
     opacity: 1; visibility: visible; transform: translateY(0) scale(1);
 }
 
-/* Unified Glass Style for all FABs */
 .fab-btn-glass, .fab-main-btn-glass {
     width: 56px; height: 56px; border-radius: 50%;
     background: rgba(255, 255, 255, 0.1);
@@ -341,7 +333,6 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 }
 .fab-btn-glass:active, .fab-main-btn-glass:active { transform: scale(0.95); }
 
-/* Main FAB specific styling */
 .fab-main-btn-glass {
     background: linear-gradient(135deg, rgba(39, 174, 96, 0.9), rgba(46, 204, 113, 0.9));
     border-color: rgba(46, 204, 113, 0.3);
@@ -357,11 +348,9 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .fab-container.active .fab-icon-open { opacity: 0; transform: rotate(90deg); }
 .fab-container.active .fab-icon-close { opacity: 1; transform: rotate(0deg); }
 
-/* PWA Install FAB (Bottom-Left) */
 .pwa-fab {
     position: fixed; bottom: 2rem; left: 2rem;
     z-index: 998;
-    /* Inherits .fab-btn-glass styles */
 }
 
 /* ===== Hero & Sections ===== */
@@ -911,182 +900,131 @@ th.hidden-col, td.hidden-col { display: none; }
     width: 300px; height: 300px;
 }
 
-/* =====================================================================
-   MOBILE RESPONSIVE
-   ===================================================================== */
-
-@media (max-width: 768px) and (orientation: portrait) {
-    .container { padding: 1rem; }
-    body { padding-top: 50px; }
-    :root { --nav-height: 50px; --radius: 14px; --radius-sm: 8px; }
-
-    .top-nav { padding: 0 0.8rem; }
-    .current-section-title { font-size: 0.8rem; }
-    .nav-right, .nav-left { width: 40px; }
-    .nav-icon-btn { width: 40px; height: 40px; font-size: 1rem; }
-
-    .side-drawer { width: 85vw; }
-    .drawer-header-block { padding: 1rem; }
-    .drawer-header-icon { width: 42px; height: 42px; font-size: 1.2rem; }
-    .drawer-site-name { font-size: 0.9rem; }
-
-    .landing-academy-badge span { font-size: 0.95rem; }
-    .landing-title { font-size: 1.8rem; }
-    .landing-title span { font-size: 1.5rem; }
-    .landing-icon { font-size: 3.5rem; }
-    
-    .landing-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 0.8rem; }
-    .landing-stat { padding: 0.6rem 0.8rem !important; }
-    .landing-stat-num { font-size: 1.4rem !important; }
-
-    .hero-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 0.8rem; }
-    .hero-stat { padding: 0.8rem !important; }
-    .hero-stat-num { font-size: 1.4rem !important; }
-
-    .econ-stats { grid-template-columns: repeat(2, 1fr) !important; gap: 0.8rem; }
-    .econ-stat { padding: 0.8rem !important; }
-    .econ-stat-num { font-size: 1.6rem !important; }
-
-    .sg, .temp-grid, .importance-grid, .conditions-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem; }
-    .about-grid, .ipm-grid, .resistance-grid, .sources-grid, .bio-agent-grid { grid-template-columns: 1fr !important; gap: 1rem; }
-
-    .temp-card { padding: 1rem !important; }
-    .degree-explanation { padding: 0.8rem !important; font-size: 0.75rem !important; margin-bottom: 1rem !important; line-height: 1.7 !important; }
-    .temp-top { flex-direction: column !important; align-items: center !important; text-align: center; gap: 0.5rem !important; margin-bottom: 0.8rem !important; }
-    .temp-display { justify-content: center; }
-    .temp-value { font-size: 2.5rem !important; }
-    .temp-unit { font-size: 1rem !important; }
-    #tempDesc { font-size: 0.75rem !important; }
-    .temp-zone { font-size: 0.7rem !important; padding: 0.3rem 0.8rem !important; }
-    .temp-slider { height: 10px !important; border-radius: 5px !important; margin: 1rem 0 !important; }
-    .temp-slider::-webkit-slider-thumb { width: 32px !important; height: 32px !important; border-width: 4px !important; }
-    .temp-slider::-moz-range-thumb { width: 32px !important; height: 32px !important; border-width: 4px !important; }
-    .temp-marks { font-size: 0.6rem !important; margin-top: 0.5rem !important; }
-    .formula-box { padding: 0.8rem !important; margin: 1rem 0 !important; }
-    .formula { font-size: 1.1rem !important; }
-    .formula-desc { font-size: 0.7rem !important; line-height: 1.5 !important; }
-    .temp-item { padding: 0.6rem 0.4rem !important; }
-    .temp-item .val { font-size: 1.1rem !important; }
-    .temp-item .lbl { font-size: 0.6rem !important; line-height: 1.3; }
-    .temp-total { grid-column: 1 / -1 !important; padding: 0.8rem !important; }
-    .temp-total .val { font-size: 1.5rem !important; }
-
-    .sg .sc2 { padding: 0.8rem 0.6rem !important; min-height: auto; }
-    .sg .sico { width: 50px !important; height: 50px !important; font-size: 1.4rem !important; margin-bottom: 0.4rem; }
-    .sg .snme { font-size: 0.85rem !important; }
-    .sg .sdys { font-size: 1.2rem !important; }
-    .sg .sdyl { font-size: 0.6rem !important; }
-    .sg .sbrf { font-size: 0.65rem !important; line-height: 1.4; }
-    .sg .snm { width: 18px !important; height: 18px !important; font-size: 0.55rem !important; }
-
-    .plan-layout { flex-direction: column; }
-    .plan-filter-col { 
-        width: 100%; border-left: none; border-bottom: 1px solid var(--border); 
-        padding: 0.8rem; flex-direction: row; overflow-x: auto; gap: 0.5rem; 
-        -webkit-overflow-scrolling: touch; scrollbar-width: none;
-    }
-    .plan-filter-col::-webkit-scrollbar { display: none; }
-    .plan-filter-col .filter-btn { white-space: nowrap; flex-shrink: 0; padding: 0.5rem 1rem; font-size: 0.8rem; }
-    .plan-card-wrapper { padding: 1rem; }
-
-    .table-wrapper { border-radius: var(--radius-sm); font-size: 0.75rem; }
-    th, td { padding: 0.5rem 0.3rem; font-size: 0.7rem; }
-    th:first-child, td:first-child { min-width: 80px; font-size: 0.7rem; padding-right: 0.4rem; }
-    .circle-badge, .level-badge, .control-badge { font-size: 0.65rem; padding: 0.1rem 0.3rem; }
-
-    .dinn { grid-template-columns: 1fr !important; }
-    .dvis, .dinf { padding: 1.5rem 1rem; }
-    .dvico { width: 90px; height: 90px; font-size: 2.5rem; }
-    .dvr { width: 110px; height: 110px; }
-    .nbtn { height: 40px; font-size: 0.8rem; padding: 0 12px; min-width: 40px; }
-
-    .heatmap-grid { grid-template-columns: repeat(4,1fr); }
-    .heatmap-labels { grid-template-columns: repeat(4,1fr); }
-    .heatmap-cell { padding: 0.8rem 0.2rem; font-size: 0.65rem; min-height: 40px; }
-    .heatmap-tip { font-size: 0.6rem; padding: 0.2rem 0.4rem; bottom: 100%; }
-
-    .section-header h2 { font-size: 1.3rem; }
-    .chart-card { padding: 1rem; }
-    .chart-card canvas { height: 250px; }
-    .chart-card h3 { font-size: 1rem; }
-
-    .bio-modal { padding: 0; }
-    .bio-modal-content { margin: 0; max-height: 100vh; border-radius: 0; width: 100%; max-width: 100%; }
-    .bio-modal-close { top: 0.5rem; left: 0.5rem; width: 40px; height: 40px; }
-    .bio-modal-header h2 { font-size: 1.2rem; }
-    .bio-card-advanced { min-height: auto; padding: 1rem; }
-    .bio-icon-large { font-size: 2rem; }
-    .bio-card-titles h3 { font-size: 0.88rem; }
-    .modal-tabs { padding: 0.8rem; gap: 0.3rem; }
-    .tab-btn { padding: 0.4rem 0.7rem; font-size: 0.72rem; min-height: 40px; }
-    .tab-content { padding: 1rem; }
-    .info-table td:first-child { width: 45%; font-size: 0.8rem; }
-
-    .bio-filter-btn { padding: 0.4rem 0.8rem; font-size: 0.75rem; min-height: 40px; }
-    .filter-btn { padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-    .faq-question { padding: 0.8rem 1rem; font-size: 0.9rem; }
-    .faq-answer { font-size: 0.85rem; }
-    .ipm-tabs { gap: 0.4rem; }
-    .ipm-tab { padding: 0.5rem 1rem; font-size: 0.82rem; }
-
-    .table-wrapper::-webkit-scrollbar, .plan-filter-col::-webkit-scrollbar, .modal-tabs::-webkit-scrollbar { height: 3px; }
-
-    .filter-btn, .ipm-tab, .nbtn, .faq-question, .bio-header, .bio-filter-btn, .tab-btn, .landing-btn, .close-detail-btn, .bio-modal-close, .drawer-header-block, .drawer-nav-item, .fab-btn-glass, .fab-main-btn-glass { min-height: 44px; min-width: 44px; }
-    html { -webkit-text-size-adjust: 100%; }
-    
-    /* FAB Responsive */
-    .fab-container { bottom: 1.5rem; right: 1.5rem; }
-    .pwa-fab { bottom: 1.5rem; left: 1.5rem; }
-    .fab-btn-glass, .fab-main-btn-glass { width: 50px; height: 50px; font-size: 1.2rem; }
-}
-
-@media (max-width: 768px) and (orientation: landscape) {
-    .about-grid, .temp-grid, .sg, .ipm-grid, .resistance-grid, .sources-grid, .bio-agent-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.8rem; }
-    .hero-stats, .econ-stats { grid-template-columns: repeat(4, 1fr) !important; }
-}
-
+/* =========================================
+   إصلاح ذكي وشامل لتجاوب التطبيق (Smart Responsive Fix)
+   يحافظ على الشبكة 2x2 للإحصائيات ودورة الحياة، ويجعل الكروت الكبيرة عمود واحد
+   ========================================= */
 @media (max-width: 480px) {
-    .about-grid, .temp-grid, .sg, .ipm-grid, .resistance-grid, .sources-grid, .bio-agent-grid, .hero-stats, .econ-stats, .landing-stats { grid-template-columns: 1fr !important; }
-}
+    /* 1. الأساسيات: منع أي تمدد أفقي */
+    *, *::before, *::after {
+        box-sizing: border-box !important;
+    }
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem 0.8rem !important;
+    }
 
-@media (max-width: 380px) {
-    .temp-value { font-size: 2.8rem; }
-    .formula { font-size: 1.1rem; }
-    .hero h1 { font-size: 1.6rem; }
-    .dropdown-icon-wrapper { width: 36px; height: 36px; }
-    .dropdown-icon-wrapper i { font-size: 1rem; }
-    .dropdown-title { font-size: 0.78rem; }
-    .dropdown-desc { font-size: 0.62rem; }
-    .landing-title { font-size: 1.5rem; }
-    .landing-title span { font-size: 1.2rem; }
-    .heatmap-grid { grid-template-columns: repeat(3,1fr); }
-    .heatmap-labels { grid-template-columns: repeat(3,1fr); }
-    .current-section-title { font-size: 0.75rem; }
-}
+    /* 2. الكروت الكبيرة: عمود واحد لضمان قراءة النصوص بوضوح */
+    .about-grid, .bio-agent-grid, .ipm-grid, .resistance-grid, 
+    .sources-grid, .plan-layout {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        width: 100% !important;
+    }
+    .plan-layout {
+        display: flex !important;
+        flex-direction: column !important;
+    }
 
-@media (max-height: 500px) and (orientation: landscape) {
-    .top-nav { height: 45px; }
-    body { padding-top: 45px; }
-    .side-drawer { max-height: 100vh; }
-    .bio-modal-content { max-height: 95vh; }
-    .landing-content { padding: 1rem; }
-    .landing-icon { font-size: 3rem; }
-    .landing-title { font-size: 1.5rem; }
-    .landing-stats { margin: 1rem 0; }
-}
+    /* 3. الكروت الإحصائية الصغيرة ودورة الحياة: تبقى 2 بجانب بعض (2x2) */
+    .sg, .landing-stats, .hero-stats, .econ-stats, .temp-grid, .importance-grid, .conditions-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 0.6rem !important;
+        width: 100% !important;
+    }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-    .container { padding: 1.2rem; }
-    .about-grid, .ipm-grid, .bio-agent-grid { grid-template-columns: repeat(2, 1fr); }
-    .hero-stats { grid-template-columns: repeat(4, 1fr); }
-}
+    /* 4. تنسيق كروت واجهة الدخول والإحصائيات لتكون مضغوطة وأنيقة */
+    .landing-stat, .hero-stat, .econ-stat, .temp-item {
+        padding: 0.6rem 0.4rem !important;
+        width: 100% !important;
+    }
+    .landing-stat-num, .hero-stat-num, .econ-stat-num {
+        font-size: 1.3rem !important;
+    }
+    .landing-stat-lbl, .hero-stat-lbl, .temp-item .lbl {
+        font-size: 0.65rem !important;
+        line-height: 1.2 !important;
+    }
 
-@media (min-width: 1400px) {
-    .container { max-width: 1400px; }
-}
+    /* 5. إصلاح شامل لمحتوى الكروت لمنع خروج النص */
+    .card, .about-card, .bio-card, .bio-card-advanced, 
+    .ipm-card, .resistance-card, .source-card, .glass-card, .faq-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
 
-@media print {
-    .top-nav, .side-drawer, .side-drawer-overlay, .landing-overlay, .pwa-fab, .fab-container, .bio-modal, .progress-bar, .pull-to-refresh { display: none !important; }
-    body { padding-top: 0; background: #fff; color: #000; }
-    .section { page-break-inside: avoid; }
+    /* 6. إصلاح النصوص والعناوين */
+    .section-header h2 {
+        font-size: 1.25rem !important;
+        line-height: 1.3 !important;
+    }
+    .landing-title {
+        font-size: 1.6rem !important;
+        line-height: 1.2 !important;
+    }
+    .landing-title span {
+        font-size: 1.3rem !important;
+    }
+    .landing-academy-badge {
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.8rem !important;
+        text-align: center;
+    }
+
+    /* 7. إصلاح زر واجهة الدخول ليكون في المنتصف تماماً */
+    .landing-btn {
+        width: 100% !important;
+        max-width: 280px !important;
+        justify-content: center !important;
+        margin: 0 auto 1rem auto !important;
+    }
+
+    /* 8. إصلاح الجداول: تمرير أفقي داخلي فقط */
+    .table-wrapper {
+        width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        margin: 1rem -0.8rem !important;
+        padding: 0 0.8rem !important;
+    }
+    table {
+        min-width: 600px !important;
+    }
+
+    /* 9. إصلاح الأزرار والفلتر */
+    .filter-bar {
+        justify-content: center !important;
+        gap: 0.5rem !important;
+    }
+    .filter-btn, .bio-filter-btn {
+        width: auto !important;
+        max-width: 48% !important; 
+        flex: 1 1 45% !important;
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.3rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* 10. العناصر العائمة والشريط العلوي */
+    .fab-container { bottom: 1rem !important; right: 1rem !important; }
+    .pwa-fab { bottom: 1rem !important; left: 1rem !important; }
+    .fab-btn-glass, .fab-main-btn-glass {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    .current-section-title {
+        font-size: 0.75rem !important;
+        max-width: 55vw !important;
+    }
 }

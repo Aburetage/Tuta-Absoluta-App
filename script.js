@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Updated with Glassmorphism & New Drawer)
-// الميزات: Side Drawer (No X, Clickable Header), Glassmorphic FABs, Dynamic Section Title, Silent SW Update
+// Tuta Absoluta App - Script.js (Optimized Canvas Performance)
+// الميزات: Side Drawer, Glassmorphic FABs, Dynamic Section Title, Silent SW Update, Canvas Optimization
 // ============================================
 
 // ============================================
@@ -132,7 +132,6 @@ function closeFab() {
     fabMainBtn.setAttribute('aria-expanded', 'false');
 }
 
-// Close FAB when clicking outside of it
 document.addEventListener('click', function(event) {
     const fabContainer = document.getElementById('fabContainer');
     if (fabContainer && fabContainer.classList.contains('active')) {
@@ -143,7 +142,7 @@ document.addEventListener('click', function(event) {
 });
 
 // ============================================
-// Side Drawer Logic (New: No X button, Clickable Header)
+// Side Drawer Logic
 // ============================================
 
 function toggleSideDrawer() {
@@ -154,7 +153,7 @@ function toggleSideDrawer() {
     if (isOpen) {
         closeSideDrawer();
     } else {
-        closeFab(); // Close FAB when opening drawer
+        closeFab();
         drawer.classList.add('open');
         overlay.classList.add('active');
         drawer.setAttribute('aria-hidden', 'false');
@@ -284,7 +283,7 @@ function updDaysBars(d) {
 }
 
 // ============================================
-// Chart Functions
+// Chart Functions (OPTIMIZED FOR LOW-END DEVICES)
 // ============================================
 
 function drawRoundedRect(ctx, x, y, w, h, r) {
@@ -304,7 +303,8 @@ function drawChart() {
     const canvas = document.getElementById('seasonChart');
     if (!canvas) return;
     
-    const dpr = window.devicePixelRatio || 1;
+    // 🚀 تحسين الأداء: تحديد أقصى دقة للبيكسل بـ 2 لتوفير موارد GPU في الأجهزة المتوسطة والضعيفة
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.getBoundingClientRect();
     
     canvas.width = rect.width * dpr;
@@ -1021,7 +1021,6 @@ function showSingleSection(groupId, clickedItem) {
     
     currentSingleGroup = groupId;
     
-    // Update the dynamic section title in the top bar
     const titleElement = document.getElementById('currentSectionTitle');
     if (titleElement) {
         titleElement.textContent = groupNames[groupId] || 'الرئيسية';
@@ -1043,7 +1042,6 @@ function goHome() {
     if (hero) hero.classList.add('hero-hidden');
     currentSingleGroup = null;
     
-    // Reset dynamic title
     const titleElement = document.getElementById('currentSectionTitle');
     if (titleElement) {
         titleElement.textContent = 'الرئيسية';
@@ -1114,7 +1112,7 @@ const categoryMap = {
 };
 
 function openModal(modalId) {
-    closeFab(); // Close FAB when opening modal
+    closeFab();
     const modal = document.getElementById(modalId);
     if (modal) { 
         modal.classList.add('active'); 
@@ -1318,7 +1316,7 @@ function filterBioByCategory(category, btn) {
 }
 
 // ============================================
-// Keyboard & Mobile Navigation (Enhanced Accessibility)
+// Keyboard & Mobile Navigation
 // ============================================
 
 document.addEventListener('keydown', function(e) {
@@ -1543,9 +1541,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         initPullToRefresh();
 
-        // ============================================
-        // Service Worker - SILENT UPDATE (No Confirm Dialog)
-        // ============================================
         if ('serviceWorker' in navigator) { 
             window.addEventListener('load', () => { 
                 navigator.serviceWorker.register('./sw.js')
