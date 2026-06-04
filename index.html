@@ -53,59 +53,11 @@
         "description": "دليل تفاعلي شامل حول آفة توتا أبسولوتا في مصر: محاكاة النموذج الحراري وخطة مكافحة متكاملة",
         "applicationCategory": "EducationalApplication",
         "operatingSystem": "Any",
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "EGP"
-        },
-        "creator": {
-            "@type": "Organization",
-            "name": "اكاديمية المهندس الزراعي"
-        },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EGP" },
+        "creator": { "@type": "Organization", "name": "اكاديمية المهندس الزراعي" },
         "url": "https://aburetage.github.io/Tuta-Absoluta-App/",
         "inLanguage": "ar-EG",
         "keywords": "توتا أبسولوتا, طماطم, مكافحة, مصر, نموذج حراري, IPM"
-    }
-    </script>
-
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "هل تختفي توتا أبسولوتا في الشتاء؟",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "لا، الحشرة لا تختفي في مصر. الشتاء المصري معتدل مما يسمح لها بالبقاء في أطوار العذراء داخل التربة."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "لماذا توقف المبيد عن العمل فجأة؟",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "السبب هو ظهور سلالات مقاومة للمبيد. الحل: التناوب بين مجموعات IRAC المختلفة ودمج المكافحة الحيوية."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "هل الثمار المصابة آمنة للأكل؟",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "الثمار المصابة تكون عرضة للتعفن والفطريات، وقد تحتوي على متبقيات مبيدات. لا يُنصح باستهلاكها."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "هل المصائد الفيرمونية كافية وحدها؟",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "لا، المصائد الفيرمونية تستخدم للمراقبة والرصد فقط. تجذب الذكور فقط، ولا تقضي على البيض أو اليرقات."
-                }
-            }
-        ]
     }
     </script>
 </head>
@@ -117,8 +69,8 @@
 
     <!-- Pull to Refresh Indicator -->
     <div class="pull-to-refresh" id="pullToRefresh">
-        <div class="pull-icon"><i class="fas fa-sync-alt"></i></div>
-        <div class="pull-text">اسحب للتحديث</div>
+        <i class="fas fa-sync-alt"></i>
+        <span class="pull-text">اسحب للتحديث</span>
     </div>
 
     <!-- Loading Spinner -->
@@ -150,7 +102,7 @@
         <div class="landing-particles" id="landingParticles" aria-hidden="true"></div>
     </div>
 
-    <!-- Top Navigation (Clean & Professional) -->
+    <!-- Top Navigation (Clean & Balanced) -->
     <nav class="top-nav" id="topNav" role="navigation" aria-label="التنقل الرئيسي">
         <div class="nav-right">
             <button class="nav-btn nav-icon-btn" onclick="toggleSideDrawer()" title="الأقسام" aria-label="الأقسام">
@@ -223,7 +175,7 @@
         </div>
     </aside>
 
-    <!-- Floating Action Button (FAB) for Contact -->
+    <!-- Floating Action Button (FAB) for Contact (Left Side) -->
     <div class="fab-container" id="fabContainer">
         <div class="fab-sub-buttons" id="fabSubButtons">
             <a href="https://wa.me/201091777099" target="_blank" rel="noopener noreferrer" class="fab-btn-glass whatsapp" title="واتساب" aria-label="واتساب">
@@ -242,7 +194,7 @@
         </button>
     </div>
 
-    <!-- PWA Install Button (Glassmorphic, Bottom-Left) -->
+    <!-- PWA Install Button (Right Side) -->
     <button id="installBtn" class="fab-btn-glass pwa-fab" onclick="installPWA()" aria-label="تثبيت التطبيق" style="display: none;">
         <i class="fas fa-download"></i>
     </button>
@@ -380,7 +332,6 @@
                 <h2 id="bioagents-title">مكتبة الأعداء الحيوية الشاملة</h2>
                 <p>موسوعة متكاملة لـ 18 عدوًا حيويًا متخصصًا في مكافحة توتا أبسولوتا</p>
             </div>
-
             <div class="reveal" style="max-width: 900px; margin: 0 auto 2rem;">
                 <div class="glass-card" style="padding: 1.8rem;">
                     <p style="color: var(--text2); line-height: 1.9;">
@@ -389,11 +340,9 @@
                     </p>
                 </div>
             </div>
-
             <div class="bio-category-filter reveal" id="bioCategoryFilter" role="toolbar" aria-label="فلترة الأعداء الحيوية حسب النوع"></div>
             <div class="bio-agent-grid reveal" id="bioCardsContainer" role="list"></div>
             <div id="bioModalsContainer" aria-hidden="true"></div>
-
             <div class="reveal" style="max-width: 900px; margin: 2rem auto;">
                 <div class="glass-card" style="padding: 1.8rem; text-align: center;">
                     <h3 style="color: var(--plan-accent); margin-bottom: 1rem;">🌼 التصنيف الشامل للأعداء الحيوية</h3>
@@ -447,7 +396,7 @@
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            document.getElementById('installBtn').style.display = 'flex'; // Changed to flex for centered icon
+            document.getElementById('installBtn').style.display = 'flex';
         });
 
         function installPWA() {
@@ -468,9 +417,7 @@
         if (section && typeof showSingleSection === 'function') {
             setTimeout(() => {
                 const item = document.querySelector(`.drawer-nav-item[onclick*="'${section}'"]`);
-                if (item) {
-                    item.click();
-                }
+                if (item) { item.click(); }
             }, 1500);
         }
     </script>
