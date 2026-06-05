@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Logic Fixes)
-// الميزات: SessionStorage للتحديث، أكورديون صارم، تبويبات افتراضية، أنيميشن سلس
+// Tuta Absoluta App - Script.js (Final Complete Version)
+// الميزات: البقاء في الصفحة بعد التحديث، أكورديون صارم، تبويبات افتراضية، أنيميشن سلس، تحسين الأداء
 // ============================================
 
 // ============================================
@@ -277,7 +277,7 @@ function updDaysBars(d) {
 }
 
 // ============================================
-// Chart Functions
+// Chart Functions (Optimized for Low-End Devices)
 // ============================================
 
 function drawRoundedRect(ctx, x, y, w, h, r) {
@@ -296,23 +296,29 @@ function drawRoundedRect(ctx, x, y, w, h, r) {
 function drawChart() {
     const canvas = document.getElementById('seasonChart');
     if (!canvas) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2); // تحسين الأداء
+    
+    // تحسين الأداء: تحديد أقصى دقة للبيكسل بـ 2
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.getBoundingClientRect();
+    
     canvas.width = rect.width * dpr;
     canvas.height = 340 * dpr;
     canvas.style.height = '340px';
     
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
+    
     const W = rect.width, H = 340;
     const pad = { t: 30, r: 35, b: 55, l: 45 };
     const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+    
     ctx.clearRect(0, 0, W, H);
     
     const data = egyptMonthsData.map(em => { 
         const d = calcDaysSync(em.temp); 
         return { m: em.month, t: em.temp, days: d.dev, gen: d.dev > 0 ? Math.floor(30 / d.dev) : 0 }; 
     });
+    
     const maxDays = Math.max(...data.map(d => d.days > 0 ? d.days : 0), 80);
     const maxTemp = Math.max(...data.map(d => d.t)) + 5;
     
@@ -593,7 +599,6 @@ function buildSpreadSection() {
         fragment.appendChild(card);
     });
     container.appendChild(fragment);
-    // تفعيل التبويب الأول افتراضياً
     setTimeout(() => {
         const firstBtn = container.parentElement.querySelector('.filter-btn.active');
         if(firstBtn) filterBioCards('env', 'spreadAccordion', firstBtn);
@@ -624,7 +629,6 @@ function buildEconomicSection() {
             fragment.appendChild(card);
         });
         cardsContainer.appendChild(fragment);
-        // تفعيل التبويب الأول افتراضياً
         setTimeout(() => {
             const firstBtn = cardsContainer.parentElement.querySelector('.filter-btn.active');
             if(firstBtn) filterBioCards('direct', 'econAccordion', firstBtn);
@@ -702,7 +706,7 @@ function buildResistanceSection() {
 }
 
 // ============================================
-// Accordion & Filter Functions (الأكورديون الصارم)
+// Accordion & Filter Functions (Strict Accordion)
 // ============================================
 
 function toggleFAQ(el) {
@@ -774,34 +778,61 @@ function filterBioCards(category, containerId, btn) {
 }
 
 // ============================================
-// Single Section Logic (مع دعم البقاء في الصفحة بعد التحديث)
+// Single Section Logic (With Stay-on-Page Fix)
 // ============================================
 
 function showSingleSection(groupId, clickedItem) {
-    document.querySelectorAll('.section').forEach(s => { s.classList.add('section-hidden'); s.classList.remove('section-visible'); });
+    // 💡 إخفاء واجهة الدخول فوراً عند عرض أي قسم
+    const landing = document.getElementById('landingOverlay');
+    if (landing) landing.classList.add('hidden');
+
+    document.querySelectorAll('.section').forEach(s => { 
+        s.classList.add('section-hidden'); 
+        s.classList.remove('section-visible'); 
+    });
+    
     const ids = groupMap[groupId] || [];
     ids.forEach(id => { 
         const sec = document.getElementById(id); 
-        if (sec) { sec.classList.remove('section-hidden'); sec.classList.add('section-visible'); } 
+        if (sec) { 
+            sec.classList.remove('section-hidden'); 
+            sec.classList.add('section-visible'); 
+        } 
     });
+    
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
+    
     currentSingleGroup = groupId;
     const titleElement = document.getElementById('currentSectionTitle');
-    if (titleElement) { titleElement.textContent = groupNames[groupId] || 'الرئيسية'; }
+    if (titleElement) { 
+        titleElement.textContent = groupNames[groupId] || 'الرئيسية'; 
+    }
+    
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (groupId === 'seasonal-heatmap') { setTimeout(() => { drawChart(); }, 400); }
+    if (groupId === 'seasonal-heatmap') { 
+        setTimeout(() => { drawChart(); }, 400); 
+    }
 }
 
 function goHome() {
-    document.querySelectorAll('.section').forEach(s => { s.classList.add('section-hidden'); s.classList.remove('section-visible'); });
+    // 💡 مسح الحالة عند العودة للرئيسية يدوياً
+    sessionStorage.removeItem('tuta_last_section');
+    
+    document.querySelectorAll('.section').forEach(s => { 
+        s.classList.add('section-hidden'); 
+        s.classList.remove('section-visible'); 
+    });
     const hero = document.getElementById('heroSection');
     if (hero) hero.classList.add('hero-hidden');
     currentSingleGroup = null;
+    
     const titleElement = document.getElementById('currentSectionTitle');
-    if (titleElement) { titleElement.textContent = 'الرئيسية'; }
+    if (titleElement) { 
+        titleElement.textContent = 'الرئيسية'; 
+    }
+    
     document.getElementById('landingOverlay').classList.remove('hidden');
-    sessionStorage.removeItem('tuta_last_section'); // مسح الحالة عند العودة للرئيسية يدوياً
 }
 
 // ============================================
@@ -1038,7 +1069,7 @@ function initPullToRefresh() {
         if (pullDistance > 0 && window.pageYOffset === 0) {
             e.preventDefault();
             const resistance = pullDistance * 0.5;
-            pullIndicator.style.transform = `translate(-50%, -150%) translateY(${resistance}px)`; // Keep centered horizontally
+            pullIndicator.style.transform = `translate(-50%, -150%) translateY(${resistance}px)`;
             pullIndicator.style.opacity = Math.min(pullDistance / PULL_THRESHOLD, 1);
             if (pullDistance > PULL_THRESHOLD) {
                 pullIndicator.querySelector('.pull-text').textContent = 'اترك للتحديث';
@@ -1059,9 +1090,9 @@ function initPullToRefresh() {
 
 function performRefresh(pullIndicator) {
     // 💡 حفظ القسم الحالي قبل إعادة التحميل
-    if (currentSingleGroup) {
-        sessionStorage.setItem('tuta_last_section', currentSingleGroup);
-    }
+    const sectionToSave = currentSingleGroup || 'biology';
+    sessionStorage.setItem('tuta_last_section', sectionToSave);
+    
     pullIndicator.querySelector('i').style.animation = 'spin 1s linear infinite';
     pullIndicator.querySelector('.pull-text').textContent = 'جاري التحديث...';
     pullIndicator.style.transform = `translate(-50%, -150%) translateY(${PULL_THRESHOLD * 0.5}px)`;
@@ -1083,38 +1114,73 @@ function resetPullIndicator(pullIndicator) {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Starting application...');
     const loadingOverlay = document.getElementById('loadingOverlay');
+    
     try {
         await loadAllData();
         console.log('✅ Data loaded successfully');
+
+        // 💡 التحقق من وجود قسم محفوظ قبل إظهار واجهة الدخول
+        const lastSection = sessionStorage.getItem('tuta_last_section');
+
         const thermal = getThermalConstants();
         T0 = thermal.T0; TH = thermal.TH; K = thermal.K;
-        stagesData = getStages(); egyptMonthsData = getEgyptMonths(); calendarDataObj = getCalendarData();
-        planCardsData = getPlanCards(); sourcesData = getSources(); bioAgentsData = getBioAgents();
+        
+        stagesData = getStages();
+        egyptMonthsData = getEgyptMonths();
+        calendarDataObj = getCalendarData();
+        planCardsData = getPlanCards();
+        sourcesData = getSources();
+        bioAgentsData = getBioAgents();
 
-        buildSpreadSection(); buildEconomicSection(); buildIPMSection();
-        buildFAQSection(); buildResistanceSection(); buildSources();
+        buildSpreadSection();
+        buildEconomicSection();
+        buildIPMSection();
+        buildFAQSection();
+        buildResistanceSection();
+        buildSources();
         console.log('✅ Dynamic sections built');
 
         const slider = document.getElementById('tempSlider');
-        if (slider) { slider.addEventListener('input', function () { curTemp = parseInt(this.value); this.setAttribute('aria-valuenow', curTemp); updAll(); }, { passive: true }); }
+        if (slider) {
+            slider.addEventListener('input', function () { 
+                curTemp = parseInt(this.value); 
+                this.setAttribute('aria-valuenow', curTemp); 
+                updAll(); 
+            }, { passive: true });
+        }
 
         const revealObs = new IntersectionObserver((entries) => { 
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } }); 
+            entries.forEach(e => { 
+                if (e.isIntersecting) {
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                } 
+            }); 
         }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+        
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-        buildStages(); populateTable(); buildPlanCards(); updAll();
+        buildStages();
+        populateTable();
+        buildPlanCards();
+        updAll();
         console.log('✅ UI components built');
 
-        renderBioCategoryFilter(); renderBioModals();
+        renderBioCategoryFilter();
+        renderBioModals();
         console.log('✅ Bio agents encyclopedia loaded');
 
-        document.getElementById('prevS').addEventListener('click', () => { let n = curStage - 1; if (n < 0) n = stagesData.length - 1; selS(n); });
-        document.getElementById('nextS').addEventListener('click', () => { let n = curStage + 1; if (n >= stagesData.length) n = 0; selS(n); });
+        document.getElementById('prevS').addEventListener('click', () => { 
+            let n = curStage - 1; if (n < 0) n = stagesData.length - 1; selS(n); 
+        });
+        document.getElementById('nextS').addEventListener('click', () => { 
+            let n = curStage + 1; if (n >= stagesData.length) n = 0; selS(n); 
+        });
         document.getElementById('autoBtn').addEventListener('click', toggleA);
 
         window.addEventListener('resize', debouncedDrawChart);
         window.addEventListener('scroll', throttle(updateProgressBar, 100), { passive: true });
+
         createLandingParticles();
 
         const seasonChart = document.getElementById('seasonChart');
@@ -1122,6 +1188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             seasonChart.addEventListener('click', () => handleDoubleTap(seasonChart));
             seasonChart.addEventListener('touchend', () => handleDoubleTap(seasonChart), { passive: true });
         }
+        
         const heatmapGrid = document.getElementById('heatmapGrid');
         if (heatmapGrid) {
             heatmapGrid.addEventListener('click', () => handleDoubleTap(heatmapGrid));
@@ -1130,12 +1197,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         initPullToRefresh();
 
-        // 💡 استعادة القسم المحفوظ بعد التحديث (Pull-to-Refresh)
-        const lastSection = sessionStorage.getItem('tuta_last_section');
+        // 💡 استعادة القسم المحفوظ بعد التحديث (يمنع العودة لواجهة الدخول)
         if (lastSection && groupMap[lastSection]) {
             const drawerItem = document.querySelector(`.drawer-nav-item[onclick*="'${lastSection}'"]`);
-            showSingleSection(lastSection, drawerItem);
+            showSingleSection(lastSection, drawerItem); // هذه الدالة تخفي الـ Landing Page تلقائياً
             sessionStorage.removeItem('tuta_last_section'); // تنظيف بعد الاستخدام
+            console.log('✅ Restored last viewed section:', lastSection);
         }
 
         if ('serviceWorker' in navigator) { 
@@ -1153,8 +1220,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 }
                             });
                         });
-                    }).catch(err => console.log('❌ SW failed:', err)); 
+                    })
+                    .catch(err => console.log('❌ SW failed:', err)); 
             }); 
+            
             let refreshing = false;
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 if (refreshing) return;
@@ -1166,10 +1235,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         console.log('🎉 Application ready!');
         setTimeout(() => { 
-            if (loadingOverlay) { loadingOverlay.classList.add('hidden'); setTimeout(() => loadingOverlay.style.display = 'none', 500); } 
+            if (loadingOverlay) { 
+                loadingOverlay.classList.add('hidden'); 
+                setTimeout(() => loadingOverlay.style.display = 'none', 500); 
+            } 
         }, 800);
+        
     } catch (error) {
         console.error('❌ Error initializing application:', error);
-        if (loadingOverlay) { loadingOverlay.classList.add('hidden'); setTimeout(() => loadingOverlay.style.display = 'none', 500); }
+        if (loadingOverlay) { 
+            loadingOverlay.classList.add('hidden'); 
+            setTimeout(() => loadingOverlay.style.display = 'none', 500); 
+        }
     }
 });
