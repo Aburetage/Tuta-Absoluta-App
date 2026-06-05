@@ -1,6 +1,6 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Complete Version)
-// الميزات: البقاء في الصفحة بعد التحديث، أكورديون صارم، تبويبات افتراضية، أنيميشن سلس، تحسين الأداء
+// Tuta Absoluta App - Script.js (Final Complete Version with Filter Fix)
+// الميزات: إصلاح فلترة التبويبات، البقاء في الصفحة بعد التحديث، أكورديون صارم، أنيميشن سلس
 // ============================================
 
 // ============================================
@@ -297,7 +297,6 @@ function drawChart() {
     const canvas = document.getElementById('seasonChart');
     if (!canvas) return;
     
-    // تحسين الأداء: تحديد أقصى دقة للبيكسل بـ 2
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.getBoundingClientRect();
     
@@ -599,10 +598,9 @@ function buildSpreadSection() {
         fragment.appendChild(card);
     });
     container.appendChild(fragment);
-    setTimeout(() => {
-        const firstBtn = container.parentElement.querySelector('.filter-btn.active');
-        if(firstBtn) filterBioCards('env', 'spreadAccordion', firstBtn);
-    }, 100);
+    
+    // 💡 تشغيل الفلتر الأولي بشكل ديناميكي بناءً على الزر النشط
+    triggerInitialFilter('spreadAccordion');
 }
 
 function buildEconomicSection() {
@@ -629,11 +627,27 @@ function buildEconomicSection() {
             fragment.appendChild(card);
         });
         cardsContainer.appendChild(fragment);
-        setTimeout(() => {
-            const firstBtn = cardsContainer.parentElement.querySelector('.filter-btn.active');
-            if(firstBtn) filterBioCards('direct', 'econAccordion', firstBtn);
-        }, 100);
+        
+        // 💡 تشغيل الفلتر الأولي بشكل ديناميكي بناءً على الزر النشط
+        triggerInitialFilter('econAccordion');
     }
+}
+
+// 💡 دالة جديدة لتشغيل الفلتر الأولي بشكل ديناميكي وآمن
+function triggerInitialFilter(containerId) {
+    setTimeout(() => {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const firstBtn = container.parentElement.querySelector('.filter-btn.active');
+        if (firstBtn) {
+            // استخراج الفئة من خاصية onclick بشكل ديناميكي لضمان التطابق التام مع بيانات JSON
+            const onclickAttr = firstBtn.getAttribute('onclick');
+            const match = onclickAttr ? onclickAttr.match(/filterBioCards\(\s*'([^']+)'/) : null;
+            if (match && match[1]) {
+                filterBioCards(match[1], containerId, firstBtn);
+            }
+        }
+    }, 150);
 }
 
 function buildIPMSection() {
@@ -706,7 +720,7 @@ function buildResistanceSection() {
 }
 
 // ============================================
-// Accordion & Filter Functions (Strict Accordion)
+// Accordion & Filter Functions (Strict Accordion & Smart Matching)
 // ============================================
 
 function toggleFAQ(el) {
@@ -721,14 +735,12 @@ function toggleAccordion(el, containerId) {
     const isOpen = card.classList.contains('open');
     const container = document.getElementById(containerId);
     
-    // 1. إغلاق جميع البطاقات في نفس الحاوية أولاً (Strict Accordion)
     container.querySelectorAll('.bio-card').forEach(c => {
         c.classList.remove('open');
         const header = c.querySelector('.bio-header');
         if(header) header.setAttribute('aria-expanded', 'false');
     });
 
-    // 2. إذا لم تكن مفتوحة، افتحها الآن
     if (!isOpen) {
         card.classList.add('open');
         el.setAttribute('aria-expanded', 'true');
@@ -747,9 +759,18 @@ function filterBioCards(category, containerId, btn) {
     btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     
     const container = document.getElementById(containerId);
+    if (!container) return;
+
     const cards = Array.from(container.querySelectorAll('.bio-card'));
-    const visibleCards = cards.filter(card => category === 'all' || card.dataset.category === category);
     
+    // 💡 تنظيف الفئة للمقارنة الآمنة (إزالة مسافات وتوحيد حالة الأحرف) لمنع اختفاء البيانات
+    const targetCategory = category.trim().toLowerCase();
+
+    const visibleCards = cards.filter(card => {
+        const cardCat = (card.dataset.category || '').trim().toLowerCase();
+        return targetCategory === 'all' || cardCat === targetCategory;
+    });
+
     if (visibleCards.length === 0) {
         cards.forEach(card => card.style.display = 'none');
         if (!container.querySelector('.empty-state')) {
@@ -761,10 +782,11 @@ function filterBioCards(category, containerId, btn) {
     } else {
         const emptyState = container.querySelector('.empty-state');
         if (emptyState) emptyState.remove();
+
         cards.forEach((card, index) => {
-            if (category === 'all' || card.dataset.category === category) {
+            const cardCat = (card.dataset.category || '').trim().toLowerCase();
+            if (targetCategory === 'all' || cardCat === targetCategory) {
                 card.style.display = '';
-                // تطبيق أنيميشن متتابع سلس
                 card.style.animation = 'none';
                 card.offsetHeight; /* trigger reflow */
                 card.style.animation = `cardSlideInSmooth 0.4s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.05}s backwards`;
@@ -782,7 +804,6 @@ function filterBioCards(category, containerId, btn) {
 // ============================================
 
 function showSingleSection(groupId, clickedItem) {
-    // 💡 إخفاء واجهة الدخول فوراً عند عرض أي قسم
     const landing = document.getElementById('landingOverlay');
     if (landing) landing.classList.add('hidden');
 
@@ -816,7 +837,6 @@ function showSingleSection(groupId, clickedItem) {
 }
 
 function goHome() {
-    // 💡 مسح الحالة عند العودة للرئيسية يدوياً
     sessionStorage.removeItem('tuta_last_section');
     
     document.querySelectorAll('.section').forEach(s => { 
@@ -1089,7 +1109,6 @@ function initPullToRefresh() {
 }
 
 function performRefresh(pullIndicator) {
-    // 💡 حفظ القسم الحالي قبل إعادة التحميل
     const sectionToSave = currentSingleGroup || 'biology';
     sessionStorage.setItem('tuta_last_section', sectionToSave);
     
@@ -1119,7 +1138,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadAllData();
         console.log('✅ Data loaded successfully');
 
-        // 💡 التحقق من وجود قسم محفوظ قبل إظهار واجهة الدخول
         const lastSection = sessionStorage.getItem('tuta_last_section');
 
         const thermal = getThermalConstants();
@@ -1197,11 +1215,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         initPullToRefresh();
 
-        // 💡 استعادة القسم المحفوظ بعد التحديث (يمنع العودة لواجهة الدخول)
         if (lastSection && groupMap[lastSection]) {
             const drawerItem = document.querySelector(`.drawer-nav-item[onclick*="'${lastSection}'"]`);
-            showSingleSection(lastSection, drawerItem); // هذه الدالة تخفي الـ Landing Page تلقائياً
-            sessionStorage.removeItem('tuta_last_section'); // تنظيف بعد الاستخدام
+            showSingleSection(lastSection, drawerItem);
+            sessionStorage.removeItem('tuta_last_section');
             console.log('✅ Restored last viewed section:', lastSection);
         }
 
