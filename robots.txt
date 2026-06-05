@@ -7,11 +7,11 @@
 User-agent: *
 Allow: /
 
-# منع فهرسة ملفات البيانات (اختياري - لتحسين الأداء)
-# Disallow: /data/
+# منع فهرسة ملفات البيانات (لتحسين الأداء ومنع ظهور الكود الخام في نتائج البحث)
+Disallow: /data/
 
 # منع فهرسة ملفات JavaScript الداخلية
-# Disallow: /js/
+Disallow: /js/
 
 # خريطة الموقع
 Sitemap: https://aburetage.github.io/Tuta-Absoluta-App/sitemap.xml

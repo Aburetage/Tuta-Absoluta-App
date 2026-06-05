@@ -1,6 +1,5 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Complete Version with Filter Fix)
-// الميزات: إصلاح فلترة التبويبات، البقاء في الصفحة بعد التحديث، أكورديون صارم، أنيميشن سلس
+// Tuta Absoluta App - Script.js (Final Complete Version with Performance & iOS Fixes)
 // ============================================
 
 // ============================================
@@ -142,7 +141,7 @@ document.addEventListener('click', function(event) {
 });
 
 // ============================================
-// Side Drawer Logic
+// Side Drawer Logic (With iOS Scroll Fix)
 // ============================================
 
 function toggleSideDrawer() {
@@ -158,6 +157,7 @@ function toggleSideDrawer() {
         overlay.classList.add('active');
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
+        document.body.classList.add('drawer-open'); // iOS Fix
     }
 }
 
@@ -169,6 +169,7 @@ function closeSideDrawer() {
     overlay.classList.remove('active');
     drawer.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    document.body.classList.remove('drawer-open'); // iOS Fix
 }
 
 // ============================================
@@ -198,6 +199,7 @@ function applyThermalResult(d) {
     const z = getZone(curTemp);
     const tc = tClr(curTemp);
     
+    // Instant UI updates
     document.getElementById('tempVal').textContent = curTemp;
     document.getElementById('tempVal').style.color = tc;
     document.getElementById('tempDesc').textContent = z.l;
@@ -207,12 +209,18 @@ function applyThermalResult(d) {
     zb.style.background = z.c + '20';
     zb.style.color = z.c;
     
-    updTempGrid(d);
-    updDaysBars(d);
-    drawChart();
-    buildHeatmap();
-    if (curStage >= 0) updDet();
-    updSD(d);
+    // Batch heavy DOM updates using requestAnimationFrame for smooth slider
+    requestAnimationFrame(() => {
+        updTempGrid(d);
+        updDaysBars(d);
+        if (curStage >= 0) updDet();
+        updSD(d);
+    });
+
+    // Use debounced versions for heavy Canvas/Grid building to prevent lag
+    debouncedDrawChart();
+    debouncedBuildHeatmap();
+    
     updateDynamicTheme(z.z);
 }
 
@@ -277,7 +285,7 @@ function updDaysBars(d) {
 }
 
 // ============================================
-// Chart Functions (Optimized for Low-End Devices)
+// Chart Functions (Optimized & Blurry Fix)
 // ============================================
 
 function drawRoundedRect(ctx, x, y, w, h, r) {
@@ -300,8 +308,9 @@ function drawChart() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.getBoundingClientRect();
     
-    canvas.width = rect.width * dpr;
-    canvas.height = 340 * dpr;
+    // Math.round Fix to prevent Blurry text on high-DPI screens
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(340 * dpr);
     canvas.style.height = '340px';
     
     const ctx = canvas.getContext('2d');
@@ -404,6 +413,9 @@ function buildHeatmap() {
     grid.innerHTML = ''; grid.appendChild(fragment);
     labels.innerHTML = ''; labels.appendChild(labelFragment);
 }
+
+// Debounced Heatmap to prevent lag on slider drag
+const debouncedBuildHeatmap = debounce(buildHeatmap, 250);
 
 // ============================================
 // Stages Functions
@@ -598,8 +610,6 @@ function buildSpreadSection() {
         fragment.appendChild(card);
     });
     container.appendChild(fragment);
-    
-    // 💡 تشغيل الفلتر الأولي بشكل ديناميكي بناءً على الزر النشط
     triggerInitialFilter('spreadAccordion');
 }
 
@@ -627,20 +637,16 @@ function buildEconomicSection() {
             fragment.appendChild(card);
         });
         cardsContainer.appendChild(fragment);
-        
-        // 💡 تشغيل الفلتر الأولي بشكل ديناميكي بناءً على الزر النشط
         triggerInitialFilter('econAccordion');
     }
 }
 
-// 💡 دالة جديدة لتشغيل الفلتر الأولي بشكل ديناميكي وآمن
 function triggerInitialFilter(containerId) {
     setTimeout(() => {
         const container = document.getElementById(containerId);
         if (!container) return;
         const firstBtn = container.parentElement.querySelector('.filter-btn.active');
         if (firstBtn) {
-            // استخراج الفئة من خاصية onclick بشكل ديناميكي لضمان التطابق التام مع بيانات JSON
             const onclickAttr = firstBtn.getAttribute('onclick');
             const match = onclickAttr ? onclickAttr.match(/filterBioCards\(\s*'([^']+)'/) : null;
             if (match && match[1]) {
@@ -720,7 +726,7 @@ function buildResistanceSection() {
 }
 
 // ============================================
-// Accordion & Filter Functions (Strict Accordion & Smart Matching)
+// Accordion & Filter Functions
 // ============================================
 
 function toggleFAQ(el) {
@@ -762,8 +768,6 @@ function filterBioCards(category, containerId, btn) {
     if (!container) return;
 
     const cards = Array.from(container.querySelectorAll('.bio-card'));
-    
-    // 💡 تنظيف الفئة للمقارنة الآمنة (إزالة مسافات وتوحيد حالة الأحرف) لمنع اختفاء البيانات
     const targetCategory = category.trim().toLowerCase();
 
     const visibleCards = cards.filter(card => {
@@ -800,7 +804,7 @@ function filterBioCards(category, containerId, btn) {
 }
 
 // ============================================
-// Single Section Logic (With Stay-on-Page Fix)
+// Single Section Logic
 // ============================================
 
 function showSingleSection(groupId, clickedItem) {
@@ -880,7 +884,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia
+// Bio Agents Encyclopedia (With iOS Modal Fix)
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -904,9 +908,10 @@ const categoryMap = {
     'predator': { name: '🪲 المفترسات' }, 'fungi': { name: '🍄 الفطريات الممرضة' }, 'nematode': { name: '🪱 النيماتودا الممرضة' }
 };
 
-function openModal(modalId) { closeFab(); const modal = document.getElementById(modalId); if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; } }
+// iOS Scroll Fix added to body class
+function openModal(modalId) { closeFab(); const modal = document.getElementById(modalId); if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); } }
 function openBioModal(agentId) { openModal(`modal-${agentId}`); }
-function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; } }
+function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; document.body.classList.remove('modal-open'); } }
 function closeModalOnBg(event, modalId) { if (event.target === event.currentTarget) closeModal(modalId); }
 
 function renderBioCategoryFilter() {
@@ -1037,7 +1042,7 @@ function filterBioByCategory(category, btn) {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
         closeSideDrawer(); closeFab();
-        document.querySelectorAll('.bio-modal.active').forEach(m => { m.classList.remove('active'); document.body.style.overflow = ''; });
+        document.querySelectorAll('.bio-modal.active').forEach(m => { m.classList.remove('active'); document.body.style.overflow = ''; document.body.classList.remove('modal-open'); });
         document.querySelectorAll('.faq-item.open').forEach(item => { item.classList.remove('open'); const q = item.querySelector('.faq-question'); if(q) q.setAttribute('aria-expanded', 'false'); });
     }
     if (e.key === 'Tab') { document.body.classList.add('keyboard-user'); }

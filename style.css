@@ -62,7 +62,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .progress-bar.visible { opacity: 1; }
 .progress-fill { height: 100%; background: linear-gradient(90deg, var(--plan-accent), var(--accent)); width: 0%; transition: width 0.1s ease; box-shadow: 0 0 10px rgba(39, 174, 96, 0.5); }
 
-/* ===== Pull to Refresh (متمركز واحترافي) ===== */
+/* ===== Pull to Refresh ===== */
 .pull-to-refresh {
     position: fixed; top: calc(var(--nav-height) + 10px); left: 50%;
     transform: translate(-50%, -150%);
@@ -93,7 +93,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .loader-text { color: var(--text); font-family: 'Cairo', sans-serif; font-size: 1rem; font-weight: 600; margin-top: 1.5rem; }
 .loader-subtext { color: var(--text2); font-size: 0.85rem; margin-top: 0.3rem; }
 
-/* ===== Landing Page (اسم الأكاديمية الفاخر) ===== */
+/* ===== Landing Page ===== */
 .landing-overlay { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; transition: opacity 0.6s ease, visibility 0.6s ease; padding: 1rem; min-height: 100dvh; height: 100dvh; }
 .landing-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
 .landing-content { text-align: center; position: relative; z-index: 2; padding: 2rem; max-width: 600px; width: 100%; animation: landingFadeIn 0.8s ease; }
@@ -137,10 +137,10 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .nav-icon-btn { background: transparent; border: none; color: var(--text); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; }
 .nav-icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--plan-accent2); }
 
-/* ===== Side Drawer (أضيق + فصل بصري احترافي) ===== */
+/* ===== Side Drawer ===== */
 .side-drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); z-index: 2000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; will-change: opacity; }
 .side-drawer-overlay.active { opacity: 1; visibility: visible; }
-.side-drawer { position: fixed; top: 0; right: 0; width: 280px; max-width: 85vw; height: 100dvh; background: var(--surface); border-left: 1px solid var(--border); z-index: 2001; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.5); will-change: transform; }
+.side-drawer { position: fixed; top: 0; right: 0; width: 280px; max-width: 85vw; height: 100dvh; background: var(--surface); border-left: 1px solid var(--border); z-index: 2001; transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.5); will-change: transform; overscroll-behavior: contain; }
 .side-drawer.open { transform: translateX(0); }
 .drawer-content { flex: 1; overflow-y: auto; padding: 1.2rem; display: flex; flex-direction: column; }
 
@@ -171,8 +171,8 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .drawer-nav-item .drawer-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: rgba(39,174,96,0.1); border-radius: 8px; color: var(--plan-accent); transition: all 0.2s; }
 .drawer-nav-item:hover .drawer-icon { background: var(--plan-accent); color: #000; }
 
-/* ===== Floating Action Buttons (عكس الأماكن + لون زجاجي فاخر) ===== */
-.fab-container { position: fixed; bottom: 2rem; left: 2rem; right: auto; z-index: 1000; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+/* ===== Floating Action Buttons ===== */
+.fab-container { position: fixed; bottom: calc(2rem + var(--safe-bottom)); left: 2rem; right: auto; z-index: 1000; display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
 .fab-sub-buttons { display: flex; flex-direction: column; gap: 0.8rem; opacity: 0; visibility: hidden; transform: translateY(20px) scale(0.8); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .fab-container.active .fab-sub-buttons { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
 
@@ -187,7 +187,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .fab-btn-glass:hover, .fab-main-btn-glass:hover { background: rgba(255, 255, 255, 0.15); transform: scale(1.05); color: #fff; border-color: rgba(255, 255, 255, 0.3); }
 .fab-main-btn-glass { background: linear-gradient(135deg, rgba(243, 156, 18, 0.9), rgba(231, 76, 60, 0.9)); border-color: rgba(243, 156, 18, 0.3); color: #fff; }
 
-.pwa-fab { position: fixed; bottom: 2rem; right: 2rem; left: auto; z-index: 998; }
+.pwa-fab { position: fixed; bottom: calc(2rem + var(--safe-bottom)); right: 2rem; left: auto; z-index: 998; }
 
 .fab-icon-close { position: absolute; opacity: 0; transform: rotate(-90deg); transition: all 0.3s ease; }
 .fab-container.active .fab-icon-open { opacity: 0; transform: rotate(90deg); }
@@ -261,11 +261,11 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 .days-bar-val { width: 60px; font-size: .8rem; font-weight: 600; color: var(--amber); text-align: right; flex-shrink: 0; }
 .days-total-row { border-top: 2px dashed var(--border); padding-top: .7rem; margin-top: .5rem; }
 
-/* ===== Chart (مع حل مشكلة الزوم) ===== */
+/* ===== Chart ===== */
 .chart-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; overflow: hidden; transition: overflow 0.3s ease; }
 .chart-card:has(canvas.zoomed) { overflow: auto; touch-action: pan-x pan-y; }
 .chart-card h3 { text-align: center; color: #fff; margin-bottom: .5rem; }
-.chart-card canvas { width: 100%; height: 340px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: zoom-in; display: block; }
+.chart-card canvas { width: 100%; height: 340px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: zoom-in; display: block; touch-action: manipulation; }
 .chart-card canvas.zoomed { 
     transform: scale(1.5); transform-origin: center center; cursor: grab; 
     box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 10; position: relative; 
@@ -280,7 +280,7 @@ h1,h2,h3,h4{font-family:'Cairo',sans-serif;font-weight:700}
 
 /* ===== Heatmap ===== */
 .heatmap-wrapper { overflow: hidden; border-radius: var(--radius); }
-.heatmap-grid { display: grid; grid-template-columns: repeat(12,1fr); gap: 4px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: zoom-in; }
+.heatmap-grid { display: grid; grid-template-columns: repeat(12,1fr); gap: 4px; transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: zoom-in; touch-action: manipulation; }
 .heatmap-grid.zoomed { transform: scale(1.2); cursor: zoom-out; box-shadow: 0 20px 50px rgba(0,0,0,0.6); z-index: 100; position: relative; background: var(--surface); border-radius: var(--radius); padding: 1rem; }
 .heatmap-cell { padding: 1rem .3rem; text-align: center; border-radius: 6px; font-size: .7rem; font-weight: 700; cursor: pointer; transition: all .2s; position: relative; min-height: 44px; touch-action: manipulation; }
 .heatmap-cell:hover { transform: scale(1.05); z-index: 3; box-shadow: 0 4px 15px rgba(0,0,0,.5); }
@@ -465,20 +465,18 @@ th.hidden-col, td.hidden-col { display: none; }
 .badge-purple { background: rgba(155,89,182,0.15); color: #9b59b6; }
 .bio-card-footer { text-align: left; margin-top: auto; font-size: 0.75rem; color: var(--plan-accent); font-weight: 600; display: flex; align-items: center; gap: 0.3rem; }
 
-/* ===== Modal (لا يغطي الشريط العلوي) ===== */
+/* ===== Modal ===== */
 .bio-modal { 
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); 
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); 
-    z-index: 900; /* أقل من الشريط العلوي (1000) */
-    overflow-y: auto; animation: fadeIn 0.3s ease; 
-    padding-top: calc(var(--nav-height) + 20px); /* إزاحة للأسفل */
-    min-height: 100dvh;
+    z-index: 900; overflow-y: auto; animation: fadeIn 0.3s ease; 
+    padding-top: calc(var(--nav-height) + 20px); min-height: 100dvh;
 }
-.bio-modal.active { display: flex; align-items: flex-start; justify-content: center; } /* تغيير إلى flex-start مع padding */
+.bio-modal.active { display: flex; align-items: flex-start; justify-content: center; }
 .bio-modal-content { 
     background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); 
     max-width: 700px; width: 100%; position: relative; animation: slideUp 0.4s ease; 
-    max-height: 90vh; overflow-y: auto; margin: 0 auto 2rem auto;
+    max-height: 90vh; overflow-y: auto; margin: 0 auto 2rem auto; overscroll-behavior: contain;
 }
 .bio-modal-close { position: sticky; top: 1rem; float: left; margin-left: 1rem; width: 44px; height: 44px; border-radius: 50%; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 1.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; z-index: 10; min-width: 44px; min-height: 44px; touch-action: manipulation; }
 .bio-modal-close:hover { background: var(--accent); color: #fff; }
@@ -693,8 +691,8 @@ th.hidden-col, td.hidden-col { display: none; }
     .table-wrapper::-webkit-scrollbar, .plan-filter-col::-webkit-scrollbar, .modal-tabs::-webkit-scrollbar { height: 3px; }
     .filter-btn, .ipm-tab, .nbtn, .faq-question, .bio-header, .bio-filter-btn, .tab-btn, .landing-btn, .close-detail-btn, .bio-modal-close, .drawer-header-block, .drawer-nav-item, .fab-btn-glass, .fab-main-btn-glass { min-height: 44px; min-width: 44px; }
     html { -webkit-text-size-adjust: 100%; }
-    .fab-container { bottom: 1.5rem; left: 1.5rem; }
-    .pwa-fab { bottom: 1.5rem; right: 1.5rem; }
+    .fab-container { bottom: calc(1.5rem + var(--safe-bottom)); left: 1.5rem; }
+    .pwa-fab { bottom: calc(1.5rem + var(--safe-bottom)); right: 1.5rem; }
     .fab-btn-glass, .fab-main-btn-glass { width: 50px; height: 50px; font-size: 1.2rem; }
 }
 
