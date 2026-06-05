@@ -1,5 +1,5 @@
 // ============================================
-// Tuta Absoluta App - Script.js (Final Complete Version with Performance & iOS Fixes)
+// Tuta Absoluta App - Script.js (Final Complete Version with Performance, iOS & UI Fixes)
 // ============================================
 
 // ============================================
@@ -157,7 +157,7 @@ function toggleSideDrawer() {
         overlay.classList.add('active');
         drawer.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-        document.body.classList.add('drawer-open'); // iOS Fix
+        document.body.classList.add('drawer-open');
     }
 }
 
@@ -169,7 +169,7 @@ function closeSideDrawer() {
     overlay.classList.remove('active');
     drawer.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
-    document.body.classList.remove('drawer-open'); // iOS Fix
+    document.body.classList.remove('drawer-open');
 }
 
 // ============================================
@@ -199,7 +199,6 @@ function applyThermalResult(d) {
     const z = getZone(curTemp);
     const tc = tClr(curTemp);
     
-    // Instant UI updates
     document.getElementById('tempVal').textContent = curTemp;
     document.getElementById('tempVal').style.color = tc;
     document.getElementById('tempDesc').textContent = z.l;
@@ -209,7 +208,6 @@ function applyThermalResult(d) {
     zb.style.background = z.c + '20';
     zb.style.color = z.c;
     
-    // Batch heavy DOM updates using requestAnimationFrame for smooth slider
     requestAnimationFrame(() => {
         updTempGrid(d);
         updDaysBars(d);
@@ -217,7 +215,6 @@ function applyThermalResult(d) {
         updSD(d);
     });
 
-    // Use debounced versions for heavy Canvas/Grid building to prevent lag
     debouncedDrawChart();
     debouncedBuildHeatmap();
     
@@ -308,7 +305,6 @@ function drawChart() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.getBoundingClientRect();
     
-    // Math.round Fix to prevent Blurry text on high-DPI screens
     canvas.width = Math.round(rect.width * dpr);
     canvas.height = Math.round(340 * dpr);
     canvas.style.height = '340px';
@@ -414,7 +410,6 @@ function buildHeatmap() {
     labels.innerHTML = ''; labels.appendChild(labelFragment);
 }
 
-// Debounced Heatmap to prevent lag on slider drag
 const debouncedBuildHeatmap = debounce(buildHeatmap, 250);
 
 // ============================================
@@ -645,7 +640,7 @@ function triggerInitialFilter(containerId) {
     setTimeout(() => {
         const container = document.getElementById(containerId);
         if (!container) return;
-        const firstBtn = container.parentElement.querySelector('.filter-btn.active');
+        const firstBtn = container.parentElement.querySelector('.bio-filter-btn.active');
         if (firstBtn) {
             const onclickAttr = firstBtn.getAttribute('onclick');
             const match = onclickAttr ? onclickAttr.match(/filterBioCards\(\s*'([^']+)'/) : null;
@@ -726,7 +721,7 @@ function buildResistanceSection() {
 }
 
 // ============================================
-// Accordion & Filter Functions
+// Accordion & Filter Functions (MODIFIED FOR UNIFIED UI)
 // ============================================
 
 function toggleFAQ(el) {
@@ -761,7 +756,8 @@ function toggleAccordion(el, containerId) {
 
 function filterBioCards(category, containerId, btn) {
     const parent = btn.parentElement;
-    parent.querySelectorAll('.filter-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+    // تم التعديل هنا لدعم الفلتر الموحد
+    parent.querySelectorAll('.bio-filter-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
     btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
     
     const container = document.getElementById(containerId);
@@ -884,7 +880,7 @@ function closeLanding() {
 }
 
 // ============================================
-// Bio Agents Encyclopedia (With iOS Modal Fix)
+// Bio Agents Encyclopedia
 // ============================================
 
 const targetLabels = { egg: '🥚 البيض', larvae: '🐛 اليرقات', pupae: '🫘 العذارى', adult: ' الكاملة' };
@@ -908,7 +904,6 @@ const categoryMap = {
     'predator': { name: '🪲 المفترسات' }, 'fungi': { name: '🍄 الفطريات الممرضة' }, 'nematode': { name: '🪱 النيماتودا الممرضة' }
 };
 
-// iOS Scroll Fix added to body class
 function openModal(modalId) { closeFab(); const modal = document.getElementById(modalId); if (modal) { modal.classList.add('active'); document.body.style.overflow = 'hidden'; document.body.classList.add('modal-open'); } }
 function openBioModal(agentId) { openModal(`modal-${agentId}`); }
 function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.classList.remove('active'); document.body.style.overflow = ''; document.body.classList.remove('modal-open'); } }
